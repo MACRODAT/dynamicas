@@ -219,15 +219,21 @@ const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
               Choose the type of geometry to import or preview for your UAV. Options include predefined geometries like airfoil and fixed wing, or custom geometries.
             </Form.Text>
           </Form.Group>
+
+          {
+            geometrystate.geometryType == "Airfoil" ? 
+            <Form.Group className='my-3' controlId="geometryImport">
+              <Form.Label>Where do you want your geometry from?</Form.Label>
+              <Form.Control as="select" defaultValue={geometrystate.selectedGeometry} onChange={handleGeometryImport}>
+                <option value="">Please select</option>
+                <option value="provided">NACA airfoils</option>
+                <option value="ownGenerator">My own (Using generator)</option>
+                <option value="ownCustom">My own (Import coordinates)</option>
+              </Form.Control>
+            </Form.Group> : <></>
+          }
           
-          <Form.Group className='my-3' controlId="geometryImport">
-            <Form.Label>Where do you want your geometry from?</Form.Label>
-            <Form.Control as="select" defaultValue={geometrystate.selectedGeometry} onChange={handleGeometryImport}>
-              <option value="provided">NACA airfoils</option>
-              <option value="ownGenerator">My own (Using generator)</option>
-              <option value="ownCustom">My own (Import coordinates)</option>
-            </Form.Control>
-          </Form.Group>
+          
           {
             (geometryImportType == "provided") ? 
             (

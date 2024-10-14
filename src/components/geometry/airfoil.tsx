@@ -1,33 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { toUpper, toUpperList } from "../../helpers";
 import { BsCheckLg } from "react-icons/bs";
 import './airfoil.scss'
 import AirfoilPlot from "../airfoilPlot";
+import { geometrySetAirfoilName } from "../../store/logic/geometryLogic";
+import { GeometryState } from "../../store/reducers/geometry_reducer";
 
-const mapStateToProps = (state : any) => {
-	return state;
+
+export type airfoilData = {name: string, screenshot: string, description: string};
+
+const mapStateToProps = (state : any) : {state: any, geoState: GeometryState} => {
+    const geoState: GeometryState = state.geometry;
+	return {state: state, geoState: geoState};
 }
 
-const Airfoil : React.FC = (state : any) => {
+const Airfoil : React.FC = (params: any) => {
 
-    const [selectedAirfoil, setSelectedAirfoil] = useState<{name: string, screenshot: string, description: string}>
-            ({name: "", screenshot: "", description: ""});
+    let state = params.state;
+    let geo: GeometryState = params.geoState;
 
-    const [selectedAirfoilDat, setSelectedAirfoilDat] = useState("");
+    const [selectedAirfoil, setSelectedAirfoil] = useState<airfoilData>
+            (geo.geometrySelectedAirfoil);
 
-	const selectedMenu = toUpper(state.application.menu);
-	const selectedSubMenus = toUpperList(state.application.submenus).join('> ');
 
 	// State to hold airfoils and their screenshots
-    const [airfoils, setAirfoils] = useState<{ name: string, screenshot: string, description: string }[]>([]);
+    const [airfoils, setAirfoils] = useState<airfoilData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const dispatch = useDispatch();
 
-    const handleSelect = (airfoil: {name: string, screenshot: string, description: string}) => {
+    const handleSelect = (airfoil: airfoilData) => {
         setSelectedAirfoil(airfoil);
-        getAirfoilDat(airfoil.name);
+        dispatch(geometrySetAirfoilName(airfoil) as any);
     }
 
 	// Fetch airfoils from the server
@@ -57,13 +63,7 @@ const Airfoil : React.FC = (state : any) => {
         };
 
         fetchAirfoils();
-    }, []);
-
-    const getAirfoilDat = async (name: string) => {
-        const response = await fetch("http://127.0.0.1:5000/airfoil/" + name + "/dat")
-        const fileContents = await response.text();
-        setSelectedAirfoilDat(fileContents);
-    }
+    }, [selectedAirfoil]);
 
     // Render loading state or error message
     if (loading) {

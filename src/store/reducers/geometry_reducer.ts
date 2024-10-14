@@ -1,8 +1,10 @@
+import { airfoilData } from "../../components/geometry/airfoil";
 import { Point, Shape } from "../../types";
-import { ADD_SHAPE, GeometryActions, IMPORT_GEOMETRY, LIST_SHAPES, PREVIEW_GEOMETRY, PREVIEW_MESH, SET_GEOMETRY_CLASS, SET_GEOMETRY_TYPE, SET_MESH_QUALITY } from "../geometry";
+import { ADD_SHAPE, GeometryActions, IMPORT_GEOMETRY, LIST_SHAPES, PREVIEW_GEOMETRY, PREVIEW_MESH, SET_GEOMETRY_AIRFOIL_NAME, SET_GEOMETRY_CLASS, SET_GEOMETRY_TYPE, SET_MESH_QUALITY } from "../geometry";
 
 export interface GeometryState {
 	geometryType: string,
+	geometrySelectedAirfoil: airfoilData,
 	selectedGeometry: string,
 	importedGeometry: Point[];
 	previewedGeometry: Point[];
@@ -12,6 +14,7 @@ export interface GeometryState {
   }
   
   const initialGeometryState: GeometryState = {
+	geometrySelectedAirfoil: {name: "", description: "", screenshot: ""},
 	geometryType: "",
 	selectedGeometry: "",
 	importedGeometry: [],
@@ -28,6 +31,8 @@ export interface GeometryState {
 	switch (action.type) {
 	  case IMPORT_GEOMETRY:
 		return { ...state, importedGeometry: action.payload };
+	  case SET_GEOMETRY_AIRFOIL_NAME:
+		return { ...state, geometrySelectedAirfoil: action.payload };
 	  case SET_GEOMETRY_TYPE:
 		return { ...state, selectedGeometry: action.payload};
 	  case SET_GEOMETRY_CLASS:

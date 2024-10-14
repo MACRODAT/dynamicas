@@ -1,3 +1,4 @@
+import { airfoilData } from "../components/geometry/airfoil";
 import { Point, Shape } from "../types";
 
 export const IMPORT_GEOMETRY = 'IMPORT_GEOMETRY';
@@ -8,6 +9,7 @@ export const SET_MESH_QUALITY = 'SET_MESH_QUALITY';
 export const ADD_SHAPE = 'ADD_SHAPE';
 export const SET_GEOMETRY_TYPE = 'SET_GEOMETRY_TYPE';
 export const SET_GEOMETRY_CLASS = 'SET_GEOMETRY_CLASS';
+export const SET_GEOMETRY_AIRFOIL_NAME = 'SET_GEOMETRY_AIRFOIL_NAME';
 
 // Action interfaces
 interface ImportGeometryAction {
@@ -50,6 +52,11 @@ interface SetGeometryClass {
   payload: string;
 }
 
+interface SetGeometryAirfoilName {
+  type: typeof SET_GEOMETRY_AIRFOIL_NAME;
+  payload: airfoilData;
+}
+
 export type GeometryActions =
   | ImportGeometryAction
   | PreviewGeometryAction
@@ -58,4 +65,5 @@ export type GeometryActions =
   | SetMeshQualityAction
   | AddShapeAction
   | SetGeometryType
+  | SetGeometryAirfoilName
   | SetGeometryClass ;
