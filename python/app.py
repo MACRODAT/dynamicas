@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
-from utils import list_airfoils, get_airfoil_stl, get_airfoil_step, get_airfoil_screenshot, create_geometry, create_mesh, create_screenshot, get_airfoil_description
+from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, get_airfoil_step, get_airfoil_screenshot, create_geometry, create_mesh, create_screenshot, get_airfoil_description
 import os
 import io
 
@@ -31,6 +31,20 @@ def get_stl(airfoil):
             mimetype='application/sla',
             as_attachment=True,
             download_name=f'{airfoil}.stl'
+        )
+    except FileNotFoundError:
+        return jsonify({"error": "STL file not found"}), 404
+
+@app.route('/airfoil/<string:airfoil>/dat', methods=['GET'])
+def get_dat(airfoil):
+    """Get the DAT file content for a specific airfoil."""
+    try:
+        dat_content = get_airfoil_dat(airfoil)
+        return send_file(
+            io.BytesIO(dat_content),  # Use BytesIO to wrap the bytes
+            mimetype='application/text',
+            as_attachment=True,
+            download_name=f'{airfoil}.dat'
         )
     except FileNotFoundError:
         return jsonify({"error": "STL file not found"}), 404

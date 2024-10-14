@@ -140,7 +140,8 @@ body,
 		margin: 0; padding: 2px;
 	}
 	.submenus { 
-		flex-grow: 3; 
+		flex-grow: 3;
+		min-width: 250px; 
 		margin: 0; padding: 2px;
 		background-color: $back-300;
 		color: $front-300;

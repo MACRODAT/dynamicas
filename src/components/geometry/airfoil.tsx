@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { toUpper, toUpperList } from "../../helpers";
 import { BsCheckLg } from "react-icons/bs";
 import './airfoil.scss'
+import AirfoilPlot from "../airfoilPlot";
 
 const mapStateToProps = (state : any) => {
 
@@ -14,6 +15,8 @@ const Airfoil : React.FC = (state : any) => {
     const [selectedAirfoil, setSelectedAirfoil] = useState<{name: string, screenshot: string, description: string}>
             ({name: "", screenshot: "", description: ""});
 
+    const [selectedAirfoilDat, setSelectedAirfoilDat] = useState("");
+
 	const selectedMenu = toUpper(state.application.menu);
 	const selectedSubMenus = toUpperList(state.application.submenus).join('> ');
 
@@ -21,6 +24,12 @@ const Airfoil : React.FC = (state : any) => {
     const [airfoils, setAirfoils] = useState<{ name: string, screenshot: string, description: string }[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+
+    const handleSelect = (airfoil: {name: string, screenshot: string, description: string}) => {
+        setSelectedAirfoil(airfoil);
+        getAirfoilDat(airfoil.name);
+    }
 
 	// Fetch airfoils from the server
     useEffect(() => {
@@ -51,6 +60,12 @@ const Airfoil : React.FC = (state : any) => {
         fetchAirfoils();
     }, []);
 
+    const getAirfoilDat = async (name: string) => {
+        const response = await fetch("http://127.0.0.1:5000/airfoil/" + name + "/dat")
+        const fileContents = await response.text();
+        setSelectedAirfoilDat(fileContents);
+    }
+
     // Render loading state or error message
     if (loading) {
         return <div>Loading...</div>;
@@ -80,7 +95,7 @@ const Airfoil : React.FC = (state : any) => {
 								border: "1px solid #ccc", // Optional: border for visibility
 							}}
 							key={airfoil.name}
-                            onClick={() => {setSelectedAirfoil(airfoil)}}
+                            onClick={() => handleSelect(airfoil)}
                             >
                             {
                                 (selectedAirfoil.name == airfoil.name) ?
@@ -102,6 +117,7 @@ const Airfoil : React.FC = (state : any) => {
                         }
                     </p>
                     <h5>Plot of the airfoil:</h5>
+                    <AirfoilPlot airfoilName={selectedAirfoil.name} />
                 </div>
             </div>
         </>

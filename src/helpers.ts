@@ -25,11 +25,25 @@ const readFileAsText = (file: File): Promise<string> => {
 	  reader.onerror = error => reject(error);
 	  reader.readAsText(file);
 	});
-  };
+};
+
+// Function to parse .dat file content into an array of coordinates
+function parseDatFile(content: string): { x: number; y: number }[] {
+    const lines = content.split('\n').slice(1);
+    const coordinates = lines
+        .filter(line => line.trim() !== '') // Ignore empty lines
+        .map(line => {
+            const [x, y] = line.trim().split(/\s+/).map(Number); // Split by spaces and convert to numbers
+            return { x, y };
+        });
+
+    return coordinates;
+}
   
 
 export {
 	toUpper, toUpperList,
-	readFileAsText
+	readFileAsText,
+	parseDatFile
 
 }

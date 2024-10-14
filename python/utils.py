@@ -17,6 +17,11 @@ def get_airfoil_stl(airfoil: str) -> bytes:
     with open(path_, "rb") as f:
         return f.read()
 
+def get_airfoil_dat(airfoil: str) -> bytes:
+    path_ = folder_path + airfoil + ".dat"
+    with open(path_, "rb") as f:
+        return f.read()
+
 def get_airfoil_step(airfoil: str) -> bytes:
     path_ = folder_path + airfoil + ".dat.step"
     with open(path_, "rb") as f:
