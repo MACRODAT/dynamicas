@@ -27,7 +27,7 @@ const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
   const handleMenuChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setSelectedMenu(newValue);
-    dispatch(setSubmenus([newValue]) as any);
+    // dispatch(setSubmenus([newValue]) as any); //TOCHECK
     updateDescription(newValue);
   };
 

@@ -1,6 +1,8 @@
 // reducer.ts
 import { SET_MENU, SET_SUBMENUS, SET_OTHER_PARAMS, SET_THEME, ADD_SUBMENUS } from '../action';
 
+let historyManager: Map<string, string[]> = new Map<string, string[]>();
+
 export interface ApplicationState {
   menu: string;
   submenus: string[];
@@ -23,10 +25,12 @@ const initialState: ApplicationState = {
 const applicationReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case SET_MENU:
+      console.log(historyManager.get(state.menu))
       return {
         ...state,
+        submenus: historyManager.has(action.payload) ? 
+          historyManager.get(action.payload) as string[] : [""],
         menu: action.payload,
-        submenus: [""]
       };
 
     case SET_SUBMENUS:
@@ -45,6 +49,8 @@ const applicationReducer = (state = initialState, action: any) => {
       {
         state.submenus.push(action.payload);
       }
+      historyManager.set(state.menu, state.submenus);
+      console.log(historyManager.get(state.menu))
       return {
         ...state,
         submenus: state.submenus,

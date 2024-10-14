@@ -17,10 +17,10 @@ const MenuCreator: React.FC<MenuProps> = ({ onSelectMenu }) => {
     setActiveMenu(menu);
     onSelectMenu(menu);
 
-    if (menu.toUpperCase() == "GEOMETRY")
-    {
-      dispatch(addSubmenu("Airfoil", 0) as any);
-    }
+    // if (menu.toUpperCase() == "GEOMETRY")
+    // {
+    //   dispatch(addSubmenu("Airfoil", 0) as any);
+    // }
   };
 
   return (
