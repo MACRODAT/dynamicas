@@ -1,0 +1,195 @@
+$back-100: #060836;
+$back-200: #1a1d59e5;
+$back-300: #0f157ebe;
+$front-100: #f0f9f9;
+$front-200: #fafafa;
+$front-300: #d7d7d7;
+$front-400: #a5a5a5;
+$front-500: #757575;
+
+$shadow-100: #7a7a7ae4;
+
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.front-100 {
+	color: $front-100 !important;
+}
+.front-200 {
+	color: $front-200 !important;
+}
+.front-300 {
+	color: $front-300 !important;
+}
+.front-400 {
+	color: $front-400 !important;
+}
+.front-500 {
+	color: $front-500 !important;
+}
+.shadow-100 {
+	color: $shadow-100 !important;
+}
+.back-100 {
+	background-color: $back-100 !important;
+	color: $front-100;
+}
+.back-200 {
+	background-color: $back-200 !important;
+	color: $front-200;
+}
+.back-300 {
+	background-color: $back-300 !important;
+	color: $front-300;
+}
+
+.App {
+	height: 100vh;
+	overflow: hidden;
+	padding: 0 !important;
+
+	width: 100%;
+
+	display: grid;
+	grid:
+		"header" 30px
+		"main" 1fr
+		"footer" 30px
+		/ 1fr;
+	gap: 1px;
+	
+
+	.header {
+		grid-area: header; 
+		background-color: $back-100;
+		color: $front-100;
+
+		#logo
+		{
+			margin: 0;
+			margin-left: 1px;
+			margin-right: 10px;
+		}
+
+		#navdesc
+		{
+			display: inline;
+			font-style: italic;
+			background-color: $back-100;
+
+			color: $shadow-100;
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+	}
+	.main { 
+		grid-area: main;
+		overflow-y: auto;
+
+		.menus {
+			margin: 0; padding: 0;
+
+			.menu-item {
+				background-color: $back-100;
+				margin: 0px;
+				margin-top: 10px;
+				padding: 6px;
+				cursor: pointer;
+		
+				border-radius: 2px 2px;
+		
+				&:hover {
+					background-color: $back-200;
+				}
+			}
+		}
+	}
+	.footer {
+		color: $front-100;
+		background-color: $back-100;
+		grid-area: footer;
+		padding: 2px;
+		padding-left: 10px;
+	}
+
+	
+
+	
+}
+
+// When the .active class is applied to the .menu-item, it will use this style
+.menu-item.active {
+	background-color: $back-300 !important;
+}
+
+.main {
+	width: 100%;
+	// height: 100%;
+
+	display: flex;
+	gap: 0px;
+
+	.menus { 
+		flex-grow: 1; 
+		background-color: $back-200;
+		color: $front-200;
+		margin: 0; padding: 2px;
+	}
+	.submenus { 
+		flex-grow: 3; 
+		margin: 0; padding: 2px;
+		background-color: $back-300;
+		color: $front-300;
+		border-right: 4px solid $back-100;
+		max-width: 300px !important;
+
+		#submenu-container {
+			padding: 4px;
+			position: relative;
+			height: 99%;
+			scroll-behavior: smooth;
+			overflow-y: auto;
+		}
+	}
+	.content { 
+		margin: 0; padding: 2px;
+		flex-grow: 9; 
+		height: 100%;
+		overflow-y: auto;
+
+		#naca {
+			height: 80%;
+			border-radius: 4px 4px;
+			padding: 4px;
+
+			width: 90%;
+			margin: auto;
+
+			display: flex;
+			gap: 16px;
+			flex-wrap: wrap;
+			overflow-y: auto;
+
+			.airfoil-grid-container
+			{
+				color: $back-100 !important;
+			}
+		}
+	}
+}
+
+ul {
+  padding-left: 20px;
+}
+
+ul li {
+  margin-bottom: 8px;
+}
+
+.h-100 {
+	height: 100%;
+}

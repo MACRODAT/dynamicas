@@ -1,0 +1,74 @@
+point
+{
+	x: float
+	y: float
+	z: float
+}
+
+shape
+{
+	name: (enum: Box, Cone, Cylinder, Wing, Gear)
+	location: point
+	radius: float
+	length: float
+	thickness: float
+	NACA: string
+	chord length: float
+	wing span: float
+	leading edge function: array[float]
+	trailing edge function: array[float]
+}
+
+dynamicas->
+	structural ->
+		process ->
+			3D print (plastic) ->
+				set (boolean)
+				set nozzle diameter (float)
+				set printing speed (float)
+				set filament diameter (float)
+				set filling percent (int)
+			Joining (Fasteners) ->
+				set (boolean)
+				set method (enum: Rivet, Screw, Snap)
+			Joining (Adhesives) ->
+				set (boolean)
+		material ->
+			set (enum: Plastic PLA, Plastic ABS, Aluminum, Steel, Custom)
+			set custom density (float)
+	parameters ->
+		flight time ->
+			set margins (float)
+			set expected (float)
+		weight ->
+			set margins (float)
+			set expected (float)
+			set expected (float)
+		speed ->
+			set margins (float)
+			set expected (float)
+		airfoil ->
+			set type (enum: airfoil, wing, fixed wing, quadcopter)			
+	geometry ->
+		import geometry (array[point])
+		preview geometry (array[point])
+		
+		preview mesh (array[point])
+		list shapes (array[shape])
+		set mesh quality (int)
+
+		add box (shape)
+		add cone (shape)
+		add cylinder (shape)
+		add wing (shape)
+		add gear (shape)
+	results ->
+		preview flow (array[point])
+		list parameters (array[float])
+		
+application ->
+	set menu (string)
+	set submenus (array[string])
+	set other_params (dict<string, string>)
+	set theme (string)
+	

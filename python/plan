@@ -1,0 +1,12 @@
+/
+return Dynamicas Server
+
+/ping
+return PONG
+
+/listAirfoils
+return a list of airfoils using def list_airfoils() from utils.py
+
+/createAirfoil
+creates an airfoil
+returns True of False

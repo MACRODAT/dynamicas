@@ -1,0 +1,12 @@
+.layout {
+	width: 100%;
+  
+	display: grid;
+	grid:
+	  "sidebar body" 1fr
+	  / 400px 1fr;
+	gap: 8px;
+  }
+  
+.sidebar { grid-area: sidebar; }
+.body { grid-area: body; }
