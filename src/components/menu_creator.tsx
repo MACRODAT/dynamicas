@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { addSubmenu } from '../store/action';
+import { useDispatch } from 'react-redux';
 
 interface MenuProps {
   onSelectMenu: (menu: string) => void;
@@ -9,9 +11,16 @@ const MenuCreator: React.FC<MenuProps> = ({ onSelectMenu }) => {
 
   const menus = ['process', 'geometry', 'parameters', 'results'];
 
+  const dispatch = useDispatch();
+
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
     onSelectMenu(menu);
+
+    if (menu.toUpperCase() == "GEOMETRY")
+    {
+      dispatch(addSubmenu("Airfoil", 0));
+    }
   };
 
   return (

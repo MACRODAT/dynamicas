@@ -167,40 +167,40 @@ const SubmenuCreator: React.FC<SubmenuProps> = ({ menu }) => {
         );
 	};
 
-    const renderGeometryOptions = () => {
-        return (
-          <div className="p-3">
-            <Form.Group  className='my-3' controlId="geometryType">
-              <Form.Label>Select Geometry Type</Form.Label>
-              <Form.Control as="select" defaultValue="Airfoil" onChange={handleGeometryChange}>
-                <option value="Airfoil">Airfoil</option>
-                <option value="Fixed Wing">Fixed Wing</option>
-                <option value="Quadcopter">Quadcopter</option>
-                <option value="Custom">Custom</option>
-              </Form.Control>
-              <Form.Text className=" front-400">
-                Choose the type of geometry to import or preview for your UAV. Options include predefined geometries like airfoil and fixed wing, or custom geometries.
-              </Form.Text>
-            </Form.Group>
+  const renderGeometryOptions = () => {
+      return (
+        <div className="p-3">
+          <Form.Group  className='my-3' controlId="geometryType">
+            <Form.Label>Select Geometry Type</Form.Label>
+            <Form.Control as="select" defaultValue="Airfoil" onChange={handleGeometryChange}>
+              <option value="Airfoil">Airfoil</option>
+              <option value="Fixed Wing">Fixed Wing</option>
+              <option value="Quadcopter">Quadcopter</option>
+              <option value="Custom">Custom</option>
+            </Form.Control>
+            <Form.Text className=" front-400">
+              Choose the type of geometry to import or preview for your UAV. Options include predefined geometries like airfoil and fixed wing, or custom geometries.
+            </Form.Text>
+          </Form.Group>
 
-            <Form.Group  className='my-3' controlId="importGeometry">
-              <Form.Label>Import Geometry</Form.Label>
-              <Form.Control type="file" />
-              <Form.Text className=" front-400">
-                Upload a file containing the 3D geometry of your UAV. This will allow you to preview and manipulate the geometry.
-              </Form.Text>
-            </Form.Group>
+          <Form.Group  className='my-3' controlId="importGeometry">
+            <Form.Label>Import Geometry</Form.Label>
+            <Form.Control type="file" />
+            <Form.Text className=" front-400">
+              Upload a file containing the 3D geometry of your UAV. This will allow you to preview and manipulate the geometry.
+            </Form.Text>
+          </Form.Group>
 
-            <Form.Group  className='my-3' controlId="meshQuality">
-              <Form.Label>Mesh Quality</Form.Label>
-              <Form.Control type="number" placeholder="5" defaultValue={5} />
-              <Form.Text className=" front-400">
-                Mesh quality determines the level of detail in the 3D model. Higher values provide more accuracy but may slow down rendering.
-              </Form.Text>
-            </Form.Group>
-          </div>
-        );
-    }
+          <Form.Group  className='my-3' controlId="meshQuality">
+            <Form.Label>Mesh Quality</Form.Label>
+            <Form.Control type="number" placeholder="5" defaultValue={5} />
+            <Form.Text className=" front-400">
+              Mesh quality determines the level of detail in the 3D model. Higher values provide more accuracy but may slow down rendering.
+            </Form.Text>
+          </Form.Group>
+        </div>
+      );
+  }
 
   const menuOptions = [
     '3D print',
