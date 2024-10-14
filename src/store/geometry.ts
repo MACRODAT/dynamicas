@@ -6,6 +6,8 @@ export const PREVIEW_MESH = 'PREVIEW_MESH';
 export const LIST_SHAPES = 'LIST_SHAPES';
 export const SET_MESH_QUALITY = 'SET_MESH_QUALITY';
 export const ADD_SHAPE = 'ADD_SHAPE';
+export const SET_GEOMETRY_TYPE = 'SET_GEOMETRY_TYPE';
+export const SET_GEOMETRY_CLASS = 'SET_GEOMETRY_CLASS';
 
 // Action interfaces
 interface ImportGeometryAction {
@@ -38,10 +40,22 @@ interface AddShapeAction {
   payload: Shape;
 }
 
+interface SetGeometryType {
+  type: typeof SET_GEOMETRY_TYPE;
+  payload: string;
+}
+
+interface SetGeometryClass {
+  type: typeof SET_GEOMETRY_CLASS;
+  payload: string;
+}
+
 export type GeometryActions =
   | ImportGeometryAction
   | PreviewGeometryAction
   | PreviewMeshAction
   | ListShapesAction
   | SetMeshQualityAction
-  | AddShapeAction;
+  | AddShapeAction
+  | SetGeometryType
+  | SetGeometryClass ;

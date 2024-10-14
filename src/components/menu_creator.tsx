@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addSubmenu } from '../store/action';
+import { addSubmenu } from '../store/logic/actionLogic';
 import { useDispatch } from 'react-redux';
 
 interface MenuProps {
@@ -19,7 +19,7 @@ const MenuCreator: React.FC<MenuProps> = ({ onSelectMenu }) => {
 
     if (menu.toUpperCase() == "GEOMETRY")
     {
-      dispatch(addSubmenu("Airfoil", 0));
+      dispatch(addSubmenu("Airfoil", 0) as any);
     }
   };
 

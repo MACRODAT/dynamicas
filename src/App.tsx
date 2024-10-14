@@ -4,7 +4,7 @@ import logo from './res/symbol_nobg.png';
 import MenuCreator from './components/menu_creator';
 import SubmenuCreator from './components/submenu_creator';
 import { connect, useDispatch } from 'react-redux';
-import { setMenu } from './store/action';
+import { setMenu } from './store/logic/actionLogic';
 import { ApplicationState } from './store/reducers/action_reducer';
 import Content from './components/Content';
 import { toUpperList } from './helpers';
@@ -28,7 +28,7 @@ const App: React.FC<ApplicationState> = (state) => {
 
   const handleMenuSelect = (menu: string) => {
     setSelectedMenu(menu);
-    dispatch(setMenu(menu));
+    dispatch(setMenu(menu) as any);
   };
 
 

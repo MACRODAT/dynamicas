@@ -1,34 +1,46 @@
 import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { addSubmenu, setSubmenus } from '../store/action';
-import { useDispatch } from 'react-redux';
+import { addSubmenu, setGeometryType, setSubmenus } from '../store/logic/actionLogic';
+import { connect, useDispatch } from 'react-redux';
+import { GeometryState } from '../store/reducers/geometry_reducer';
+import { geometrySetClass } from '../store/logic/geometryLogic';
 
 interface SubmenuProps {
   menu: string;
 }
 
-const SubmenuCreator: React.FC<SubmenuProps> = ({ menu }) => {
+const mapStateToProps = (state : any, ownProps: any) => {
+  const geoState: GeometryState = state.geometry;
+	return {geometrystate: geoState, ownProps: ownProps};
+}
+
+const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
   const [selectedMenu, setSelectedMenu] = useState<string>('3D print');
   const [description, setDescription] = useState<string>('');
   const [geometryImportType, setGeometryImportType] = useState<string>('provided');
+
+  const {menu} = state.ownProps;
+  const geometrystate: GeometryState = state.geometrystate;
 
   const dispatch = useDispatch();
 
   const handleMenuChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setSelectedMenu(newValue);
-    dispatch(setSubmenus([newValue]));
+    dispatch(setSubmenus([newValue]) as any);
     updateDescription(newValue);
   };
 
   const handleGeometryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const val = event.target.value;
-    dispatch(addSubmenu(val, 0));
+    dispatch(addSubmenu(val, 0) as any);
+    dispatch(geometrySetClass(val) as any);
   }
 
   const handleGeometryImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGeometryImportType(event.target.value)
-    dispatch(addSubmenu(event.target.value, 1))
+    dispatch(addSubmenu(event.target.value, 1) as any)
+    dispatch(setGeometryType(event.target.value) as any);
   }
 
   const updateDescription = (menuItem: string) => {
@@ -133,7 +145,24 @@ const SubmenuCreator: React.FC<SubmenuProps> = ({ menu }) => {
 	};
   };
 
-  	const renderParametersOptions = () => {
+  const renderParametersOptions = () => {
+        if (geometrystate.selectedGeometry == "provided")
+        {
+          return (
+            <div className='p-1'>
+              <Form.Group className='my-3'>
+                <Form.Label>
+                  Set simulation type:
+                </Form.Label>
+                <Form.Control as='select' defaultValue={''}>
+                  <option value="2D">2D simulation</option>
+                  <option value="3D">3D simulation</option>
+                </Form.Control>
+              </Form.Group>
+            </div>
+          )
+        }
+
         return (
           <div className="p-1">
             <Form.Group  className='my-3' controlId="flightTimeMargin">
@@ -179,7 +208,8 @@ const SubmenuCreator: React.FC<SubmenuProps> = ({ menu }) => {
         <div className="p-3">
           <Form.Group  className='my-3' controlId="geometryType">
             <Form.Label>Select Geometry Type</Form.Label>
-            <Form.Control as="select" defaultValue="Airfoil" onChange={handleGeometryChange}>
+            <Form.Control as="select" defaultValue={geometrystate.geometryType} onChange={handleGeometryChange}>
+              <option value="">Please choose</option>
               <option value="Airfoil">Airfoil</option>
               <option value="Fixed Wing">Fixed Wing</option>
               <option value="Quadcopter">Quadcopter</option>
@@ -192,7 +222,7 @@ const SubmenuCreator: React.FC<SubmenuProps> = ({ menu }) => {
           
           <Form.Group className='my-3' controlId="geometryImport">
             <Form.Label>Where do you want your geometry from?</Form.Label>
-            <Form.Control as="select" defaultValue="NACA airfoils" onChange={handleGeometryImport}>
+            <Form.Control as="select" defaultValue={geometrystate.selectedGeometry} onChange={handleGeometryImport}>
               <option value="provided">NACA airfoils</option>
               <option value="ownGenerator">My own (Using generator)</option>
               <option value="ownCustom">My own (Import coordinates)</option>
@@ -310,4 +340,4 @@ const SubmenuCreator: React.FC<SubmenuProps> = ({ menu }) => {
   );
 };
 
-export default SubmenuCreator;
+export default connect(mapStateToProps) (SubmenuCreator);

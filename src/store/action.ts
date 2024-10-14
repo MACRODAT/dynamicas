@@ -1,3 +1,5 @@
+import { SET_GEOMETRY_TYPE } from "./geometry";
+
 // actions.ts
 export const SET_MENU = 'SET_MENU';
 export const SET_SUBMENUS = 'SET_SUBMENUS';
@@ -5,34 +7,43 @@ export const ADD_SUBMENUS = 'ADD_SUBMENUS';
 export const SET_OTHER_PARAMS = 'SET_OTHER_PARAMS';
 export const SET_THEME = 'SET_THEME';
 
+// Action interfaces
+interface SetMenuAction {
+  type: typeof SET_MENU;
+  payload: string;
+}
 
-// Action to set the current menu
-export const setMenu = (menu: string) => ({
-  type: SET_MENU,
-  payload: menu,
-});
+interface SetGeometryTypeAction {
+  type: typeof SET_GEOMETRY_TYPE;
+  payload: string;
+}
 
-// Action to set the submenus
-export const setSubmenus = (submenus: string[]) => ({
-  type: SET_SUBMENUS,
-  payload: submenus,
-});
+interface SetSubmenusAction {
+  type: typeof SET_SUBMENUS;
+  payload: string[];
+}
 
-// Action to set the submenus
-export const addSubmenu = (submenu: string, level: number) => ({
-  type: ADD_SUBMENUS,
-  payload: submenu,
-  level: level,
-});
+interface AddSubmenuAction {
+  type: typeof ADD_SUBMENUS;
+  payload: string;
+  level: number;
+}
 
-// Action to set other parameters (key-value pairs)
-export const setOtherParams = (otherParams: { [key: string]: string }) => ({
-  type: SET_OTHER_PARAMS,
-  payload: otherParams,
-});
+interface SetOtherParamsAction {
+  type: typeof SET_OTHER_PARAMS;
+  payload: { [key: string]: string };
+}
 
-// Action to set the theme
-export const setTheme = (theme: string) => ({
-  type: SET_THEME,
-  payload: theme,
-});
+interface SetThemeAction {
+  type: typeof SET_THEME;
+  payload: string;
+}
+
+// Union of all action types
+export type AppActions =
+  | SetMenuAction
+  | SetGeometryTypeAction
+  | SetSubmenusAction
+  | AddSubmenuAction
+  | SetOtherParamsAction
+  | SetThemeAction;

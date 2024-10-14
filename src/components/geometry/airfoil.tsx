@@ -6,7 +6,6 @@ import './airfoil.scss'
 import AirfoilPlot from "../airfoilPlot";
 
 const mapStateToProps = (state : any) => {
-
 	return state;
 }
 

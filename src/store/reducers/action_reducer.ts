@@ -26,6 +26,7 @@ const applicationReducer = (state = initialState, action: any) => {
       return {
         ...state,
         menu: action.payload,
+        submenus: [""]
       };
 
     case SET_SUBMENUS:
@@ -35,7 +36,15 @@ const applicationReducer = (state = initialState, action: any) => {
       };
     
     case ADD_SUBMENUS:
-      state.submenus[action.level] = (action.payload);
+      if (state.submenus.length >= action.level){
+
+        state.submenus[action.level] = (action.payload);
+        state.submenus = state.submenus.slice(0, action.level + 1);
+      }
+      else
+      {
+        state.submenus.push(action.payload);
+      }
       return {
         ...state,
         submenus: state.submenus,
