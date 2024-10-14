@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { toUpper, toUpperList } from "../../helpers";
 import NACADrawer from "./drawer";
 import './airfoil.scss'
-import { relative } from "path";
 
 const mapStateToProps = (state : any) => {
 
@@ -11,6 +10,8 @@ const mapStateToProps = (state : any) => {
 }
 
 const Airfoil : React.FC = (state : any) => {
+
+    const [selectedAirfoil, setSelectedAirfoil] = useState("");
 
 	const selectedMenu = toUpper(state.application.menu);
 	const selectedSubMenus = toUpperList(state.application.submenus).join('> ');
@@ -35,7 +36,6 @@ const Airfoil : React.FC = (state : any) => {
                     
 					const screenshotBlob = await screenshotResponse.blob();
                     const screenshotUrl = URL.createObjectURL(screenshotBlob);
-					console.log(screenshotDescRes.description)
                     return { name: airfoil, screenshot: screenshotUrl, description: screenshotDescRes.description};
                 }));
                 setAirfoils(airfoilData);
@@ -63,16 +63,23 @@ const Airfoil : React.FC = (state : any) => {
             <h3>Airfoil (NACA)</h3>
             <h5>Please select an airfoil from the NACA profiles below:</h5>
             <div className="back-100" id="naca">
-                <div className="airfoil-grid-container">
+                <div className="airfoil-grid-container p-2">
                     {airfoils.map((airfoil) => (
-                        <div className="airfoil-grid-item" 
+                        <div 
+                            className = {
+                                (selectedAirfoil == airfoil.name) ?
+                                    "airfoil-grid-item m-2 selected":
+                                    "airfoil-grid-item m-2"
+                            }
 							style={{
 								backgroundImage: `url(${airfoil.screenshot})`,
-								backgroundSize: "contain", // Cover the entire div
+								backgroundSize: "cover", // Cover the entire div
 								backgroundPosition: "center", // Center the image
 								border: "1px solid #ccc", // Optional: border for visibility
 							}}
-							key={airfoil.name}>
+							key={airfoil.name}
+                            onClick={() => {setSelectedAirfoil(airfoil.name); console.log(airfoil)}}
+                            >
                             <h6>{airfoil.name}</h6>
                             <p>{airfoil.description}</p>
                             {/* <img 
