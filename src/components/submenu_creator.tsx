@@ -10,6 +10,8 @@ interface SubmenuProps {
 const SubmenuCreator: React.FC<SubmenuProps> = ({ menu }) => {
   const [selectedMenu, setSelectedMenu] = useState<string>('3D print');
   const [description, setDescription] = useState<string>('');
+  const [geometryImportType, setGeometryImportType] = useState<string>('provided');
+
   const dispatch = useDispatch();
 
   const handleMenuChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +24,11 @@ const SubmenuCreator: React.FC<SubmenuProps> = ({ menu }) => {
   const handleGeometryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const val = event.target.value;
     dispatch(addSubmenu(val, 0));
+  }
+
+  const handleGeometryImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setGeometryImportType(event.target.value)
+    dispatch(addSubmenu(event.target.value, 1))
   }
 
   const updateDescription = (menuItem: string) => {
@@ -182,22 +189,54 @@ const SubmenuCreator: React.FC<SubmenuProps> = ({ menu }) => {
               Choose the type of geometry to import or preview for your UAV. Options include predefined geometries like airfoil and fixed wing, or custom geometries.
             </Form.Text>
           </Form.Group>
-
-          <Form.Group  className='my-3' controlId="importGeometry">
-            <Form.Label>Import Geometry</Form.Label>
-            <Form.Control type="file" />
-            <Form.Text className=" front-400">
-              Upload a file containing the 3D geometry of your UAV. This will allow you to preview and manipulate the geometry.
-            </Form.Text>
+          
+          <Form.Group className='my-3' controlId="geometryImport">
+            <Form.Label>Where do you want your geometry from?</Form.Label>
+            <Form.Control as="select" defaultValue="NACA airfoils" onChange={handleGeometryImport}>
+              <option value="provided">NACA airfoils</option>
+              <option value="ownGenerator">My own (Using generator)</option>
+              <option value="ownCustom">My own (Import coordinates)</option>
+            </Form.Control>
           </Form.Group>
-
-          <Form.Group  className='my-3' controlId="meshQuality">
-            <Form.Label>Mesh Quality</Form.Label>
-            <Form.Control type="number" placeholder="5" defaultValue={5} />
-            <Form.Text className=" front-400">
-              Mesh quality determines the level of detail in the 3D model. Higher values provide more accuracy but may slow down rendering.
-            </Form.Text>
-          </Form.Group>
+          {
+            (geometryImportType == "provided") ? 
+            (
+              <Form.Group  className='my-3' controlId="importGeometry">
+                <Form.Label>Select one of the preset NACA airfoils to continue.</Form.Label>
+              </Form.Group>
+            ) : <></>
+          }
+          {
+            (geometryImportType == "ownGenerator") ? 
+            (
+              <Form.Group  className='my-3' controlId="importGeometry">
+                <Form.Label>Please use the NACA airfoil generator to select an appropriate geometry.</Form.Label>
+              </Form.Group>
+            ) : <></>
+          }
+          {
+            (geometryImportType == "ownCustom") ? 
+            (
+              <>
+                <Form.Group  className='my-3' controlId="importGeometry">
+                  <Form.Label>Import Geometry</Form.Label>
+                  <Form.Control type="file" />
+                  <Form.Text className=" front-400">
+                    Upload a file containing the 3D geometry of your UAV. This will allow you to preview and manipulate the geometry.
+                  </Form.Text>
+                </Form.Group>
+                <Form.Group  className='my-3' controlId="meshQuality">
+                  <Form.Label>Mesh Quality</Form.Label>
+                  <Form.Control type="number" placeholder="5" defaultValue={5} />
+                  <Form.Text className=" front-400">
+                    Mesh quality determines the level of detail in the 3D model. Higher values provide more accuracy but may slow down rendering.
+                  </Form.Text>
+                </Form.Group>
+              </>
+            ) : <></>
+          }
+          
+          
         </div>
       );
   }
