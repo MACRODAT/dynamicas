@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { toUpper, toUpperList } from "../../helpers";
-import NACADrawer from "./drawer";
+import { BsCheckLg } from "react-icons/bs";
 import './airfoil.scss'
 
 const mapStateToProps = (state : any) => {
@@ -11,7 +11,8 @@ const mapStateToProps = (state : any) => {
 
 const Airfoil : React.FC = (state : any) => {
 
-    const [selectedAirfoil, setSelectedAirfoil] = useState("");
+    const [selectedAirfoil, setSelectedAirfoil] = useState<{name: string, screenshot: string, description: string}>
+            ({name: "", screenshot: "", description: ""});
 
 	const selectedMenu = toUpper(state.application.menu);
 	const selectedSubMenus = toUpperList(state.application.submenus).join('> ');
@@ -32,10 +33,11 @@ const Airfoil : React.FC = (state : any) => {
                 const data = await response.json();
                 const airfoilData = await Promise.all(data.map(async (airfoil: string) => {
 					const screenshotResponse= await fetch(`http://127.0.0.1:5000/airfoil/${airfoil}/screenshot`);
-					const screenshotDescRes: any = (await fetch(`http://127.0.0.1:5000/airfoil/${airfoil}/description`)).json();
+					const screenshotDescRes: any = await (await fetch(`http://127.0.0.1:5000/airfoil/${airfoil}/description`)).json();
                     
 					const screenshotBlob = await screenshotResponse.blob();
                     const screenshotUrl = URL.createObjectURL(screenshotBlob);
+
                     return { name: airfoil, screenshot: screenshotUrl, description: screenshotDescRes.description};
                 }));
                 setAirfoils(airfoilData);
@@ -67,7 +69,7 @@ const Airfoil : React.FC = (state : any) => {
                     {airfoils.map((airfoil) => (
                         <div 
                             className = {
-                                (selectedAirfoil == airfoil.name) ?
+                                (selectedAirfoil.name == airfoil.name) ?
                                     "airfoil-grid-item m-2 selected":
                                     "airfoil-grid-item m-2"
                             }
@@ -78,15 +80,28 @@ const Airfoil : React.FC = (state : any) => {
 								border: "1px solid #ccc", // Optional: border for visibility
 							}}
 							key={airfoil.name}
-                            onClick={() => {setSelectedAirfoil(airfoil.name); console.log(airfoil)}}
+                            onClick={() => {setSelectedAirfoil(airfoil)}}
                             >
-                            <h6>{airfoil.name}</h6>
-                            <p>{airfoil.description}</p>
-                            {/* <img 
-								src={airfoil.screenshot} 
-								alt={`${airfoil.name} screenshot`}/> */}
+                            {
+                                (selectedAirfoil.name == airfoil.name) ?
+                                <h6> <BsCheckLg /> {airfoil.name}</h6>
+                                :
+                                <h6>{airfoil.name}</h6>
+                            }
+                            {/* <p>{airfoil.description}</p> */}
                         </div>
                     ))}
+                </div>
+                <div className="back-200" id="airfoilSideBar">
+                    <h4>Airfoil information ({selectedAirfoil.name})</h4>
+                    <hr />
+                    <h5>Description:</h5>
+                    <p>
+                        {
+                            selectedAirfoil.description
+                        }
+                    </p>
+                    <h5>Plot of the airfoil:</h5>
                 </div>
             </div>
         </>
