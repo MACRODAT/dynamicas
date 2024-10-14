@@ -7,7 +7,6 @@ It is a project aimed at providing tools for non-engineers to design and build t
 
 Dynamicas is intended as a general UAV design tool for hobbyists who may not possess the requisite acknowledge or tools to create their own designs. Today, we see drones produced in massive numbers, often by hobbyists who lack the acknowledge and only proceed to assemble parts. The aim here is to let this audience master some of the design aspects to achieve its intended usage. 
 
-Dynamicas is intended as a general UAV design tool for hobbyists who may not possess the requisite acknowledge or tools to create their own designs. Today, we see drones produced in massive numbers, often by hobbyists who lack the acknowledge and only proceed to assemble parts. The aim here is to let this audience master some of the design aspects to achieve its intended usage. 
 
 ### Description
 
