@@ -8,12 +8,13 @@ interface MenuProps {
   onSelectMenu: (menu: string) => void;
 }
 
-let mapStateToProps = (state: any) => {
+let mapStateToProps = (state: any, ownProps: any) => {
   let geometryState : GeometryState = state.geometry;
   let actionState : ApplicationState = state.action;
   return {
     geo: geometryState,
-    action: actionState
+    action: actionState,
+    ownProps: ownProps
   }
 }
 

@@ -48,7 +48,7 @@ function parseDatFile(content: string): { x: number; y: number }[] {
     return coordinates;
 }
 
-let allInterfaces = (state: any) => {
+let allInterfaces = (state: any, ownProps: any) => {
 	let geo : GeometryState = state.geometry;
 	let action : ApplicationState = state.action;
 	let process : ProcessState = state.geometry;
@@ -56,6 +56,17 @@ let allInterfaces = (state: any) => {
 	let material : MaterialState = state.material;
 	let params : ParametersState = state.parameters;
 	let res : ResultsState = state.results;
+	
+	return {
+		geo: geo,
+		action: action,
+		process: process,
+		join: join,
+		material: material,
+		params: params,
+		res: res,
+		ownProps: ownProps,
+	}
 }
   
 
