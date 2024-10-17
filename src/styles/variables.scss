@@ -1,0 +1,54 @@
+$back-100: #060836;
+$back-200: #1a1d59e5;
+$back-300: #0f157ebe;
+$green-100: #0f7e18be;
+$front-100: #f0f9f9;
+$front-200: #fafafa;
+$front-300: #d7d7d7;
+$front-400: #a5a5a5;
+$front-500: #757575;
+
+$shadow-100: #7a7a7ae4;
+
+:root {
+	--back-color: #f0f0f0;
+	--text-color: #333333;
+}
+
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.front-100 {
+	color: $front-100 !important;
+}
+.front-200 {
+	color: $front-200 !important;
+}
+.front-300 {
+	color: $front-300 !important;
+}
+.front-400 {
+	color: $front-400 !important;
+}
+.front-500 {
+	color: $front-500 !important;
+}
+.shadow-100 {
+	color: $shadow-100 !important;
+}
+.back-100 {
+	background-color: $back-100 !important;
+	color: $front-100;
+}
+.back-200 {
+	background-color: $back-200 !important;
+	color: $front-200;
+}
+.back-300 {
+	background-color: $back-300 !important;
+	color: $front-300;
+}

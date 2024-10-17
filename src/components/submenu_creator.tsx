@@ -29,7 +29,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 
   const handleProcessChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    // setselectedProcess(newValue);
+    setselectedProcess(newValue);
     dispatch(processSetProcess(newValue) as any);
     // dispatch(setSubmenus([newValue]) as any); //TOCHECK
     updateDescription(newValue);
