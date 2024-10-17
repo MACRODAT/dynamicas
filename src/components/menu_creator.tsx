@@ -8,7 +8,8 @@ interface MenuProps {
   onSelectMenu: (menu: string) => void;
 }
 
-let mapStateToProps = (state: any, ownProps: any) => {
+let mapStateToProps = (state: any, ownProps: any): 
+                      {geo: GeometryState, action: ApplicationState, ownProps: any} => {
   let geometryState : GeometryState = state.geometry;
   let actionState : ApplicationState = state.action;
   return {
@@ -18,12 +19,13 @@ let mapStateToProps = (state: any, ownProps: any) => {
   }
 }
 
-const MenuCreator: React.FC<MenuProps> = ({ onSelectMenu }) => {
+const MenuCreator: React.FC<MenuProps> = (state) => {
   const [activeMenu, setActiveMenu] = useState<string>('');
 
   const menus = ['process', 'geometry', 'parameters', 'results'];
 
   const dispatch = useDispatch();
+  let onSelectMenu = state.ownProps.onSelectMenu;
 
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
