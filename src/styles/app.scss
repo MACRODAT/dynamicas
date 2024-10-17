@@ -1,6 +1,7 @@
 $back-100: #060836;
 $back-200: #1a1d59e5;
 $back-300: #0f157ebe;
+$green-100: #0f7e18be;
 $front-100: #f0f9f9;
 $front-200: #fafafa;
 $front-300: #d7d7d7;
@@ -124,6 +125,10 @@ body,
 // When the .active class is applied to the .menu-item, it will use this style
 .menu-item.active {
 	background-color: $back-300 !important;
+}
+
+.menu-item.done {
+	background-color: $green-100 !important;
 }
 
 .main {

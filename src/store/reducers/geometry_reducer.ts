@@ -34,11 +34,17 @@ export function geometryReducer(
 	  case IMPORT_GEOMETRY:
 		return { ...state, done:true, importedGeometry: action.payload };
 	  case SET_GEOMETRY_AIRFOIL_NAME:
-		return { ...state, done:true, geometrySelectedAirfoil: action.payload };
+		if (action.payload.name != "" && action.payload.description != "")
+		{
+			return { ...state, done:true, geometrySelectedAirfoil: action.payload };
+		}else{
+			return { ...state, done:false, geometrySelectedAirfoil: action.payload };
+		}
 	  case SET_GEOMETRY_TYPE:
 		return { ...state, done: false, selectedGeometry: action.payload};
 	  case SET_GEOMETRY_CLASS:
-		return { ...state, geometryType: action.payload};
+		console.log(state.done);
+		return { ...state, done: false, geometryType: action.payload};
 	  case PREVIEW_GEOMETRY:
 		return { ...state, previewedGeometry: action.payload };
 	  case PREVIEW_MESH:

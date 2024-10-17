@@ -26,8 +26,6 @@ let mapStateToProps = (state: any, ownProps: any):
 const MenuCreator: React.FC<Stator> = (state: Stator) => {
   const [activeMenu, setActiveMenu] = useState<string>('');
 
-  const [geoDone, setGeoDone] = useState(state.geo.done);
-
   const menus = ['process', 'geometry', 'parameters', 'results'];
 
   const dispatch = useDispatch();
@@ -43,25 +41,41 @@ const MenuCreator: React.FC<Stator> = (state: Stator) => {
     // }
   };
 
+  const getMenuState = (menu: string): boolean => {
+    switch (menu)
+    {
+      case "geometry":
+        return state.geo.done
+      default:
+        return false
+    }
+  }
+
+  let moveNext: boolean = true;
+
   return (
     <div>
-      {menus.map((menu) => (
+      {menus.map((menu) => ( moveNext ? 
         <div
           key={menu}
-          className={`menu-item ${activeMenu === menu ? 'active' : ''}`}
+          className={`menu-item ${activeMenu === menu ? 'active' : ''} ${getMenuState(menu) ? " done" : ""}`}
           onClick={() => handleMenuClick(menu)}
         >
-          {
-            geoDone ? 
-              <CiEdit className='mx-2' />
-            :
-              <MdOutlineDownloadDone className='mx-2' />
-          }
-          {menu.charAt(0).toUpperCase() + menu.slice(1)}
-        </div>
+          
+            <>
+                {
+                  getMenuState(menu) ? 
+                  <MdOutlineDownloadDone className='mx-2' />
+                  :
+                  <CiEdit className='mx-2' />
+                }
+                {menu.charAt(0).toUpperCase() + menu.slice(1)}
+            </>
+          {moveNext = getMenuState(menu)}
+        </div> : ""
       ))}
     </div>
-  );
+  )
 };
 
 export default connect(mapStateToProps) (MenuCreator);

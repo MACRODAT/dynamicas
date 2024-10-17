@@ -16,7 +16,7 @@ const mapStateToProps = (state : any, ownProps: any) => {
 }
 
 const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
-  const [selectedMenu, setSelectedMenu] = useState<string>('3D print');
+  const [selectedProcess, setselectedProcess] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [geometryImportType, setGeometryImportType] = useState<string>('provided');
 
@@ -25,9 +25,9 @@ const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
 
   const dispatch = useDispatch();
 
-  const handleMenuChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProcessChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    setSelectedMenu(newValue);
+    setselectedProcess(newValue);
     // dispatch(setSubmenus([newValue]) as any); //TOCHECK
     updateDescription(newValue);
   };
@@ -71,7 +71,7 @@ const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
   };
 
   const renderProcessSubmenuOptions = () => {
-    switch (selectedMenu) {
+    switch (selectedProcess) {
       case '3D print':
         return (
           <div className="p-1">
@@ -282,11 +282,10 @@ const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
   }
 
   const menuOptions = [
+    '',
     '3D print',
     'Joining (Fasteners)',
     'Joining (Adhesives)',
-    // 'Flight Parameters',
-    // 'Geometry',
   ];
 
   const renderMainMenus = () => {
@@ -297,12 +296,12 @@ const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
 				<>
 					<Form.Group  className='my-3' controlId="menuSelection">
 						<Form.Label>What's your manufacturing process?</Form.Label>
-						<Form.Control as="select" value={selectedMenu} onChange={handleMenuChange}>
-						{menuOptions.map((menuOption) => (
-							<option key={menuOption} value={menuOption}>
-							{menuOption}
-							</option>
-						))}
+						<Form.Control as="select" value={selectedProcess} onChange={handleProcessChange}>
+              {menuOptions.map((menuOption) => (
+                <option key={menuOption} value={menuOption}>
+                {menuOption}
+                </option>
+              ))}
 						</Form.Control>
 					</Form.Group>
 				
