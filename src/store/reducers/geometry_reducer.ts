@@ -11,6 +11,7 @@ export interface GeometryState {
 	previewedMesh: Point[];
 	shapes: Shape[];
 	meshQuality: number;
+	done: boolean;
 }
 
 const initialGeometryState: GeometryState = {
@@ -22,6 +23,7 @@ const initialGeometryState: GeometryState = {
 	previewedMesh: [],
 	shapes: [],
 	meshQuality: 0,
+	done: false,
 };
   
 export function geometryReducer(
@@ -30,9 +32,9 @@ export function geometryReducer(
   ): GeometryState {
 	switch (action.type) {
 	  case IMPORT_GEOMETRY:
-		return { ...state, importedGeometry: action.payload };
+		return { ...state, done:true, importedGeometry: action.payload };
 	  case SET_GEOMETRY_AIRFOIL_NAME:
-		return { ...state, geometrySelectedAirfoil: action.payload };
+		return { ...state, done:true, geometrySelectedAirfoil: action.payload };
 	  case SET_GEOMETRY_TYPE:
 		return { ...state, selectedGeometry: action.payload};
 	  case SET_GEOMETRY_CLASS:

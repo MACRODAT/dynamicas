@@ -1,7 +1,7 @@
 import { MaterialType } from "../../types";
 import { MaterialActions, SET_CUSTOM_DENSITY, SET_MATERIAL } from "../material";
 
-interface MaterialState {
+export interface MaterialState {
 	material: MaterialType;
 	customDensity: number;
   }

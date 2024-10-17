@@ -1,7 +1,7 @@
 import { JoiningMethod } from "../../types";
 import { JoiningFastenersActions, SET_FASTENING_METHOD, SET_JOINING_FASTENERS } from "../joining_fasteners";
 
-interface JoiningFastenersState {
+export interface JoiningFastenersState {
 	fasteners: boolean;
 	method: JoiningMethod;
   }

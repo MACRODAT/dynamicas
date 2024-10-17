@@ -1,7 +1,7 @@
 import { Point } from "../../types";
 import { LIST_PARAMETERS, PREVIEW_FLOW, ResultsActions } from "../results";
 
-interface ResultsState {
+export interface ResultsState {
 	flowPreview: Point[];
 	parameters: number[];
   }

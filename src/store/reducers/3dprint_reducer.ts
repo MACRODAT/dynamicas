@@ -1,6 +1,6 @@
 import { ProcessActions, SET_3D_PRINT, SET_FILAMENT_DIAMETER, SET_FILLING_PERCENT, SET_NOZZLE_DIAMETER, SET_PRINTING_SPEED } from "../3dprint";
 
-interface ProcessState {
+export interface ProcessState {
 	printing: boolean;
 	nozzleDiameter: number;
 	printingSpeed: number;

@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { addSubmenu } from '../store/logic/actionLogic';
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
+import { GeometryState } from '../store/reducers/geometry_reducer';
+import { ApplicationState } from '../store/reducers/action_reducer';
 
 interface MenuProps {
   onSelectMenu: (menu: string) => void;
+}
+
+let mapStateToProps = (state: any) => {
+  let geometryState : GeometryState = state.geometry;
+  let actionState : ApplicationState = state.action;
+  return {
+    geo: geometryState,
+    action: actionState
+  }
 }
 
 const MenuCreator: React.FC<MenuProps> = ({ onSelectMenu }) => {
@@ -38,4 +49,4 @@ const MenuCreator: React.FC<MenuProps> = ({ onSelectMenu }) => {
   );
 };
 
-export default MenuCreator;
+export default connect(mapStateToProps) (MenuCreator);

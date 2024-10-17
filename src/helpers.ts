@@ -1,3 +1,11 @@
+import { ProcessState } from "./store/reducers/3dprint_reducer";
+import { ApplicationState } from "./store/reducers/action_reducer";
+import { GeometryState } from "./store/reducers/geometry_reducer";
+import { JoiningFastenersState } from "./store/reducers/joining_reducer";
+import { MaterialState } from "./store/reducers/material_reducer";
+import { ParametersState } from "./store/reducers/parameters_reducer";
+import { ResultsState } from "./store/reducers/results_reducer";
+
 const toUpper = (s : string) => {
 	if (s == undefined)
 	{
@@ -39,11 +47,21 @@ function parseDatFile(content: string): { x: number; y: number }[] {
 
     return coordinates;
 }
+
+let allInterfaces = (state: any) => {
+	let geo : GeometryState = state.geometry;
+	let action : ApplicationState = state.action;
+	let process : ProcessState = state.geometry;
+	let join : JoiningFastenersState = state.JoiningFasteners;
+	let material : MaterialState = state.material;
+	let params : ParametersState = state.parameters;
+	let res : ResultsState = state.results;
+}
   
 
 export {
 	toUpper, toUpperList,
 	readFileAsText,
-	parseDatFile
-
+	parseDatFile,
+	allInterfaces
 }

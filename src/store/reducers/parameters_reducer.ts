@@ -1,7 +1,7 @@
 import { AirfoilType } from "../../types";
 import { ParametersActions, SET_AIRFOIL_TYPE, SET_FLIGHT_TIME_EXPECTED, SET_FLIGHT_TIME_MARGINS, SET_SPEED_EXPECTED, SET_SPEED_MARGINS, SET_WEIGHT_EXPECTED, SET_WEIGHT_MARGINS } from "../parameters";
 
-interface ParametersState {
+export interface ParametersState {
 	flightTime: { margins: number; expected: number };
 	weight: { margins: number; expected: number };
 	speed: { margins: number; expected: number };
