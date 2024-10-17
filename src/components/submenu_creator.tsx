@@ -8,6 +8,7 @@ import { airfoilData } from './geometry/airfoil';
 import { States, allInterfaces } from '../helpers';
 import { processPrintingSpeed, processSet3DDiameter, processSetProcess } from '../store/logic/processLogic';
 import { parametersSimulationType } from '../store/logic/parametersLogic';
+import { solverSetMaxIterations } from '../store/logic/solverLogic';
 
 // interface SubmenuProps {
 //   menu: string;
@@ -20,10 +21,11 @@ import { parametersSimulationType } from '../store/logic/parametersLogic';
 
 const SubmenuCreator: React.FC<States> = (state: States) => {
   const [selectedProcess, setselectedProcess] = useState<string>(state.process.selectedProcess);
+  const {menu} = state.ownProps;
+
   const [description, setDescription] = useState<string>('');
   const [geometryImportType, setGeometryImportType] = useState<string>('provided');
 
-  const {menu} = state.ownProps;
   const geometrystate: GeometryState = state.geo;
 
   const dispatch = useDispatch();
@@ -75,6 +77,9 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
       case 'Geometry':
         setDescription('Select the type of geometry to define the 3D shape of your UAV. You can import custom geometries or select predefined types like airfoil, fixed wing, or quadcopter.');
         break;
+      case 'Solver':
+        setDescription('The solver is used to calculate the results of your simulation. It uses many important parameters, but you will be best leaving important parameters as they are.')
+        break;
       default:
         setDescription('Select a menu item to configure its options.');
         break;
@@ -91,6 +96,12 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
     let val = event.target.value;
     let val_ = Number(val);
     dispatch(processPrintingSpeed(val_) as any)
+  }
+ 
+  const handleMaxIterations = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let val = event.target.value;
+    let val_ = Number(val);
+    dispatch(solverSetMaxIterations(val_) as any)
   }
 
   const renderProcessSubmenuOptions = () => {
@@ -246,6 +257,32 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
           </div>
         );
 	};
+  const renderSolverOptions = () => {
+        if (geometrystate.selectedGeometry == "provided")
+        {
+          return (
+            <div className='p-1'>
+              <Form.Group className='my-3'>
+                <Form.Label>
+                  Set max iterations:
+                </Form.Label>
+                <Form.Control
+                      type='number'
+                      value={state.solver.maxIterations}
+                      onChange={handleMaxIterations}
+                       />
+              </Form.Group>
+            </div>
+          )
+        }
+
+        return (
+          <div className="p-1">
+            To be implemented
+           
+          </div>
+        );
+	};
 
   const renderGeometryOptions = () => {
       return (
@@ -363,6 +400,20 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 					</div>
 					<div className="menu-options mt-3">
 						{renderParametersOptions()}
+					</div>
+				</>
+				)
+		case 'solver':
+			return (
+				<>
+					<h3>Solver</h3>
+					<div className="dynamic-description mt-3">
+						<p>The solver is used to calculate the results of your simulation. 
+              It uses many important parameters, but you will be best leaving important 
+              parameters as they are.</p>
+					</div>
+					<div className="menu-options mt-3">
+						{renderSolverOptions()}
 					</div>
 				</>
 				)

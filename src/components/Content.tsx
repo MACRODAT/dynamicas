@@ -4,6 +4,7 @@ import { toUpper, toUpperList } from "../helpers";
 import Airfoil from "./geometry/airfoil";
 import TDPrint  from "./process/3dprint";
 import ConfigureAirfoil from "./parameters/configureAirfoil";
+import Solver from "./solver.ts/solver";
 
 const mapStateToProps = (state : any) => {
 
@@ -25,6 +26,10 @@ const Content : React.FC = (state : any) => {
 		if (state.application.submenus.length == 0)
 		{
 			return defaultComponent;
+		}
+		if (selectedMenu == "Solver")
+		{
+			return <Solver />
 		}
 		switch (state.application.submenus[0].toUpperCase())
 		{

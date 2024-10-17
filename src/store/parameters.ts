@@ -17,6 +17,10 @@ export const SET_SPEED_EXPECTED = 'SET_SPEED_EXPECTED';
 // Airfoil
 export const SET_AIRFOIL_TYPE = 'SET_AIRFOIL_TYPE';
 
+//2D
+export const SET_STREAM_VELOCITY_2D = 'SET_STREAM_VELOCITY_2D';
+export const SET_ANGLE_OF_ATTACK = 'SET_ANGLE_OF_ATTACK';
+
 // Action interfaces
 interface SetFlightTimeMarginsAction {
   type: typeof SET_FLIGHT_TIME_MARGINS;
@@ -58,6 +62,16 @@ interface SetSimulationType {
   payload: string;
 }
 
+interface SetAngleOfAttack {
+  type: typeof SET_ANGLE_OF_ATTACK;
+  payload: number;
+}
+
+interface SetStreamVelocity2D {
+  type: typeof SET_STREAM_VELOCITY_2D;
+  payload: number;
+}
+
 export type ParametersActions =
   | SetFlightTimeMarginsAction
   | SetFlightTimeExpectedAction
@@ -66,4 +80,6 @@ export type ParametersActions =
   | SetSpeedMarginsAction
   | SetSpeedExpectedAction
   | SetSimulationType
+  | SetAngleOfAttack
+  | SetStreamVelocity2D
   | SetAirfoilTypeAction;

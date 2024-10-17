@@ -1,14 +1,16 @@
 import { AirfoilType } from "../../types";
-import { ParametersActions, SET_AIRFOIL_TYPE, SET_FLIGHT_TIME_EXPECTED, SET_FLIGHT_TIME_MARGINS, SET_SIMULATION_TYPE, SET_SPEED_EXPECTED, SET_SPEED_MARGINS, SET_WEIGHT_EXPECTED, SET_WEIGHT_MARGINS } from "../parameters";
+import { ParametersActions, SET_AIRFOIL_TYPE, SET_ANGLE_OF_ATTACK, SET_FLIGHT_TIME_EXPECTED, SET_FLIGHT_TIME_MARGINS, SET_SIMULATION_TYPE, SET_SPEED_EXPECTED, SET_SPEED_MARGINS, SET_STREAM_VELOCITY_2D, SET_WEIGHT_EXPECTED, SET_WEIGHT_MARGINS } from "../parameters";
 
 export interface ParametersState {
 	flightTime: { margins: number; expected: number };
 	weight: { margins: number; expected: number };
 	speed: { margins: number; expected: number };
 	airfoilType: AirfoilType;
+	streamVelocityX: number;
+	angleOfAttack: number;
 	done: boolean;
 	simulationType: string,
-  }
+}
   
   const initialParametersState: ParametersState = {
 	flightTime: { margins: 0, expected: 0 },
@@ -16,8 +18,23 @@ export interface ParametersState {
 	speed: { margins: 0, expected: 0 },
 	airfoilType: AirfoilType.Airfoil,
 	done: false,
-	simulationType: ''
+	simulationType: '',
+	angleOfAttack: -1,
+	streamVelocityX: -100,
   };
+
+  const CheckDone = (e: ParametersState): boolean => {
+	// console.log(e)
+	if (e.simulationType == "2D")
+	{
+		if (e.angleOfAttack >= -90 && e.streamVelocityX >= 0 &&  e.streamVelocityX < 400)
+		{
+			return true;
+		}
+		return false;
+	}
+	return false;
+  }
   
   export function parametersReducer(
 	state = initialParametersState,
@@ -52,6 +69,15 @@ export interface ParametersState {
 		return { ...state, speed: { ...state.speed, expected: action.payload } };
 	  case SET_AIRFOIL_TYPE:
 		return { ...state, airfoilType: action.payload };
+	  case SET_ANGLE_OF_ATTACK:
+		state.angleOfAttack = action.payload;
+		return {...state, done: CheckDone(state), angleOfAttack: action.payload}
+	  case SET_SIMULATION_TYPE:
+		state.simulationType = action.payload;
+		return {...state, done: CheckDone(state), simulationType: action.payload}
+	  case SET_STREAM_VELOCITY_2D:
+		state.streamVelocityX = action.payload;
+		return {...state, done: CheckDone(state), streamVelocityX: action.payload}
 	  default:
 		return state;
 	}

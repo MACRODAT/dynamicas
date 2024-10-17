@@ -6,6 +6,7 @@ import { parametersReducer } from './parameters_reducer';
 import { geometryReducer } from './geometry_reducer';
 import { resultsReducer } from './results_reducer';
 import applicationReducer from './action_reducer';
+import { solverReducer } from './solver_reducer';
 
 const rootReducer = combineReducers({
 	process: processReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
 	parameters: parametersReducer,
 	geometry: geometryReducer,
 	results: resultsReducer,
+	solver: solverReducer,
 	application: applicationReducer,
 });
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { toUpper, toUpperList } from "../../helpers";
 import { BsCheckLg } from "react-icons/bs";
 import './airfoil.scss'
 import AirfoilPlot from "../airfoilPlot";
@@ -16,8 +15,6 @@ const mapStateToProps = (state : any) : {state: any, geoState: GeometryState} =>
 }
 
 const Airfoil : React.FC = (params: any) => {
-
-    let state = params.state;
     let geo: GeometryState = params.geoState;
 
     const [selectedAirfoil, setSelectedAirfoil] = useState<airfoilData>

@@ -5,6 +5,7 @@ import { JoiningFastenersState } from "./store/reducers/joining_reducer";
 import { MaterialState } from "./store/reducers/material_reducer";
 import { ParametersState } from "./store/reducers/parameters_reducer";
 import { ResultsState } from "./store/reducers/results_reducer";
+import { SolverState } from "./store/reducers/solver_reducer";
 
 const toUpper = (s : string) => {
 	if (s == undefined)
@@ -56,6 +57,7 @@ export type States = {
 	material : MaterialState,
 	params : ParametersState,
 	res : ResultsState,
+	solver: SolverState,
 	ownProps: any
 };
 
@@ -67,6 +69,7 @@ let allInterfaces = (state: any, ownProps: any) => {
 	let material : MaterialState = state.material;
 	let params : ParametersState = state.parameters;
 	let res : ResultsState = state.results;
+	let solver : SolverState = state.solver;
 	
 	return {
 		geo: geo,
@@ -75,6 +78,7 @@ let allInterfaces = (state: any, ownProps: any) => {
 		join: join,
 		material: material,
 		params: params,
+		solver: solver,
 		res: res,
 		ownProps: ownProps,
 	}
