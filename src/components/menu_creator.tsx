@@ -1,32 +1,25 @@
-import React, { useState } from 'react';
-import { addSubmenu } from '../store/logic/actionLogic';
+import React, { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
-import { GeometryState } from '../store/reducers/geometry_reducer';
-import { ApplicationState } from '../store/reducers/action_reducer';
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDownloadDone } from "react-icons/md";
+import { States, allInterfaces } from '../helpers';
 
-interface MenuProps {
-  onSelectMenu: (menu: string) => void;
+type menu = {
+  process: string,
+  done: boolean
 }
 
-type Stator = {geo: GeometryState, action: ApplicationState, ownProps: any};
-
-let mapStateToProps = (state: any, ownProps: any): 
-                      Stator => {
-  let geometryState : GeometryState = state.geometry;
-  let actionState : ApplicationState = state.action;
-  return {
-    geo: geometryState,
-    action: actionState,
-    ownProps: ownProps
-  }
-}
-
-const MenuCreator: React.FC<Stator> = (state: Stator) => {
+const MenuCreator: React.FC<States> = (state: States) => {
   const [activeMenu, setActiveMenu] = useState<string>('');
 
-  const menus = ['process', 'geometry', 'parameters', 'results'];
+  let menus : menu[] = []
+
+  menus = [
+    {process: 'process', done: state.process.done && state.material.done},
+    {process: 'geometry', done: state.geo.done},
+    {process: 'parameters', done: false},
+    {process: 'results', done: false},
+  ]
 
   const dispatch = useDispatch();
   let onSelectMenu = state.ownProps.onSelectMenu;
@@ -34,48 +27,37 @@ const MenuCreator: React.FC<Stator> = (state: Stator) => {
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
     onSelectMenu(menu);
-
-    // if (menu.toUpperCase() == "GEOMETRY")
-    // {
-    //   dispatch(addSubmenu("Airfoil", 0) as any);
-    // }
   };
-
-  const getMenuState = (menu: string): boolean => {
-    switch (menu)
-    {
-      case "geometry":
-        return state.geo.done
-      default:
-        return false
-    }
-  }
 
   let moveNext: boolean = true;
 
+
+
   return (
     <div>
-      {menus.map((menu) => ( moveNext ? 
+      {menus.map((el) => ( moveNext ? 
         <div
-          key={menu}
-          className={`menu-item ${activeMenu === menu ? 'active' : ''} ${getMenuState(menu) ? " done" : ""}`}
-          onClick={() => handleMenuClick(menu)}
+          key={el.process}
+          className={`menu-item ${activeMenu === el.process ? 'active' : ''} ${el.done ? " done" : ""}`}
+          onClick={() => handleMenuClick(el.process)}
         >
           
             <>
+            
                 {
-                  getMenuState(menu) ? 
+                  el.done ? 
                   <MdOutlineDownloadDone className='mx-2' />
                   :
                   <CiEdit className='mx-2' />
                 }
-                {menu.charAt(0).toUpperCase() + menu.slice(1)}
+                {el.process.charAt(0).toUpperCase() + el.process.slice(1)}
             </>
-          {moveNext = getMenuState(menu)}
+          {moveNext = el.done}
+          {moveNext = true}
         </div> : ""
       ))}
     </div>
   )
 };
 
-export default connect(mapStateToProps) (MenuCreator);
+export default connect(allInterfaces) (MenuCreator);

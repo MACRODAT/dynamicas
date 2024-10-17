@@ -4,6 +4,8 @@ import { AirfoilType } from "../types";
 export const SET_FLIGHT_TIME_MARGINS = 'SET_FLIGHT_TIME_MARGINS';
 export const SET_FLIGHT_TIME_EXPECTED = 'SET_FLIGHT_TIME_EXPECTED';
 
+export const SET_SIMULATION_TYPE = 'SET_SIMULATION_TYPE';
+
 // Weight
 export const SET_WEIGHT_MARGINS = 'SET_WEIGHT_MARGINS';
 export const SET_WEIGHT_EXPECTED = 'SET_WEIGHT_EXPECTED';
@@ -51,6 +53,11 @@ interface SetAirfoilTypeAction {
   payload: AirfoilType;
 }
 
+interface SetSimulationType {
+  type: typeof SET_SIMULATION_TYPE;
+  payload: string;
+}
+
 export type ParametersActions =
   | SetFlightTimeMarginsAction
   | SetFlightTimeExpectedAction
@@ -58,4 +65,5 @@ export type ParametersActions =
   | SetWeightExpectedAction
   | SetSpeedMarginsAction
   | SetSpeedExpectedAction
+  | SetSimulationType
   | SetAirfoilTypeAction;

@@ -5,6 +5,15 @@
 	max-width: fit-content;
 	margin-left: auto;
 	margin-right: auto;
+
+	.image
+	{
+		// object-fit: cover;
+		min-width: 50%;
+		max-width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+	}
 }
 
 .box

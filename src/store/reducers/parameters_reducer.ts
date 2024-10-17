@@ -1,11 +1,13 @@
 import { AirfoilType } from "../../types";
-import { ParametersActions, SET_AIRFOIL_TYPE, SET_FLIGHT_TIME_EXPECTED, SET_FLIGHT_TIME_MARGINS, SET_SPEED_EXPECTED, SET_SPEED_MARGINS, SET_WEIGHT_EXPECTED, SET_WEIGHT_MARGINS } from "../parameters";
+import { ParametersActions, SET_AIRFOIL_TYPE, SET_FLIGHT_TIME_EXPECTED, SET_FLIGHT_TIME_MARGINS, SET_SIMULATION_TYPE, SET_SPEED_EXPECTED, SET_SPEED_MARGINS, SET_WEIGHT_EXPECTED, SET_WEIGHT_MARGINS } from "../parameters";
 
 export interface ParametersState {
 	flightTime: { margins: number; expected: number };
 	weight: { margins: number; expected: number };
 	speed: { margins: number; expected: number };
 	airfoilType: AirfoilType;
+	done: boolean;
+	simulationType: string,
   }
   
   const initialParametersState: ParametersState = {
@@ -13,6 +15,8 @@ export interface ParametersState {
 	weight: { margins: 0, expected: 0 },
 	speed: { margins: 0, expected: 0 },
 	airfoilType: AirfoilType.Airfoil,
+	done: false,
+	simulationType: ''
   };
   
   export function parametersReducer(
@@ -30,6 +34,11 @@ export interface ParametersState {
 		  ...state,
 		  flightTime: { ...state.flightTime, expected: action.payload },
 		};
+	  case SET_SIMULATION_TYPE:
+		return {
+			...state,
+			simulationType: action.payload
+		}
 	  case SET_WEIGHT_MARGINS:
 		return { ...state, weight: { ...state.weight, margins: action.payload } };
 	  case SET_WEIGHT_EXPECTED:

@@ -7,16 +7,29 @@ export interface ProcessState {
 	printingSpeed: number;
 	filamentDiameter: number;
 	fillingPercent: number;
+	done: boolean;
   }
   
   const initialProcessState: ProcessState = {
 	selectedProcess: '',
+	done: false,
 	printing: false,
 	nozzleDiameter: 0,
 	printingSpeed: 0,
 	filamentDiameter: 0,
 	fillingPercent: 0,
   };
+
+  const checkDone = (e: ProcessState): boolean => {
+	console.log(e)
+	return (
+		e.filamentDiameter > 0 && e.filamentDiameter < 10
+		&& e.nozzleDiameter > 0 && e.nozzleDiameter < 2.1
+		&& e.printingSpeed > 0 && e.printingSpeed < 200
+		&& e.fillingPercent > 0 && e.fillingPercent <= 100
+		&& e.selectedProcess != ""
+	)
+  }
   
   export function processReducer(
 	state = initialProcessState,
@@ -24,17 +37,22 @@ export interface ProcessState {
   ): ProcessState {
 	switch (action.type) {
 	  case SET_3D_PRINT:
-		return { ...state, printing: action.payload };
+		return { ...state, done: checkDone(state), printing: action.payload };
 	  case PROCESS_SET_PROCESS:
-		return { ...state, selectedProcess: action.payload};
+		state.selectedProcess =  action.payload;
+		return { ...state, done: checkDone(state), selectedProcess: action.payload};
 	  case SET_NOZZLE_DIAMETER:
-		return { ...state, nozzleDiameter: action.payload };
+		state.nozzleDiameter =  action.payload;
+		return { ...state, done: checkDone(state), nozzleDiameter: action.payload };
 	  case SET_PRINTING_SPEED:
-		return { ...state, printingSpeed: action.payload };
+		state.printingSpeed =  action.payload;
+		return { ...state, done: checkDone(state), printingSpeed: action.payload };
 	  case SET_FILAMENT_DIAMETER:
-		return { ...state, filamentDiameter: action.payload };
+		state.filamentDiameter =  action.payload;
+		return { ...state, done: checkDone(state), filamentDiameter: action.payload };
 	  case SET_FILLING_PERCENT:
-		return { ...state, fillingPercent: action.payload };
+		state.fillingPercent =  action.payload;
+		return { ...state, done: checkDone(state), fillingPercent: action.payload };
 	  default:
 		return state;
 	}

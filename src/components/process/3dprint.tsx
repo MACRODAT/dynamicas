@@ -5,18 +5,26 @@ import { ApplicationState } from '../../store/reducers/action_reducer';
 import { ProcessState } from '../../store/reducers/3dprint_reducer';
 import nozzle from "../../res/nozles.webp";
 import diameter from "../../res/diameter.webp";
+import materials from "../../res/materials.webp";
+import printingspeed from "../../res/printingspeed.jpg";
+import fillingPercent from "../../res/fillingPercen.png";
+import filamentDiameter from "../../res/filamentDiameter.webp";
 import './3dprint.scss'
 import { Form } from 'react-bootstrap';
+import { MaterialState } from '../../store/reducers/material_reducer';
+import { processFilamentDiameter, processFillingPercent, processSetMaterial } from '../../store/logic/processLogic';
 
-type Stator = {process: ProcessState, action: ApplicationState, ownProps: any};
+type Stator = {process: ProcessState, action: ApplicationState, material: MaterialState, ownProps: any};
 
 let mapStateToProps = (state: any, ownProps: any): 
                       Stator => {
   let actionState : ApplicationState = state.action;
   let process : ProcessState = state.process;
+  let material : MaterialState = state.material;
   return {
 	process: process,
     action: actionState,
+    material: material,
     ownProps: ownProps
   }
 }
@@ -31,6 +39,23 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 	setUseHelp(!useHelp)
   }
 
+  const changeMaterial = (e: any) => {
+	const val = e.target.value;
+	dispatch(processSetMaterial(val) as any)
+  }
+
+  const handleFilamentDiameter = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const val = event.target.value;
+	const nbr = Number(val);
+    dispatch(processFilamentDiameter(nbr) as any)
+  }
+
+  const handleFillingPercent = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const val = event.target.value;
+	const nbr = Number(val);
+    dispatch(processFillingPercent(nbr) as any)
+  }
+
   return (
     <div style={{}}>
       <h1>3D Printing as manufacturing process</h1>
@@ -42,7 +67,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 					checked={useHelp} 
 					label="Use help."
 					type='switch'
-					onClick={setHelp}
+					onChange={setHelp}
 					/>
 				
 			</Form.Group>
@@ -59,7 +84,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 					layer by layer. For precise airfoil or drone component creation, a high-quality nozzle is required.
 				</p>
 				<div className='centerImage'>
-					<img src={nozzle} alt="Nozzle" width="800" />
+					<img src={nozzle} alt="Nozzle" className='image' />
 				</div>
 				<div className="centerImage">
 					Source: <a href="https://blog.diyelectronics.co.za/diyelectronics-3d-printer-nozzle-guide/">Diy Electronics</a>
@@ -90,7 +115,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 					For drone components requiring both strength and aerodynamics, a 0.4mm nozzle is a great starting point.
 				</p>
 				<div className='centerImage'>
-					<img src={diameter} alt="Nozzle" width="800" />
+					<img src={diameter} alt="Nozzle" className='image' />
 				</div>
 			</> : ""
 		}
@@ -107,48 +132,157 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
       {/* Materials */}
       <div className='box'>
         <h2>Material Types</h2>
-        <p>
-          Choosing the right material is essential for creating durable and lightweight drone components.
-          Here are a few common materials:
-        </p>
-        <ul>
-          <li><b>PLA</b>: Easy to print, good for prototypes, but not very durable.</li>
-          <li><b>ABS</b>: Stronger than PLA and more heat-resistant, but can be tricky to print due to warping.</li>
-          <li><b>PETG</b>: A good middle ground between PLA and ABS, offering strength and heat resistance.</li>
-          <li><b>Nylon</b>: Lightweight, durable, and ideal for mechanical parts like drone arms.</li>
-        </ul>
-        <img src="image_path/materials.png" alt="Materials" width="300" />
+		{
+			useHelp ?
+			<>
+				<p>
+					Choosing the right material is essential for creating durable and lightweight drone components.
+					Here are a few common materials:
+				</p>
+				<ul>
+				<li><b>PLA</b>: Easy to print, good for prototypes, but not very durable.</li>
+				<li><b>ABS</b>: Stronger than PLA and more heat-resistant, but can be tricky to print due to warping.</li>
+				<li><b>PETG</b>: A good middle ground between PLA and ABS, offering strength and heat resistance.</li>
+				<li><b>Nylon</b>: Lightweight, durable, and ideal for mechanical parts like drone arms.</li>
+				</ul>
+				
+				<div className='centerImage'>
+					<img src={materials} alt="Nozzle" className='image' />
+				</div>
+			</> : ""
+		}
+        <div className='centerImage actionBox'>
+			Actions:
+			<hr />
+			<div className="div">
+				<Form>
+					<Form.Group>
+						<Form.Label>
+							Select your material of choice: 
+						</Form.Label>
+						<Form.Select 
+								value={state.material.material}
+								onChange={changeMaterial}
+								>
+							<option value="ANY">Select</option>
+							<option value="PLA">PLA</option>
+							<option value="ABS">ABS</option>
+							<option value="PETG">PETG</option>
+							<option value="NYLON">NYLON</option>
+						</Form.Select>
+					</Form.Group>
+				</Form>
+			</div>
+		</div>
+      </div>
+
+      {/* Filament diameter */}
+      <div className='box'>
+        <h2>Filament diameter</h2>
+		{
+			useHelp ?
+			<>
+				<p>
+				3D printing filament in different colours with models created using 
+				the filament. 
+				Filament comes in a range of diameters, 
+				most commonly 1.75 mm and 2.85 mm, 
+				with the latter often being confused with the less 
+				common 3 mm. Filament consists of one continuous slender plastic 
+				thread spooled into a reel.
+				</p>
+				<div className='centerImage'>
+					<img src={filamentDiameter} alt="Nozzle" className='image' />
+				</div>			
+			</> :  ""
+		}
+		<div className='centerImage actionBox'>
+			Actions:
+			<hr />
+			<div className="div">
+				<Form>
+					<Form.Group>
+						<Form.Label>
+							Selected diameter for your filament: 
+						</Form.Label>
+						<Form.Range
+							min={0.1}
+							max={10}
+							step={0.05}
+							onChange={handleFilamentDiameter}
+							value={state.process.filamentDiameter}
+						/>
+					</Form.Group>
+				</Form>
+				<b>{state.process.filamentDiameter}mm</b>
+			</div>
+		</div>
       </div>
 
       {/* Printing Speed */}
       <div className='box'>
         <h2>Printing Speed</h2>
-        <p>
-          The speed at which your 3D printer moves affects the quality and accuracy of the final product. 
-          For detailed airfoil designs, a slower speed (around 40-60 mm/s) ensures precision.
-        </p>
-        <img src="image_path/printing_speed.png" alt="Printing Speed" width="300" />
+		{
+			useHelp ?
+			<>
+				<p>
+				The speed at which your 3D printer moves affects the quality and accuracy of the final product. 
+				For detailed airfoil designs, a slower speed (around 40-60 mm/s) ensures precision.
+				</p>
+				<div className='centerImage'>
+					<img src={printingspeed} alt="Nozzle" className='image' />
+				</div>			
+			</> :  ""
+		}
+		<div className='centerImage actionBox'>
+			Actions:
+			<hr />
+			<div className="div">
+				Selected speed: <b>{state.process.printingSpeed}mm/s</b>
+			</div>
+		</div>
       </div>
 
-      {/* Layer Height */}
+
+      {/* Filling percent */}
       <div className='box'>
-        <h2>Layer Height</h2>
-        <p>
-          Layer height impacts the smoothness of the final print. For aerodynamic surfaces like airfoils, a smaller
-          layer height (0.1mm or 0.2mm) ensures a smoother surface and better aerodynamic performance.
-        </p>
-        <img src="image_path/layer_height.png" alt="Layer Height" width="300" />
+        <h2>Filling percent</h2>
+		{
+			useHelp ?
+			<>
+				<p>
+				While non-functional 3D prints can be printed with a low infill density (0-15%), 
+				functional components should have an infill percentage of at least 50%. 3D infill patterns, 
+				such as cubic, octet, and gyroid provide high strength in all directions.
+				</p>
+				<div className='centerImage'>
+					<img src={fillingPercent} alt="Nozzle" className='image' />
+				</div>			
+			</> :  ""
+		}
+		<div className='centerImage actionBox'>
+			Actions:
+			<hr />
+			<div className="div">
+				<Form>
+					<Form.Group>
+						<Form.Label>
+							Selected a filling % for your print:
+						</Form.Label>
+						<Form.Range
+							min={1}
+							max={100}
+							step={1}
+							onChange={handleFillingPercent}
+							value={state.process.fillingPercent}
+						/>
+					</Form.Group>
+				</Form>
+				<b>{state.process.fillingPercent}%</b>
+			</div>
+		</div>
       </div>
 
-      {/* Infill Density */}
-      <div className='box'>
-        <h2>Infill Density</h2>
-        <p>
-          Infill refers to the internal structure of the 3D print. Higher infill density provides more strength but increases weight.
-          For drones, a balance is important. A 20-50% infill density is common, depending on the strength required.
-        </p>
-        <img src="image_path/infill.png" alt="Infill Density" width="300" />
-      </div>
     </div>
   );
 };

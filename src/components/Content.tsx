@@ -40,7 +40,7 @@ const Content : React.FC = (state : any) => {
 				{
 					return defaultComponent
 				}
-			case 'PARAMETERS':
+			case '2D':
 				return <ConfigureAirfoil />
 			default:
 				return defaultComponent

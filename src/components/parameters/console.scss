@@ -1,0 +1,23 @@
+.console-container {
+	width: 100%;
+	padding: 0px;
+	font-family: 'Courier New', Courier, monospace; /* Console-like font */
+	border: 1px solid #333;
+	border-left: 10px solid #332;
+	background-color: white;
+}
+  
+.line-grey {
+	background-color: #c3c3c3;
+	color: #332;
+	padding: 2px;
+	padding-left: 10px;
+}
+
+.line-white {
+	background-color: #fff;
+	padding: 2px;
+	padding-left: 10px;
+	color: #333;
+}
+  

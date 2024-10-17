@@ -36,8 +36,11 @@ type Point = {
   }
   
   enum MaterialType {
-	PlasticPLA = 'Plastic PLA',
-	PlasticABS = 'Plastic ABS',
+	ANY = '',
+	PLA = 'PLA',
+	ABS = 'ABS',
+	PETG = 'PETG',
+	NYLON = 'NYLON',
 	Aluminum = 'Aluminum',
 	Steel = 'Steel',
 	Custom = 'Custom',

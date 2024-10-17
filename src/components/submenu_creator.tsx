@@ -6,7 +6,8 @@ import { GeometryState } from '../store/reducers/geometry_reducer';
 import { geometrySetAirfoilName, geometrySetClass } from '../store/logic/geometryLogic';
 import { airfoilData } from './geometry/airfoil';
 import { States, allInterfaces } from '../helpers';
-import { processSet3DDiameter, processSetProcess } from '../store/logic/processLogic';
+import { processPrintingSpeed, processSet3DDiameter, processSetProcess } from '../store/logic/processLogic';
+import { parametersSimulationType } from '../store/logic/parametersLogic';
 
 // interface SubmenuProps {
 //   menu: string;
@@ -45,6 +46,12 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
     dispatch(geometrySetAirfoilName(d) as any);
   }
 
+  const handleSimulationType = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const val = event.target.value;
+    dispatch(addSubmenu(val, 0) as any);
+    dispatch(parametersSimulationType(val) as any);
+  }
+
   const handleGeometryImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGeometryImportType(event.target.value)
     dispatch(addSubmenu(event.target.value, 1) as any)
@@ -79,6 +86,12 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
     let val_ = Number(val);
     dispatch(processSet3DDiameter(val_) as any)
   }
+  
+  const handlePrintingSpeed = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let val = event.target.value;
+    let val_ = Number(val);
+    dispatch(processPrintingSpeed(val_) as any)
+  }
 
   const renderProcessSubmenuOptions = () => {
     switch (selectedProcess) {
@@ -102,7 +115,14 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
               <hr />
               <Form.Group  className='my-3' controlId="printingSpeed">
                 <Form.Label>Printing Speed (mm/s)</Form.Label>
-                <Form.Control type="number" placeholder="60" defaultValue={60} />
+                <Form.Control 
+                        type="number"
+                        placeholder="select" 
+                        value={state.process.printingSpeed}                        
+                        onChange={handlePrintingSpeed}
+                        min={10} max={200} 
+                        step={10}
+                        />
                 <Form.Text className=" front-400">
                   Printing speed is provided by the printer, typically indicating the time it takes to complete a layer.
                 </Form.Text>
@@ -174,7 +194,11 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
                 <Form.Label>
                   Set simulation type:
                 </Form.Label>
-                <Form.Control as='select' defaultValue={''}>
+                <Form.Control as='select' 
+                      value={state.params.simulationType}
+                      onChange={handleSimulationType}
+                      >
+                  <option value="">Select one.</option>
                   <option value="2D">2D simulation</option>
                   <option value="3D">3D simulation</option>
                 </Form.Control>
