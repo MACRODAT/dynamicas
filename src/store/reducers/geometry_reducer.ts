@@ -11,9 +11,9 @@ export interface GeometryState {
 	previewedMesh: Point[];
 	shapes: Shape[];
 	meshQuality: number;
-  }
-  
-  const initialGeometryState: GeometryState = {
+}
+
+const initialGeometryState: GeometryState = {
 	geometrySelectedAirfoil: {name: "", description: "", screenshot: ""},
 	geometryType: "",
 	selectedGeometry: "",
@@ -22,9 +22,9 @@ export interface GeometryState {
 	previewedMesh: [],
 	shapes: [],
 	meshQuality: 0,
-  };
+};
   
-  export function geometryReducer(
+export function geometryReducer(
 	state = initialGeometryState,
 	action: GeometryActions
   ): GeometryState {
