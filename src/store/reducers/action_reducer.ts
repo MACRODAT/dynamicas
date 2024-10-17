@@ -25,7 +25,7 @@ const initialState: ApplicationState = {
 const applicationReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case SET_MENU:
-      console.log(historyManager.get(state.menu))
+      // console.log(historyManager.get(state.menu))
       return {
         ...state,
         submenus: historyManager.has(action.payload) ? 
@@ -50,7 +50,7 @@ const applicationReducer = (state = initialState, action: any) => {
         state.submenus.push(action.payload);
       }
       historyManager.set(state.menu, state.submenus);
-      console.log(historyManager.get(state.menu))
+      // console.log(historyManager.get(state.menu))
       return {
         ...state,
         submenus: state.submenus,

@@ -36,7 +36,7 @@ export function geometryReducer(
 	  case SET_GEOMETRY_AIRFOIL_NAME:
 		return { ...state, done:true, geometrySelectedAirfoil: action.payload };
 	  case SET_GEOMETRY_TYPE:
-		return { ...state, selectedGeometry: action.payload};
+		return { ...state, done: false, selectedGeometry: action.payload};
 	  case SET_GEOMETRY_CLASS:
 		return { ...state, geometryType: action.payload};
 	  case PREVIEW_GEOMETRY:

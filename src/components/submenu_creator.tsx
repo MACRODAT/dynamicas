@@ -3,7 +3,8 @@ import { Form } from 'react-bootstrap';
 import { addSubmenu, setGeometryType, setSubmenus } from '../store/logic/actionLogic';
 import { connect, useDispatch } from 'react-redux';
 import { GeometryState } from '../store/reducers/geometry_reducer';
-import { geometrySetClass } from '../store/logic/geometryLogic';
+import { geometrySetAirfoilName, geometrySetClass } from '../store/logic/geometryLogic';
+import { airfoilData } from './geometry/airfoil';
 
 interface SubmenuProps {
   menu: string;
@@ -35,6 +36,9 @@ const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
     const val = event.target.value;
     dispatch(addSubmenu(val, 0) as any);
     dispatch(geometrySetClass(val) as any);
+    dispatch(setGeometryType("") as any);
+    let d: airfoilData = {description: "", name: "", screenshot: ""};
+    dispatch(geometrySetAirfoilName(d) as any);
   }
 
   const handleGeometryImport = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -208,14 +212,14 @@ const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
         <div className="p-3">
           <Form.Group  className='my-3' controlId="geometryType">
             <Form.Label>Select Geometry Type</Form.Label>
-            <Form.Control as="select" defaultValue={geometrystate.geometryType} onChange={handleGeometryChange}>
+            <Form.Control as="select" value={geometrystate.geometryType} onChange={handleGeometryChange}>
               <option value="">Please choose</option>
               <option value="Airfoil">Airfoil</option>
               <option value="Fixed Wing">Fixed Wing</option>
               <option value="Quadcopter">Quadcopter</option>
               <option value="Custom">Custom</option>
             </Form.Control>
-            <Form.Text className=" front-400">
+            <Form.Text className="front-400">
               Choose the type of geometry to import or preview for your UAV. Options include predefined geometries like airfoil and fixed wing, or custom geometries.
             </Form.Text>
           </Form.Group>
