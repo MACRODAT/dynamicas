@@ -6,7 +6,7 @@ import { GeometryState } from '../store/reducers/geometry_reducer';
 import { geometrySetAirfoilName, geometrySetClass } from '../store/logic/geometryLogic';
 import { airfoilData } from './geometry/airfoil';
 import { States, allInterfaces } from '../helpers';
-import { processSetProcess } from '../store/logic/processLogic';
+import { processSet3DDiameter, processSetProcess } from '../store/logic/processLogic';
 
 // interface SubmenuProps {
 //   menu: string;
@@ -74,6 +74,12 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
     }
   };
 
+  const handleNozzleDiameter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let val = event.target.value;
+    let val_ = Number(val);
+    dispatch(processSet3DDiameter(val_) as any)
+  }
+
   const renderProcessSubmenuOptions = () => {
     switch (selectedProcess) {
       case '3D print':
@@ -82,7 +88,13 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
             <Form>
               <Form.Group  className='my-3' controlId="nozzleDiameter">
                 <Form.Label>Nozzle Diameter (mm)</Form.Label>
-                <Form.Control type="number" placeholder="0.4" defaultValue={0.4} />
+                <Form.Control type="number" 
+                  placeholder="0.4" 
+                  min={0.1} max={2.0} 
+                  step={0.1}
+                  value={state.process.nozzleDiameter} 
+                  onChange={handleNozzleDiameter}
+                />
                 <Form.Text className="front-400">
                   Nozzle diameter determines the width of the extruded filament. A smaller nozzle provides finer detail but may increase printing time.
                 </Form.Text>

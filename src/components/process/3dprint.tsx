@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { GeometryState } from '../../store/reducers/geometry_reducer';
 import { ApplicationState } from '../../store/reducers/action_reducer';
@@ -6,6 +6,7 @@ import { ProcessState } from '../../store/reducers/3dprint_reducer';
 import nozzle from "../../res/nozles.webp";
 import diameter from "../../res/diameter.webp";
 import './3dprint.scss'
+import { Form } from 'react-bootstrap';
 
 type Stator = {process: ProcessState, action: ApplicationState, ownProps: any};
 
@@ -22,44 +23,89 @@ let mapStateToProps = (state: any, ownProps: any):
 
 const TDPrint: React.FC<Stator> = (state: Stator) => {
   const [activeMenu, setActiveMenu] = useState<string>('');
+  const [useHelp, setUseHelp] = useState(true);
 
   const dispatch = useDispatch();
+
+  const setHelp = (e: any) => {
+	setUseHelp(!useHelp)
+  }
 
   return (
     <div style={{}}>
       <h1>3D Printing as manufacturing process</h1>
 	  <hr />
+	  <div className="box">
+		<Form>
+			<Form.Group>
+				<Form.Check 
+					checked={useHelp} 
+					label="Use help."
+					type='switch'
+					onClick={setHelp}
+					/>
+				
+			</Form.Group>
+		</Form>
+	  </div>
       {/* Nozzle Information */}
       <div className='box'>
         <h2>Nozzle</h2>
-        <p>
-          The nozzle is one of the most crucial parts of a 3D printer, as it dictates how the material is deposited
-          layer by layer. For precise airfoil or drone component creation, a high-quality nozzle is required.
-        </p>
-		<div className='centerImage'>
-			<img src={nozzle} alt="Nozzle" width="800" />
+        {
+			useHelp ?
+			<>
+				<p>
+					The nozzle is one of the most crucial parts of a 3D printer, as it dictates how the material is deposited
+					layer by layer. For precise airfoil or drone component creation, a high-quality nozzle is required.
+				</p>
+				<div className='centerImage'>
+					<img src={nozzle} alt="Nozzle" width="800" />
+				</div>
+				<div className="centerImage">
+					Source: <a href="https://blog.diyelectronics.co.za/diyelectronics-3d-printer-nozzle-guide/">Diy Electronics</a>
+				</div>
+			</>
+			:
+			""
+		}
+		
+		<div className='centerImage actionBox'>
+			Actions:
+			<hr />
+			<div className="div">
+				No action can be taken here. Please select the best material for your nozzle.
+			</div>
 		</div>
-		<div className="centerImage">
-			Source: <a href="https://blog.diyelectronics.co.za/diyelectronics-3d-printer-nozzle-guide/">Diy Electronics</a>
-		</div>
-
       </div>
 
       {/* Nozzle Diameter */}
-      <div style={{ marginBottom: '20px' }}>
+      <div className='box'>
         <h2>Nozzle Diameter</h2>
-        <p>
-          Nozzle diameter affects the precision of your prints. Smaller diameters (e.g., 0.2mm) provide finer detail but take longer to print. 
-          Larger diameters (e.g., 0.4mm or 0.6mm) allow for faster printing but reduce the level of detail. 
-          For drone components requiring both strength and aerodynamics, a 0.4mm nozzle is a great starting point.
-        </p>
-        <div className='centerImage'>
-			<img src={diameter} alt="Nozzle" width="800" />
+		{
+			useHelp ?
+			<>
+				<p>
+					Nozzle diameter affects the precision of your prints. Smaller diameters (e.g., 0.2mm) provide finer detail but take longer to print. 
+					Larger diameters (e.g., 0.4mm or 0.6mm) allow for faster printing but reduce the level of detail. 
+					For drone components requiring both strength and aerodynamics, a 0.4mm nozzle is a great starting point.
+				</p>
+				<div className='centerImage'>
+					<img src={diameter} alt="Nozzle" width="800" />
+				</div>
+			</> : ""
+		}
+
+		<div className='centerImage actionBox'>
+			Actions:
+			<hr />
+			<div className="div">
+				Selected nozzle diameter: <b>{state.process.nozzleDiameter}mm</b>
+			</div>
 		</div>
       </div>
 
       {/* Materials */}
-      <div style={{ marginBottom: '20px' }}>
+      <div className='box'>
         <h2>Material Types</h2>
         <p>
           Choosing the right material is essential for creating durable and lightweight drone components.
@@ -75,7 +121,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
       </div>
 
       {/* Printing Speed */}
-      <div style={{ marginBottom: '20px' }}>
+      <div className='box'>
         <h2>Printing Speed</h2>
         <p>
           The speed at which your 3D printer moves affects the quality and accuracy of the final product. 
@@ -85,7 +131,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
       </div>
 
       {/* Layer Height */}
-      <div style={{ marginBottom: '20px' }}>
+      <div className='box'>
         <h2>Layer Height</h2>
         <p>
           Layer height impacts the smoothness of the final print. For aerodynamic surfaces like airfoils, a smaller
@@ -95,7 +141,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
       </div>
 
       {/* Infill Density */}
-      <div style={{ marginBottom: '20px' }}>
+      <div className='box'>
         <h2>Infill Density</h2>
         <p>
           Infill refers to the internal structure of the 3D print. Higher infill density provides more strength but increases weight.
