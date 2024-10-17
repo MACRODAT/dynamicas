@@ -48,6 +48,17 @@ function parseDatFile(content: string): { x: number; y: number }[] {
     return coordinates;
 }
 
+export type States = {
+	geo: GeometryState, 
+	process: ProcessState, 
+	action: ApplicationState, 
+	join : JoiningFastenersState,
+	material : MaterialState,
+	params : ParametersState,
+	res : ResultsState,
+	ownProps: any
+};
+
 let allInterfaces = (state: any, ownProps: any) => {
 	let geo : GeometryState = state.geometry;
 	let action : ApplicationState = state.action;

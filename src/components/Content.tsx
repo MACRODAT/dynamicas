@@ -15,7 +15,7 @@ const Content : React.FC = (state : any) => {
 	const selectedMenu = toUpper(state.application.menu);
 	const selectedSubMenus = toUpperList(state.application.submenus).join('> ');
 
-	console.log("Updated:", state.application.submenus)
+	// console.log("Updated:", state.application.submenus)
 
 	const defaultComponent = (
 		<>Still working on this: Not yet implemented.</>

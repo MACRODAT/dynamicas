@@ -1,6 +1,7 @@
-import { ProcessActions, SET_3D_PRINT, SET_FILAMENT_DIAMETER, SET_FILLING_PERCENT, SET_NOZZLE_DIAMETER, SET_PRINTING_SPEED } from "../3dprint";
+import { PROCESS_SET_PROCESS, ProcessActions, SET_3D_PRINT, SET_FILAMENT_DIAMETER, SET_FILLING_PERCENT, SET_NOZZLE_DIAMETER, SET_PRINTING_SPEED } from "../3dprint";
 
 export interface ProcessState {
+	selectedProcess: string,
 	printing: boolean;
 	nozzleDiameter: number;
 	printingSpeed: number;
@@ -9,6 +10,7 @@ export interface ProcessState {
   }
   
   const initialProcessState: ProcessState = {
+	selectedProcess: '',
 	printing: false,
 	nozzleDiameter: 0,
 	printingSpeed: 0,
@@ -23,6 +25,8 @@ export interface ProcessState {
 	switch (action.type) {
 	  case SET_3D_PRINT:
 		return { ...state, printing: action.payload };
+	  case PROCESS_SET_PROCESS:
+		return { ...state, selectedProcess: action.payload};
 	  case SET_NOZZLE_DIAMETER:
 		return { ...state, nozzleDiameter: action.payload };
 	  case SET_PRINTING_SPEED:

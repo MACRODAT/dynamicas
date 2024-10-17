@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { GeometryState } from '../../store/reducers/geometry_reducer';
 import { ApplicationState } from '../../store/reducers/action_reducer';
+import { ProcessState } from '../../store/reducers/3dprint_reducer';
 
-type Stator = {geo: GeometryState, action: ApplicationState, ownProps: any};
+type Stator = {process: ProcessState, action: ApplicationState, ownProps: any};
 
 let mapStateToProps = (state: any, ownProps: any): 
                       Stator => {
-  let geometryState : GeometryState = state.geometry;
   let actionState : ApplicationState = state.action;
+  let process : ProcessState = state.process;
   return {
-    geo: geometryState,
+	process: process,
     action: actionState,
     ownProps: ownProps
   }
@@ -20,9 +21,6 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
   const [activeMenu, setActiveMenu] = useState<string>('');
 
   const dispatch = useDispatch();
-
-
-  let moveNext: boolean = true;
 
   return (
     <div>

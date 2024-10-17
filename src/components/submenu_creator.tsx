@@ -5,31 +5,35 @@ import { connect, useDispatch } from 'react-redux';
 import { GeometryState } from '../store/reducers/geometry_reducer';
 import { geometrySetAirfoilName, geometrySetClass } from '../store/logic/geometryLogic';
 import { airfoilData } from './geometry/airfoil';
+import { States, allInterfaces } from '../helpers';
+import { processSetProcess } from '../store/logic/processLogic';
 
-interface SubmenuProps {
-  menu: string;
-}
+// interface SubmenuProps {
+//   menu: string;
+// }
 
-const mapStateToProps = (state : any, ownProps: any) => {
-  const geoState: GeometryState = state.geometry;
-	return {geometrystate: geoState, ownProps: ownProps};
-}
+// const mapStateToProps = (state : any, ownProps: any) => {
+//   const geoState: GeometryState = state.geometry;
+// 	return {geometrystate: geoState, ownProps: ownProps};
+// }
 
-const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
-  const [selectedProcess, setselectedProcess] = useState<string>('');
+const SubmenuCreator: React.FC<States> = (state: States) => {
+  const [selectedProcess, setselectedProcess] = useState<string>(state.process.selectedProcess);
   const [description, setDescription] = useState<string>('');
   const [geometryImportType, setGeometryImportType] = useState<string>('provided');
 
   const {menu} = state.ownProps;
-  const geometrystate: GeometryState = state.geometrystate;
+  const geometrystate: GeometryState = state.geo;
 
   const dispatch = useDispatch();
 
   const handleProcessChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    setselectedProcess(newValue);
+    // setselectedProcess(newValue);
+    dispatch(processSetProcess(newValue) as any);
     // dispatch(setSubmenus([newValue]) as any); //TOCHECK
     updateDescription(newValue);
+    dispatch(addSubmenu(newValue, 0) as any);
   };
 
   const handleGeometryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -349,4 +353,4 @@ const SubmenuCreator: React.FC<SubmenuProps> = (state: any) => {
   );
 };
 
-export default connect(mapStateToProps) (SubmenuCreator);
+export default connect(allInterfaces) (SubmenuCreator);

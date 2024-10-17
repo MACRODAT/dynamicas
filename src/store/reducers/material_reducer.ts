@@ -23,5 +23,5 @@ export interface MaterialState {
 	  default:
 		return state;
 	}
-  }
+}
   
