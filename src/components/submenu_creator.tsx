@@ -54,6 +54,10 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
     dispatch(parametersSimulationType(val) as any);
   }
 
+  const handleSolverType = (event: string) => {
+    dispatch(addSubmenu(event, 0) as any);
+  }
+
   const handleGeometryImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGeometryImportType(event.target.value)
     dispatch(addSubmenu(event.target.value, 1) as any)
@@ -257,6 +261,30 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
           </div>
         );
 	};
+
+  const renderSolutionOptions = () => {
+    // console.log(state.geo)
+    if (geometrystate.selectedGeometry == "provided")
+    {
+      return (
+        <div className='p-1'>
+            <div className='menuRes' onClick={() => handleSolverType("")}>
+              Intro
+            </div>
+            <div className='menuRes' onClick={() => handleSolverType("folder")}>
+              View my folder structure
+            </div>
+            <div className='menuRes'>
+              Item 1
+            </div>
+            <div className='menuRes'>
+              Item 1
+            </div>
+        </div>
+      )
+    }
+  }
+
   const renderSolverOptions = () => {
         if (geometrystate.selectedGeometry == "provided")
         {
@@ -430,6 +458,18 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 					</div>
 				</>
 			)
+    case 'results':
+      return (
+        <>
+          <h3>Results pane</h3>
+					<div className="dynamic-description mt-3">
+						<p>Display the results as computer from your simulation.</p>
+					</div>
+					<div className="menu-options mt-3">
+						{renderSolutionOptions()}
+					</div>
+        </>
+      )
 	}
   }
 

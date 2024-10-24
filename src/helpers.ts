@@ -6,6 +6,7 @@ import { MaterialState } from "./store/reducers/material_reducer";
 import { ParametersState } from "./store/reducers/parameters_reducer";
 import { ResultsState } from "./store/reducers/results_reducer";
 import { SolverState } from "./store/reducers/solver_reducer";
+import { UserState } from "./store/reducers/user_reducer";
 
 const toUpper = (s : string) => {
 	if (s == undefined)
@@ -58,6 +59,7 @@ export type States = {
 	params : ParametersState,
 	res : ResultsState,
 	solver: SolverState,
+	user: UserState,
 	ownProps: any
 };
 
@@ -70,7 +72,8 @@ let allInterfaces = (state: any, ownProps: any) => {
 	let params : ParametersState = state.parameters;
 	let res : ResultsState = state.results;
 	let solver : SolverState = state.solver;
-	
+	let user : UserState = state.user;
+
 	return {
 		geo: geo,
 		action: action,
@@ -80,6 +83,7 @@ let allInterfaces = (state: any, ownProps: any) => {
 		params: params,
 		solver: solver,
 		res: res,
+		user: user,
 		ownProps: ownProps,
 	}
 }

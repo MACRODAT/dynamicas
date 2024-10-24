@@ -17,6 +17,9 @@ const Solver2D: React.FC<States> = (state: States) => {
 		"Density: " + state.material.customDensity + " Kg/m3",
 		"Simulation type: 2D",
 		"Selected Process: " + state.process.selectedProcess,
+		"--------------------------------------------",
+		"Angle of attack: " + state.params.angleOfAttack + " degrees",
+		"Incoming stream velocity: " + state.params.streamVelocityX + " m/s",
 		"-------------------------------------------",
 		"Solver:",
 		"Max iterations: " + state.solver.maxIterations,
@@ -32,9 +35,11 @@ const Solver2D: React.FC<States> = (state: States) => {
 			<EngineeringConsole datatext={data} />
 			<Form>
 				<Form.Group>
+					<br />
 					<Form.Label>
 						Start the simulation:
 					</Form.Label>
+					<br />
 					<Button>Start</Button>
 				</Form.Group>
 			</Form>

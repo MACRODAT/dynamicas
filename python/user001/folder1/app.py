@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
-from create_io import list_files_by_folder, list_files_recursively
 from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, get_airfoil_step, get_airfoil_screenshot, create_geometry, create_mesh, create_screenshot, get_airfoil_description
 import os
 import io
@@ -83,9 +82,8 @@ def get_description(airfoil):
     """Get the description for a specific airfoil."""
     try:
         return jsonify({"description": get_airfoil_description(airfoil)})
-    except Exception as e:
+    except e:
         return jsonify({"error": "Desc not found", "description": ""}), 404
-
 
 @app.route('/airfoil/<string:airfoil>/geometry', methods=['POST'])
 def create_geo(airfoil):
@@ -125,14 +123,6 @@ def take_screenshot(airfoil):
         )
     except FileNotFoundError:
         return jsonify({"error": "Screenshot not found"}), 404
-
-@app.route('/user/<string:username>/dir', methods=['GET'])
-def get_dir(username):
-    """Will display dir of the user"""
-    try:
-        return jsonify(list_files_recursively(username))
-    except Exception as e:
-        return jsonify({"error": "Error in dir", "description": e}), 404 
 
 if __name__ == '__main__':
     app.run(debug=True)

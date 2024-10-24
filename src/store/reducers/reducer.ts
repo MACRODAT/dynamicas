@@ -7,6 +7,7 @@ import { geometryReducer } from './geometry_reducer';
 import { resultsReducer } from './results_reducer';
 import applicationReducer from './action_reducer';
 import { solverReducer } from './solver_reducer';
+import { userReducer } from './user_reducer';
 
 const rootReducer = combineReducers({
 	process: processReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
 	results: resultsReducer,
 	solver: solverReducer,
 	application: applicationReducer,
+	user: userReducer
 });
 
 export default rootReducer;

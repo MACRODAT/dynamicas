@@ -5,6 +5,8 @@ import Airfoil from "./geometry/airfoil";
 import TDPrint  from "./process/3dprint";
 import ConfigureAirfoil from "./parameters/configureAirfoil";
 import Solver from "./solver.ts/solver";
+import ViewFolder from "./results/viewFolder";
+import DefaultResult from "./results/defaultResult";
 
 const mapStateToProps = (state : any) => {
 
@@ -30,6 +32,16 @@ const Content : React.FC = (state : any) => {
 		if (selectedMenu == "Solver")
 		{
 			return <Solver />
+		}
+		if (selectedMenu == "Results")
+		{
+			switch (state.application.submenus[0].toUpperCase())
+			{
+				case 'FOLDER':
+					return <ViewFolder />
+				default:
+					return <DefaultResult />
+			}
 		}
 		switch (state.application.submenus[0].toUpperCase())
 		{

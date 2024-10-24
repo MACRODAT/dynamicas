@@ -108,6 +108,18 @@
 		border-right: 4px solid variables.$back-100;
 		max-width: 300px !important;
 
+		.menuRes
+		{
+			margin: 0;
+			margin-top: 6px;
+			padding: 4px;
+			border-radius: 4px 4px;
+			background-color: variables.$back-200;
+
+			cursor: pointer;
+		}
+
+
 		#submenu-container {
 			padding: 4px;
 			position: relative;

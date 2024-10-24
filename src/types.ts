@@ -53,8 +53,16 @@ type Point = {
 	Quadcopter = 'quadcopter',
   }
 
+  type User = {
+	firstname: string;
+	lastname: string;
+	avatar: string;
+	loginDate: Date;
+
+  }
+
   export type {
-	Point, Shape
+	Point, Shape, User
   }
   export {
 	ShapeName, JoiningMethod, MaterialType, AirfoilType
