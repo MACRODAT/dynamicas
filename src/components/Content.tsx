@@ -47,27 +47,43 @@ const Content : React.FC = (state : any) => {
 					return <DefaultResult />
 			}
 		}
+		// if (selectedMenu == "Geometry")
+		// {
+		// 	switch (state.application.submenus[0].toUpperCase())
+		// 	{
+		// 		case 'FIXED WING':
+		// 			if (state.application.submenus.length > 1
+		// 				&& state.application.submenus[1].toUpperCase() == "PROVIDED")
+		// 			{
+		// 				return <Airfoil />
+		// 			}
+		// 			else if (state.application.submenus.length > 1
+		// 				&& state.application.submenus[1].toUpperCase() == "OWNGENERATOR")
+		// 			{
+		// 				return <Generator />	
+		// 			}
+		// 			else
+		// 			{
+		// 				return defaultComponent
+		// 			}
+		// 		case '':
+		// 			return 
+		// 		case '2D':
+		// 			return <ConfigureAirfoil />
+		// 		default:
+		// 			return <GeneralGeo />
+		// 	}
+		// }
 		if (selectedMenu == "Geometry")
 		{
-			switch (state.application.submenus[0].toUpperCase())
+			// console.log(state.application.submenus)
+			switch (state.application.submenus.length > 1 &&
+				state.application.submenus[1].toUpperCase())
 			{
-				case 'FIXED WING':
-					if (state.application.submenus.length > 1
-						&& state.application.submenus[1].toUpperCase() == "PROVIDED")
-					{
-						return <Airfoil />
-					}
-					else if (state.application.submenus.length > 1
-						&& state.application.submenus[1].toUpperCase() == "OWNGENERATOR")
-					{
-						return <Generator />	
-					}
-					else
-					{
-						return defaultComponent
-					}
-				case '':
-					return 
+				case 'PROVIDED':
+					return <Airfoil />
+				case 'OWNGENERATOR':
+					return <Generator /> 
 				case '2D':
 					return <ConfigureAirfoil />
 				default:
