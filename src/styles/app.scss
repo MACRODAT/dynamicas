@@ -96,6 +96,22 @@
 	}
 }
 
+.inline{
+	display: inline-block !important; 
+}
+
+.inlineh6{
+	display: inline-block;
+	margin-left: 12px;
+	border-left: 3px solid variables.$back-300;
+	padding-left: 4px;
+}
+
+.bold
+{
+	font-weight: 700 !important;
+}
+
 .done{
 	color: rgb(145, 208, 145) !important;
 }
@@ -154,6 +170,8 @@
 		flex-grow: 9; 
 		height: 100%;
 		overflow-y: auto;
+		background-color: variables.$back-100;
+		color: variables.$front-100;
 
 		#naca {
 			height: 80%;

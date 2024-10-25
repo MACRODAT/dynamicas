@@ -8,6 +8,7 @@ import Solver from "./solver.ts/solver";
 import ViewFolder from "./results/viewFolder";
 import DefaultResult from "./results/defaultResult";
 import GeneralGeo from "./geometry/generalGeo";
+import Fixedwingspecs from "./process/fixedwingspecs";
 
 const mapStateToProps = (state : any) => {
 
@@ -71,6 +72,8 @@ const Content : React.FC = (state : any) => {
 			{
 				case '3D PRINT':
 					return <TDPrint />
+				case 'FIXED WING SPECS':
+					return <Fixedwingspecs />
 				default:
 					return defaultComponent
 			}
@@ -79,7 +82,7 @@ const Content : React.FC = (state : any) => {
 	}
 
 	return (
-		<div className="p-1 h-100">
+		<div className="p-1 h-100" id="Contenter">
 			<h5 className="front-400">{selectedMenu} {">"} {selectedSubMenus}</h5>
 			
 

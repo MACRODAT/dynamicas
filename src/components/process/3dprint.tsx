@@ -77,7 +77,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 		
 		{/* Nozzle Information */}
 		<div className='box'>
-			<h2>Nozzle</h2>
+			<h4>Nozzle</h4>
 			{
 				useHelp ?
 				<>
@@ -107,7 +107,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 
 		{/* Nozzle Diameter */}
 		<div className='box'>
-			<h2>Nozzle Diameter</h2>
+			<h4>Nozzle Diameter</h4>
 			{
 				useHelp ?
 				<>
@@ -145,7 +145,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 
 		{/* Materials */}
 		<div className='box'>
-			<h2>Material Types</h2>
+			<h4>Material Types</h4>
 			{
 				useHelp ?
 				<>
@@ -192,7 +192,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 
 		{/* Filament diameter */}
 		<div className='box'>
-			<h2>Filament diameter</h2>
+			<h4>Filament diameter</h4>
 			{
 				useHelp ?
 				<>
@@ -235,7 +235,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 
 		{/* Printing Speed */}
 		<div className='box'>
-			<h2>Printing Speed</h2>
+			<h4>Printing Speed</h4>
 			{
 				useHelp ?
 				<>
@@ -272,7 +272,7 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 
 		{/* Filling percent */}
 		<div className='box'>
-			<h2>Filling percent</h2>
+			<h4>Filling percent</h4>
 			{
 				useHelp ?
 				<>

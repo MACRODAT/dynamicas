@@ -117,64 +117,15 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
     switch (selectedProcess) {
       case '3D print':
         return (
-          <div className="p-1">
-            {/* <Form>
-              <Form.Group  className='my-3' controlId="nozzleDiameter">
-                <Form.Label>Nozzle Diameter (mm)</Form.Label>
-                <Form.Control type="number" 
-                  placeholder="0.4" 
-                  min={0.1} max={2.0} 
-                  step={0.1}
-                  value={state.process.nozzleDiameter} 
-                  onChange={handleNozzleDiameter}
-                />
-                <Form.Text className="front-400">
-                  Nozzle diameter determines the width of the extruded filament. A smaller nozzle provides finer detail but may increase printing time.
-                </Form.Text>
-              </Form.Group>
-              <hr />
-              <Form.Group  className='my-3' controlId="printingSpeed">
-                <Form.Label>Printing Speed (mm/s)</Form.Label>
-                <Form.Control 
-                        type="number"
-                        placeholder="select" 
-                        value={state.process.printingSpeed}                        
-                        onChange={handlePrintingSpeed}
-                        min={10} max={200} 
-                        step={10}
-                        />
-                <Form.Text className=" front-400">
-                  Printing speed is provided by the printer, typically indicating the time it takes to complete a layer.
-                </Form.Text>
-              </Form.Group>
-              <hr />
-
-              <Form.Group  className='my-3' controlId="filamentDiameter">
-                <Form.Label>Filament Diameter (mm)</Form.Label>
-                <Form.Control type="number" placeholder="1.75" defaultValue={1.75} />
-                <Form.Text className=" front-400">
-                  Filament diameter is usually standardized, with 1.75mm being the most common.
-                </Form.Text>
-              </Form.Group>
-              <hr />
-
-              <Form.Group  className='my-3' controlId="fillingPercent">
-                <Form.Label>Filling Percent (%)</Form.Label>
-                <Form.Control type="number" placeholder="20" defaultValue={20} />
-                <Form.Text className=" front-400">
-                  Filling percent indicates how much of the internal volume of the object will be filled with material.
-                </Form.Text>
-              </Form.Group>
-              <hr />
-            </Form> */}
-            <h6 className={"link" + (state.geo.done ? ' done' : ' notdone')}
+          <div className="">
+            <h6 className={"link" + (state.process.done ? ' done' : ' notdone')}
                 onClick={() => dispatch(addSubmenu('3D Print', 0) as any)}>
                   {
-                    state.geo.done ?
+                    state.process.done ?
                     <MdOutlineDownloadDone /> : 
                     <CiEdit />
                   }
-              Set up 3d printing options ({state.geo.done ? "Complete" : "Incomplete"})
+              Set up 3d printing options ({state.process.done ? "Complete" : "Incomplete"})
             </h6>
           </div>
         );
@@ -414,7 +365,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 		case 'process':
 			return (
 				<>
-					<Form.Group  className='my-3' controlId="menuSelection">
+					<Form.Group  className='my-3 bold' controlId="menuSelection">
 						<Form.Label>What's your manufacturing process?</Form.Label>
 						<Form.Control as="select" value={selectedProcess} onChange={handleProcessChange}>
               {menuOptions.map((menuOption) => (
@@ -435,13 +386,30 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 
           <hr />
 
-          <Form.Group className='my-3' controlId='aircraftType'>
+          <Form.Group className='my-3 bold' controlId='aircraftType'>
             <Form.Label>What's your air vehicle type?</Form.Label>
-            <Form.Control as="select" value={state.geo.geometryType}>
+            <Form.Control as="select" 
+                  onChange={(e) => dispatch(geometrySetClass(e.target.value) as any)}
+                  value={state.geo.geometryType}>
+              <option key="">Select one</option>
               <option key="Fixed wing">Fixed wing</option>
               <option key="multirotor" disabled={true}>Multirotor</option>
             </Form.Control>
           </Form.Group>
+          <div className="dynamic-description mt-3">
+						<p>Set up the type aircraft that you're intending to build.</p>
+					</div>
+					<div className="menu-options mt-3">
+            <h6 className={"link" + (state.process.done ? ' done' : ' notdone')}
+                onClick={() => dispatch(addSubmenu('fixed wing specs', 0) as any)}>
+                  {
+                    state.process.done ?
+                    <MdOutlineDownloadDone /> : 
+                    <CiEdit />
+                  }
+              Set up initial {state.geo.geometryType} specs. ({state.process.done ? "Complete" : "Incomplete"})
+            </h6>
+					</div>
 				</>
 			)
 		case 'parameters':

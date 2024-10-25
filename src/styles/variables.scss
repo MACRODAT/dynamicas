@@ -1,4 +1,4 @@
-$back-100: #060836;
+$back-100: var(--back-100);
 $back-200: #1a1d59e5;
 $back-300: #0f157ebe;
 $green-100: #0f7e18be;
@@ -11,8 +11,8 @@ $front-500: #757575;
 $shadow-100: #7a7a7ae4;
 
 :root {
-	--back-color: #f0f0f0;
-	--text-color: #333333;
+	--back-color: $front-100;
+	--text-color: $front-500;
 }
 
 

@@ -7,6 +7,7 @@ export interface ApplicationState {
   menu: string;
   submenus: string[];
   otherParams: { [key: string]: string };
+  themeSchema: { [key: string]: string};
   theme: string;
 }
 
@@ -18,7 +19,13 @@ const initialState: ApplicationState = {
   , '', '', '', ''
   ],
   otherParams: {},
-  theme: 'light',  // Default theme
+  theme: 'blue sky',  // Default theme
+  themeSchema: {
+    'primary-color': '#903829',
+    'front-200': '#839911',
+    // 'back-100': '#060836',
+    'back-100': '#060806'
+  }
 };
 
 // Application reducer
