@@ -378,7 +378,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 				
 					{/* Render options for the selected menu */}
 					<div className="dynamic-description mt-3">
-						<p>{description}</p>
+						<p className='italic'>{description}</p>
 					</div>
 					<div className="menu-options mt-3">
 						{renderProcessSubmenuOptions()}
@@ -397,7 +397,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
             </Form.Control>
           </Form.Group>
           <div className="dynamic-description mt-3">
-						<p>Set up the type aircraft that you're intending to build.</p>
+						<p className='italic'>Set up the type aircraft that you're intending to build.</p>
 					</div>
 					<div className="menu-options mt-3">
             <h6 className={"link" + (state.process.done ? ' done' : ' notdone')}

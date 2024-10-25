@@ -84,6 +84,9 @@ const App: React.FC<ApplicationState> = (state: ApplicationState) => {
                 <option value={"black space"}>
                   Black space
                 </option>
+                <option value={"green park"}>
+                  Green park
+                </option>
               </Form.Select>
             </Form.Group>
           </Form>

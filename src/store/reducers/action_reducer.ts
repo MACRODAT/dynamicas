@@ -45,6 +45,23 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
       'front-500': '#B9C4CC',
     }
   }
+  else if (theme == 'green park')
+  {
+    return {
+      'primary-color': '#0f0809',
+      'back-100': '#D2DEE7',
+      'back-200': '#CEDBE5',
+      'back-300': '#C6D4DB',
+      'back-400': '#BECCD1',
+      'back-500': '#ADBCBC',
+      'green-100': '#149E59',
+      'front-100': '#0C0C0C',
+      'front-200': '#0C0C0C',
+      'front-300': '#2D4526',
+      'front-400': '#475C41',
+      'front-500': '#8B9C93',
+    }
+  }
   return {
 
   }
