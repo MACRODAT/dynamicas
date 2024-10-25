@@ -41,9 +41,10 @@ export function geometryReducer(
 			return { ...state, done:false, geometrySelectedAirfoil: action.payload };
 		}
 	  case SET_GEOMETRY_TYPE:
+		// console.log("type: ", state.done);
 		return { ...state, done: false, selectedGeometry: action.payload};
-	  case SET_GEOMETRY_CLASS:
-		console.log(state.done);
+		case SET_GEOMETRY_CLASS:
+		//   console.log("class: ", state.done);
 		return { ...state, done: false, geometryType: action.payload};
 	  case PREVIEW_GEOMETRY:
 		return { ...state, previewedGeometry: action.payload };

@@ -9,6 +9,7 @@ import ViewFolder from "./results/viewFolder";
 import DefaultResult from "./results/defaultResult";
 import GeneralGeo from "./geometry/generalGeo";
 import Fixedwingspecs from "./process/fixedwingspecs";
+import Generator from "./geometry/generator";
 
 const mapStateToProps = (state : any) => {
 
@@ -50,16 +51,23 @@ const Content : React.FC = (state : any) => {
 		{
 			switch (state.application.submenus[0].toUpperCase())
 			{
-				case 'AIRFOIL':
+				case 'FIXED WING':
 					if (state.application.submenus.length > 1
 						&& state.application.submenus[1].toUpperCase() == "PROVIDED")
 					{
 						return <Airfoil />
 					}
+					else if (state.application.submenus.length > 1
+						&& state.application.submenus[1].toUpperCase() == "OWNGENERATOR")
+					{
+						return <Generator />	
+					}
 					else
 					{
 						return defaultComponent
 					}
+				case '':
+					return 
 				case '2D':
 					return <ConfigureAirfoil />
 				default:

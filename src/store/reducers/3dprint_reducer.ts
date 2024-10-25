@@ -21,7 +21,7 @@ export interface ProcessState {
   };
 
   const checkDone = (e: ProcessState): boolean => {
-	console.log(e)
+	// console.log(e)
 	return (
 		e.filamentDiameter > 0 && e.filamentDiameter < 10
 		&& e.nozzleDiameter > 0 && e.nozzleDiameter < 2.1

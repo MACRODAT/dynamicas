@@ -54,7 +54,7 @@ const MenuCreator: React.FC<States> = (state: States) => {
                 {el.process.charAt(0).toUpperCase() + el.process.slice(1)}
             </>
           {moveNext = el.done}
-          {/* {moveNext = true} */}
+          {moveNext = true}
         </div> : ""
       ))}
     </div>

@@ -47,8 +47,8 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
   const handleGeometryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const val = event.target.value;
     dispatch(addSubmenu(val, 0) as any);
-    dispatch(geometrySetClass(val) as any);
-    dispatch(setGeometryType("") as any);
+    // dispatch(geometrySetClass(val) as any);
+    dispatch(setGeometryType(val) as any);
     let d: airfoilData = {description: "", name: "", screenshot: ""};
     dispatch(geometrySetAirfoilName(d) as any);
   }
@@ -279,30 +279,32 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 
   const renderGeometryOptions = () => {
       return (
-        <div className="p-3">
-          <Form.Group  className='my-3' controlId="geometryType">
-            <Form.Label>Select Geometry Type</Form.Label>
-            <Form.Control as="select" value={geometrystate.geometryType} onChange={handleGeometryChange}>
+        <div className="">
+          <hr />
+          <Form.Group  className='my-3 done' controlId="geometryType">
+            <Form.Label>Which airfoil to use?</Form.Label>
+            <Form.Control className='done' as="select" disabled={true} value={geometrystate.geometryType} onChange={handleGeometryChange}>
               <option value="">Please choose</option>
-              <option value="Airfoil">Airfoil</option>
-              <option value="Fixed Wing">Fixed Wing</option>
-              <option value="Quadcopter">Quadcopter</option>
-              <option value="Custom">Custom</option>
+              {/* <option value="Airfoil">Fixed wing</option> */}
+              <option value="Fixed wing">Fixed Wing</option>
+              <option value="Multirotor">Multirotor</option>
+              {/* <option value="Custom">Custom</option> */}
             </Form.Control>
-            <Form.Text className="front-400">
+            <Form.Text className="front-400 italic">
               Choose the type of geometry to import or preview for your UAV. Options include predefined geometries like airfoil and fixed wing, or custom geometries.
             </Form.Text>
           </Form.Group>
+          <hr />
 
           {
-            geometrystate.geometryType == "Airfoil" ? 
+            geometrystate.geometryType == "Fixed wing" ? 
             <Form.Group className='my-3' controlId="geometryImport">
-              <Form.Label>Where do you want your geometry from?</Form.Label>
+              <Form.Label>how do you want to set your wing airfoil profile?</Form.Label>
               <Form.Control as="select" defaultValue={geometrystate.selectedGeometry} onChange={handleGeometryImport}>
                 <option value="">Please select</option>
-                <option value="provided">NACA airfoils</option>
-                <option value="ownGenerator">My own (Using generator)</option>
-                <option value="ownCustom">My own (Import coordinates)</option>
+                <option value="provided">Preset NACA airfoils (select best)</option>
+                <option value="ownGenerator">My own (Using NACA generator)</option>
+                <option value="ownCustom" disabled={true}>My own (Import coordinates)</option>
               </Form.Control>
             </Form.Group> : <></>
           }
@@ -444,9 +446,9 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 				<>
 					<h3>Geometry</h3>
 					<div className="dynamic-description mt-3">
-						<p>{description}</p>
+						<p>How do you want your {state.geo.geometryType} to look like ? let's choose some elements.</p>
 					</div>
-					<div className="menu-options mt-3">
+					<div className="menu-options">
 						{renderGeometryOptions()}
 					</div>
 				</>
