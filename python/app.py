@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from create_io import list_files_by_folder, list_files_recursively
 from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, get_airfoil_step, get_airfoil_screenshot, create_geometry, create_mesh, create_screenshot, get_airfoil_description
-from airfoilGen.generator import naca4, naca5
+from airfoilGen.generator import naca as nacaFunction
 import os
 
 import io
@@ -136,33 +136,29 @@ def get_dir(username):
     except Exception as e:
         return jsonify({"error": "Error in dir", "description": e}), 404 
 
-@app.route('/naca/<int:version>/<string:naca>/<int:n>/txt', methods=['GET'])
-def getNacaAirfoilTxt(version, naca, n):
+@app.route('/naca/<string:naca>/<int:n>/txt', methods=['GET'])
+def getNacaAirfoilTxt(naca, n):
     """
         Will generate and fetch the NACA dat file
     """
     try:
-        if version == 4:
-            dat = naca4(naca, n, False, save=False)
-        elif version == 5:
-            dat = naca5(naca, n, False, save=False)
-        else:
+        try:
+            dat = nacaFunction(naca, n, save=False)
+        except Exception as e:
             return jsonify({"success": False, "message": "No naca function."})
         return jsonify({"success": True, "data": dat})
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 
-@app.route('/naca/<int:version>/<string:naca>/<int:n>/dat', methods=['GET'])
-def getNacaAirfoilDat(version, naca, n):
+@app.route('/naca/<string:naca>/<int:n>/dat', methods=['GET'])
+def getNacaAirfoilDat(naca, n):
     """
         Will generate and fetch the NACA dat file
     """
     try:
-        if version == 4:
-            dat = naca4(naca, n, False, save=False)
-        elif version == 5:
-            dat = naca5(naca, n, False, save=False)
-        else:
+        try:
+            dat = nacaFunction(naca, n, save=False)
+        except Exception as e:
             return jsonify({"success": False, "message": "No naca function."})
         dat_content = '\n'.join(f"{x}   {y}" for x, y in zip(dat[0],dat[1]))
         
@@ -175,6 +171,26 @@ def getNacaAirfoilDat(version, naca, n):
             mimetype='application/txt',
             as_attachment=True,
             download_name=f'NACA_{naca}_{n}.dat'
+        )
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
+@app.route('/naca/<string:naca>/<int:n>/png', methods=['GET'])
+def getNacaAirfoilImage(naca, n):
+    """
+        Will generate and fetch the NACA dat file
+    """
+    try:
+        try:
+            dat = nacaFunction(naca, n, save=False, uploadImage=True)
+        except Exception as e:
+            return jsonify({"success": False, "message": "No naca function."})
+        dat.seek(0)
+        return send_file(
+            dat,
+            mimetype='image/png',
+            as_attachment=True,
+            download_name=f'NACA_{naca}_{n}.png'
         )
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})

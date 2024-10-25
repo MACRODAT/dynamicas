@@ -151,8 +151,14 @@ class Display(object):
         # Save the plot as an image
         self.plt.savefig(save_path, format='png', dpi=300)
         self.plt.close()
+    def tobytes(self):
+        from io import BytesIO
+        img_io = BytesIO()
+        self.plt.savefig(img_io, format='png', dpi=300)
+        return img_io
 
-def naca4(number, n, finite_TE = False, half_cosine_spacing = False, file_name = "", save=False):
+def naca4(number, n, finite_TE = False, \
+          half_cosine_spacing = False):
     """
     Returns 2*n+1 points in [0 1] for the given 4 digit NACA number string
     """
@@ -210,27 +216,13 @@ def naca4(number, n, finite_TE = False, half_cosine_spacing = False, file_name =
 
     X = xu[::-1] + xl[1:]
     Z = yu[::-1] + yl[1:]
-
-    naca_code = number
-
-    if save:
-        # Set the file name if not provided
-        if not file_name:
-            file_name = f"NACA_{naca_code}.dat"
-
-        file_name = correctPath(__file__, file_name)
-
-        # Write to .dat file
-        with open(file_name, 'w') as f:
-            f.write(f"# NACA {naca_code} airfoil coordinates\n")
-            for x, y in zip(x, Z):
-                f.write(f"{x:.6f} {y:.6f}\n")
-
-    print(f"Generated {file_name} with {len(X)} coordinates.")
+    
+    # print(f"Generated {file_name} with {len(X)} coordinates.")
 
     return X,Z
 
-def naca5(number, n, finite_TE = False, half_cosine_spacing = False, file_name = "", save=False):
+def naca5(number, n, finite_TE = False, half_cosine_spacing = False, \
+          ):
     """
     Returns 2*n+1 points in [0 1] for the given 5 digit NACA number string
     """
@@ -301,22 +293,6 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False, file_name =
     X = xu[::-1] + xl[1:]
     Z = yu[::-1] + yl[1:]
 
-    
-    naca_code = number
-    
-    if save:
-        # Set the file name if not provided
-        if not file_name:
-            file_name = f"NACA_{naca_code}.dat"
-
-        file_name = correctPath(__file__, file_name)
-
-        # Write to .dat file
-        with open(file_name, 'w') as f:
-            f.write(f"# NACA {naca_code} airfoil coordinates\n")
-            for x, y in zip(x, Z):
-                f.write(f"{x:.6f} {y:.6f}\n")
-
     return X,Z
 
 
@@ -347,11 +323,34 @@ def rotate_points(p, angle_deg):
     return rotated_x, rotated_y
 
 
-def naca(number, n, finite_TE = False, half_cosine_spacing = False, rotation = 0):
+def naca(number, n, finite_TE = False, half_cosine_spacing = False, rotation = 0,\
+            file_name = "", save=False, uploadImage=False):
     if len(number) in [4, 5]:
-        points = naca4(number, n, finite_TE, half_cosine_spacing, "", True) if len(number) == 4 else naca5(number, n, finite_TE, half_cosine_spacing)
+        points = naca4(number, n, finite_TE, half_cosine_spacing) \
+            if len(number) == 4 else \
+                naca5(number, n, finite_TE, half_cosine_spacing)
         if rotation != 0:
             points = rotate_points(points, rotation)
+        # file_name = "", save=False, uploadImage=False
+        naca_code = number
+        X,Z = points
+        if save:
+            # Set the file name if not provided
+            if not file_name:
+                file_name = f"NACA_{naca_code}.dat"
+
+            file_name = correctPath(__file__, file_name)
+
+            # Write to .dat file
+            with open(file_name, 'w') as f:
+                f.write(f"# NACA {naca_code} airfoil coordinates\n")
+                for x, y in zip(X, Z):
+                    f.write(f"{x:.6f} {y:.6f}\n")
+        if uploadImage:
+            d = Display(number=number)
+            d.plot(X, Z, f"NACA {number}({n} points)")
+            d.show()
+            return d.tobytes()
         return points
     else:
         raise Exception
