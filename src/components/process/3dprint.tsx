@@ -12,7 +12,7 @@ import filamentDiameter from "../../res/filamentDiameter.webp";
 import './3dprint.scss'
 import { Form } from 'react-bootstrap';
 import { MaterialState } from '../../store/reducers/material_reducer';
-import { processFilamentDiameter, processFillingPercent, processSetMaterial } from '../../store/logic/processLogic';
+import { processFilamentDiameter, processFillingPercent, processPrintingSpeed, processSet3DDiameter, processSetMaterial } from '../../store/logic/processLogic';
 
 type Stator = {process: ProcessState, action: ApplicationState, material: MaterialState, ownProps: any};
 
@@ -127,6 +127,18 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 				<hr />
 				<div className="div">
 					Selected nozzle diameter: <b>{state.process.nozzleDiameter}mm</b>
+					<Form>
+						<Form.Label>
+							Change nozzle diameter:
+						</Form.Label>
+						<Form.Range
+								min={0.1}
+								max={1.6}
+								step={0.05}
+								onChange={(e) => dispatch(processSet3DDiameter(Number(e.target.value)) as any)}
+								value={state.process.nozzleDiameter}
+							/>
+					</Form>
 				</div>
 			</div>
 		</div>
@@ -241,6 +253,18 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
 				<hr />
 				<div className="div">
 					Selected speed: <b>{state.process.printingSpeed}mm/s</b>
+					<Form>
+						<Form.Label>
+							Change nozzle diameter:
+						</Form.Label>
+						<Form.Range
+								min={10}
+								max={100}
+								step={5}
+								onChange={(e) => dispatch(processPrintingSpeed(Number(e.target.value)) as any)}
+								value={state.process.printingSpeed}
+							/>
+					</Form>
 				</div>
 			</div>
 		</div>
