@@ -57,231 +57,234 @@ const TDPrint: React.FC<Stator> = (state: Stator) => {
   }
 
   return (
-    <div style={{}}>
+    <div style={{}} className=''>
       <h1>3D Printing as manufacturing process</h1>
 	  <hr />
 	  <div className="box">
-		<Form>
-			<Form.Group>
-				<Form.Check 
-					checked={useHelp} 
-					label="Use help."
-					type='switch'
-					onChange={setHelp}
-					/>
-				
-			</Form.Group>
-		</Form>
+			<Form>
+				<Form.Group>
+					<Form.Check 
+						checked={useHelp} 
+						label="Use help."
+						type='switch'
+						onChange={setHelp}
+						/>
+					
+				</Form.Group>
+			</Form>
 	  </div>
-      {/* Nozzle Information */}
-      <div className='box'>
-        <h2>Nozzle</h2>
-        {
-			useHelp ?
-			<>
-				<p>
-					The nozzle is one of the most crucial parts of a 3D printer, as it dictates how the material is deposited
-					layer by layer. For precise airfoil or drone component creation, a high-quality nozzle is required.
-				</p>
-				<div className='centerImage'>
-					<img src={nozzle} alt="Nozzle" className='image' />
-				</div>
-				<div className="centerImage">
-					Source: <a href="https://blog.diyelectronics.co.za/diyelectronics-3d-printer-nozzle-guide/">Diy Electronics</a>
-				</div>
-			</>
-			:
-			""
-		}
+	  <div className="container3d">
 		
-		<div className='centerImage actionBox'>
-			Actions:
-			<hr />
-			<div className="div">
-				No action can be taken here. Please select the best material for your nozzle.
-			</div>
-		</div>
-      </div>
-
-      {/* Nozzle Diameter */}
-      <div className='box'>
-        <h2>Nozzle Diameter</h2>
-		{
-			useHelp ?
-			<>
-				<p>
-					Nozzle diameter affects the precision of your prints. Smaller diameters (e.g., 0.2mm) provide finer detail but take longer to print. 
-					Larger diameters (e.g., 0.4mm or 0.6mm) allow for faster printing but reduce the level of detail. 
-					For drone components requiring both strength and aerodynamics, a 0.4mm nozzle is a great starting point.
-				</p>
-				<div className='centerImage'>
-					<img src={diameter} alt="Nozzle" className='image' />
+		{/* Nozzle Information */}
+		<div className='box'>
+			<h2>Nozzle</h2>
+			{
+				useHelp ?
+				<>
+					<p>
+						The nozzle is one of the most crucial parts of a 3D printer, as it dictates how the material is deposited
+						layer by layer. For precise airfoil or drone component creation, a high-quality nozzle is required.
+					</p>
+					<div className='centerImage'>
+						<img src={nozzle} alt="Nozzle" className='image' />
+					</div>
+					<div className="centerImage">
+						Source: <a href="https://blog.diyelectronics.co.za/diyelectronics-3d-printer-nozzle-guide/">Diy Electronics</a>
+					</div>
+				</>
+				:
+				""
+			}
+			
+			<div className='centerImage actionBox'>
+				Actions:
+				<hr />
+				<div className="div">
+					No action can be taken here. Please select the best material for your nozzle.
 				</div>
-			</> : ""
-		}
-
-		<div className='centerImage actionBox'>
-			Actions:
-			<hr />
-			<div className="div">
-				Selected nozzle diameter: <b>{state.process.nozzleDiameter}mm</b>
 			</div>
 		</div>
-      </div>
 
-      {/* Materials */}
-      <div className='box'>
-        <h2>Material Types</h2>
-		{
-			useHelp ?
-			<>
-				<p>
-					Choosing the right material is essential for creating durable and lightweight drone components.
-					Here are a few common materials:
-				</p>
-				<ul>
-				<li><b>PLA</b>: Easy to print, good for prototypes, but not very durable.</li>
-				<li><b>ABS</b>: Stronger than PLA and more heat-resistant, but can be tricky to print due to warping.</li>
-				<li><b>PETG</b>: A good middle ground between PLA and ABS, offering strength and heat resistance.</li>
-				<li><b>Nylon</b>: Lightweight, durable, and ideal for mechanical parts like drone arms.</li>
-				</ul>
-				
-				<div className='centerImage'>
-					<img src={materials} alt="Nozzle" className='image' />
+		{/* Nozzle Diameter */}
+		<div className='box'>
+			<h2>Nozzle Diameter</h2>
+			{
+				useHelp ?
+				<>
+					<p>
+						Nozzle diameter affects the precision of your prints. Smaller diameters (e.g., 0.2mm) provide finer detail but take longer to print. 
+						Larger diameters (e.g., 0.4mm or 0.6mm) allow for faster printing but reduce the level of detail. 
+						For drone components requiring both strength and aerodynamics, a 0.4mm nozzle is a great starting point.
+					</p>
+					<div className='centerImage'>
+						<img src={diameter} alt="Nozzle" className='image' />
+					</div>
+				</> : ""
+			}
+
+			<div className='centerImage actionBox'>
+				Actions:
+				<hr />
+				<div className="div">
+					Selected nozzle diameter: <b>{state.process.nozzleDiameter}mm</b>
 				</div>
-			</> : ""
-		}
-        <div className='centerImage actionBox'>
-			Actions:
-			<hr />
-			<div className="div">
-				<Form>
-					<Form.Group>
-						<Form.Label>
-							Select your material of choice: 
-						</Form.Label>
-						<Form.Select 
-								value={state.material.material}
-								onChange={changeMaterial}
-								>
-							<option value="ANY">Select</option>
-							<option value="PLA">PLA</option>
-							<option value="ABS">ABS</option>
-							<option value="PETG">PETG</option>
-							<option value="NYLON">NYLON</option>
-						</Form.Select>
-					</Form.Group>
-				</Form>
 			</div>
 		</div>
-      </div>
 
-      {/* Filament diameter */}
-      <div className='box'>
-        <h2>Filament diameter</h2>
-		{
-			useHelp ?
-			<>
-				<p>
-				3D printing filament in different colours with models created using 
-				the filament. 
-				Filament comes in a range of diameters, 
-				most commonly 1.75 mm and 2.85 mm, 
-				with the latter often being confused with the less 
-				common 3 mm. Filament consists of one continuous slender plastic 
-				thread spooled into a reel.
-				</p>
-				<div className='centerImage'>
-					<img src={filamentDiameter} alt="Nozzle" className='image' />
-				</div>			
-			</> :  ""
-		}
-		<div className='centerImage actionBox'>
-			Actions:
-			<hr />
-			<div className="div">
-				<Form>
-					<Form.Group>
-						<Form.Label>
-							Selected diameter for your filament: 
-						</Form.Label>
-						<Form.Range
-							min={0.1}
-							max={10}
-							step={0.05}
-							onChange={handleFilamentDiameter}
-							value={state.process.filamentDiameter}
-						/>
-					</Form.Group>
-				</Form>
-				<b>{state.process.filamentDiameter}mm</b>
+		{/* Materials */}
+		<div className='box'>
+			<h2>Material Types</h2>
+			{
+				useHelp ?
+				<>
+					<p>
+						Choosing the right material is essential for creating durable and lightweight drone components.
+						Here are a few common materials:
+					</p>
+					<ul>
+					<li><b>PLA</b>: Easy to print, good for prototypes, but not very durable.</li>
+					<li><b>ABS</b>: Stronger than PLA and more heat-resistant, but can be tricky to print due to warping.</li>
+					<li><b>PETG</b>: A good middle ground between PLA and ABS, offering strength and heat resistance.</li>
+					<li><b>Nylon</b>: Lightweight, durable, and ideal for mechanical parts like drone arms.</li>
+					</ul>
+					
+					<div className='centerImage'>
+						<img src={materials} alt="Nozzle" className='image' />
+					</div>
+				</> : ""
+			}
+			<div className='centerImage actionBox'>
+				Actions:
+				<hr />
+				<div className="div">
+					<Form>
+						<Form.Group>
+							<Form.Label>
+								Select your material of choice: 
+							</Form.Label>
+							<Form.Select 
+									value={state.material.material}
+									onChange={changeMaterial}
+									>
+								<option value="ANY">Select</option>
+								<option value="PLA">PLA</option>
+								<option value="ABS">ABS</option>
+								<option value="PETG">PETG</option>
+								<option value="NYLON">NYLON</option>
+							</Form.Select>
+						</Form.Group>
+					</Form>
+				</div>
 			</div>
 		</div>
-      </div>
 
-      {/* Printing Speed */}
-      <div className='box'>
-        <h2>Printing Speed</h2>
-		{
-			useHelp ?
-			<>
-				<p>
-				The speed at which your 3D printer moves affects the quality and accuracy of the final product. 
-				For detailed airfoil designs, a slower speed (around 40-60 mm/s) ensures precision.
-				</p>
-				<div className='centerImage'>
-					<img src={printingspeed} alt="Nozzle" className='image' />
-				</div>			
-			</> :  ""
-		}
-		<div className='centerImage actionBox'>
-			Actions:
-			<hr />
-			<div className="div">
-				Selected speed: <b>{state.process.printingSpeed}mm/s</b>
+		{/* Filament diameter */}
+		<div className='box'>
+			<h2>Filament diameter</h2>
+			{
+				useHelp ?
+				<>
+					<p>
+					3D printing filament in different colours with models created using 
+					the filament. 
+					Filament comes in a range of diameters, 
+					most commonly 1.75 mm and 2.85 mm, 
+					with the latter often being confused with the less 
+					common 3 mm. Filament consists of one continuous slender plastic 
+					thread spooled into a reel.
+					</p>
+					<div className='centerImage'>
+						<img src={filamentDiameter} alt="Nozzle" className='image' />
+					</div>			
+				</> :  ""
+			}
+			<div className='centerImage actionBox'>
+				Actions:
+				<hr />
+				<div className="div">
+					<Form>
+						<Form.Group>
+							<Form.Label>
+								Selected diameter for your filament: 
+							</Form.Label>
+							<Form.Range
+								min={0.1}
+								max={10}
+								step={0.05}
+								onChange={handleFilamentDiameter}
+								value={state.process.filamentDiameter}
+							/>
+						</Form.Group>
+					</Form>
+					<b>{state.process.filamentDiameter}mm</b>
+				</div>
 			</div>
 		</div>
-      </div>
 
-
-      {/* Filling percent */}
-      <div className='box'>
-        <h2>Filling percent</h2>
-		{
-			useHelp ?
-			<>
-				<p>
-				While non-functional 3D prints can be printed with a low infill density (0-15%), 
-				functional components should have an infill percentage of at least 50%. 3D infill patterns, 
-				such as cubic, octet, and gyroid provide high strength in all directions.
-				</p>
-				<div className='centerImage'>
-					<img src={fillingPercent} alt="Nozzle" className='image' />
-				</div>			
-			</> :  ""
-		}
-		<div className='centerImage actionBox'>
-			Actions:
-			<hr />
-			<div className="div">
-				<Form>
-					<Form.Group>
-						<Form.Label>
-							Selected a filling % for your print:
-						</Form.Label>
-						<Form.Range
-							min={1}
-							max={100}
-							step={1}
-							onChange={handleFillingPercent}
-							value={state.process.fillingPercent}
-						/>
-					</Form.Group>
-				</Form>
-				<b>{state.process.fillingPercent}%</b>
+		{/* Printing Speed */}
+		<div className='box'>
+			<h2>Printing Speed</h2>
+			{
+				useHelp ?
+				<>
+					<p>
+					The speed at which your 3D printer moves affects the quality and accuracy of the final product. 
+					For detailed airfoil designs, a slower speed (around 40-60 mm/s) ensures precision.
+					</p>
+					<div className='centerImage'>
+						<img src={printingspeed} alt="Nozzle" className='image' />
+					</div>			
+				</> :  ""
+			}
+			<div className='centerImage actionBox'>
+				Actions:
+				<hr />
+				<div className="div">
+					Selected speed: <b>{state.process.printingSpeed}mm/s</b>
+				</div>
 			</div>
 		</div>
-      </div>
+
+
+		{/* Filling percent */}
+		<div className='box'>
+			<h2>Filling percent</h2>
+			{
+				useHelp ?
+				<>
+					<p>
+					While non-functional 3D prints can be printed with a low infill density (0-15%), 
+					functional components should have an infill percentage of at least 50%. 3D infill patterns, 
+					such as cubic, octet, and gyroid provide high strength in all directions.
+					</p>
+					<div className='centerImage'>
+						<img src={fillingPercent} alt="Nozzle" className='image' />
+					</div>			
+				</> :  ""
+			}
+			<div className='centerImage actionBox'>
+				Actions:
+				<hr />
+				<div className="div">
+					<Form>
+						<Form.Group>
+							<Form.Label>
+								Selected a filling % for your print:
+							</Form.Label>
+							<Form.Range
+								min={1}
+								max={100}
+								step={1}
+								onChange={handleFillingPercent}
+								value={state.process.fillingPercent}
+							/>
+						</Form.Group>
+					</Form>
+					<b>{state.process.fillingPercent}%</b>
+				</div>
+			</div>
+		</div>
+	  </div>
 
     </div>
   );

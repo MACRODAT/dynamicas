@@ -1,5 +1,10 @@
 @use '../../styles/variables.scss';
 
+.container3d{
+	display: flex;
+	flex-wrap: wrap;
+}
+
 .centerImage
 {
 	max-width: fit-content;
@@ -20,6 +25,7 @@
 {
 	margin-bottom: 10px;
 	width: fit-content;
+	height: fit-content;
 	
 	max-width: 40%;
 	min-width: 40%;
