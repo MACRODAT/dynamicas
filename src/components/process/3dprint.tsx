@@ -31,7 +31,7 @@ let mapStateToProps = (state: any, ownProps: any):
 
 const TDPrint: React.FC<Stator> = (state: Stator) => {
   const [activeMenu, setActiveMenu] = useState<string>('');
-  const [useHelp, setUseHelp] = useState(true);
+  const [useHelp, setUseHelp] = useState(false);
 
   const dispatch = useDispatch();
 

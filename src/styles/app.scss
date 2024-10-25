@@ -83,6 +83,27 @@
 	background-color: variables.$green-100 !important;
 }
 
+.link
+{
+	cursor: pointer;
+	font-style: italic;
+	border-left: 3px solid variables.$front-400;
+	padding-left: 4px;
+	
+	&:hover{
+		color: variables.$front-200;
+		font-weight: 500;
+	}
+}
+
+.done{
+	color: rgb(145, 208, 145) !important;
+}
+
+.notdone{
+	color: rgb(235, 109, 109) !important;
+}
+
 .main {
 	width: 100%;
 	// height: 100%;

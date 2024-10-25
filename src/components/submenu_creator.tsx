@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { Form } from 'react-bootstrap';
 import { addSubmenu, setGeometryType, setSubmenus } from '../store/logic/actionLogic';
 import { connect, useDispatch } from 'react-redux';
@@ -9,6 +10,9 @@ import { States, allInterfaces } from '../helpers';
 import { processPrintingSpeed, processSet3DDiameter, processSetProcess } from '../store/logic/processLogic';
 import { parametersSimulationType } from '../store/logic/parametersLogic';
 import { solverSetMaxIterations } from '../store/logic/solverLogic';
+
+import { CiEdit } from "react-icons/ci";
+import { MdOutlineDownloadDone } from "react-icons/md";
 
 // interface SubmenuProps {
 //   menu: string;
@@ -21,6 +25,7 @@ import { solverSetMaxIterations } from '../store/logic/solverLogic';
 
 const SubmenuCreator: React.FC<States> = (state: States) => {
   const [selectedProcess, setselectedProcess] = useState<string>(state.process.selectedProcess);
+  
   const {menu} = state.ownProps;
 
   const [description, setDescription] = useState<string>('');
@@ -36,7 +41,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
     dispatch(processSetProcess(newValue) as any);
     // dispatch(setSubmenus([newValue]) as any); //TOCHECK
     updateDescription(newValue);
-    dispatch(addSubmenu(newValue, 0) as any);
+    // dispatch(addSubmenu(newValue, 0) as any);
   };
 
   const handleGeometryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +118,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
       case '3D print':
         return (
           <div className="p-1">
-            <Form>
+            {/* <Form>
               <Form.Group  className='my-3' controlId="nozzleDiameter">
                 <Form.Label>Nozzle Diameter (mm)</Form.Label>
                 <Form.Control type="number" 
@@ -161,7 +166,16 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
                 </Form.Text>
               </Form.Group>
               <hr />
-            </Form>
+            </Form> */}
+            <h6 className={"link" + (state.geo.done ? ' done' : ' notdone')}
+                onClick={() => dispatch(addSubmenu('3D Print', 0) as any)}>
+                  {
+                    state.geo.done ?
+                    <MdOutlineDownloadDone /> : 
+                    <CiEdit />
+                  }
+              Set up 3d printing options ({state.geo.done ? "Complete" : "Incomplete"})
+            </h6>
           </div>
         );
       case 'Joining (Fasteners)':
@@ -394,6 +408,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
   ];
 
   const renderMainMenus = () => {
+    // console.log(menu)
 	switch (menu)
 	{
 		case 'process':
@@ -417,6 +432,16 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 					<div className="menu-options mt-3">
 						{renderProcessSubmenuOptions()}
 					</div>
+
+          <hr />
+
+          <Form.Group className='my-3' controlId='aircraftType'>
+            <Form.Label>What's your air vehicle type?</Form.Label>
+            <Form.Control as="select" value={state.geo.geometryType}>
+              <option key="Fixed wing">Fixed wing</option>
+              <option key="multirotor" disabled={true}>Multirotor</option>
+            </Form.Control>
+          </Form.Group>
 				</>
 			)
 		case 'parameters':

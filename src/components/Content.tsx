@@ -7,6 +7,7 @@ import ConfigureAirfoil from "./parameters/configureAirfoil";
 import Solver from "./solver.ts/solver";
 import ViewFolder from "./results/viewFolder";
 import DefaultResult from "./results/defaultResult";
+import GeneralGeo from "./geometry/generalGeo";
 
 const mapStateToProps = (state : any) => {
 
@@ -25,6 +26,7 @@ const Content : React.FC = (state : any) => {
 	)
 
 	const renderProperSection = () => {
+		// console.log(state.application.submenus)
 		if (state.application.submenus.length == 0)
 		{
 			return defaultComponent;
@@ -43,25 +45,37 @@ const Content : React.FC = (state : any) => {
 					return <DefaultResult />
 			}
 		}
-		switch (state.application.submenus[0].toUpperCase())
+		if (selectedMenu == "Geometry")
 		{
-			case '3D PRINT':
-				return <TDPrint />
-			case 'AIRFOIL':
-				if (state.application.submenus.length > 1
-					&& state.application.submenus[1].toUpperCase() == "PROVIDED")
-				{
-					return <Airfoil />
-				}
-				else
-				{
-					return defaultComponent
-				}
-			case '2D':
-				return <ConfigureAirfoil />
-			default:
-				return defaultComponent
+			switch (state.application.submenus[0].toUpperCase())
+			{
+				case 'AIRFOIL':
+					if (state.application.submenus.length > 1
+						&& state.application.submenus[1].toUpperCase() == "PROVIDED")
+					{
+						return <Airfoil />
+					}
+					else
+					{
+						return defaultComponent
+					}
+				case '2D':
+					return <ConfigureAirfoil />
+				default:
+					return <GeneralGeo />
+			}
 		}
+		if (selectedMenu == "Process")
+		{
+			switch (state.application.submenus[0].toUpperCase())
+			{
+				case '3D PRINT':
+					return <TDPrint />
+				default:
+					return defaultComponent
+			}
+		}
+		return defaultComponent
 	}
 
 	return (

@@ -14,7 +14,7 @@ export interface ApplicationState {
 const initialState: ApplicationState = {
   menu: 'process',
   submenus: [
-    '3D print'
+    ''
   , '', '', '', ''
   ],
   otherParams: {},
