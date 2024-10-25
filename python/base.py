@@ -67,3 +67,7 @@ class airfoilFile:
                 arr.append((float(objs[0]), float(objs[1])))
         return arr
 
+def correctPath(scriptfile, file):
+    from os.path import dirname, realpath
+    file_name = dirname(realpath(scriptfile)) + '/' + file
+    return file_name

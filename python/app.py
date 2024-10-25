@@ -2,7 +2,9 @@ from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from create_io import list_files_by_folder, list_files_recursively
 from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, get_airfoil_step, get_airfoil_screenshot, create_geometry, create_mesh, create_screenshot, get_airfoil_description
+from airfoilGen.generator import naca4, naca5
 import os
+
 import io
 
 
@@ -133,6 +135,14 @@ def get_dir(username):
         return jsonify(list_files_recursively(username))
     except Exception as e:
         return jsonify({"error": "Error in dir", "description": e}), 404 
+
+@app.route('/naca/4/<number:naca>/<number:n>/dat', methods=['GET'])
+def getNacaAirfoilDat(naca, n):
+    """
+        Will generate and fetch the NACA dat file
+    """
+    try:
+        dat = naca4(naca, n, False, save=False)
 
 if __name__ == '__main__':
     app.run(debug=True)
