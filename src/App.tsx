@@ -35,7 +35,7 @@ const App: React.FC<ApplicationState> = (state: ApplicationState) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    console.log(state.themeSchema)
+    // console.log(state.themeSchema)
     Object.keys(state.themeSchema).forEach((key: string) => {
       // console.log(key);
       root.style.setProperty(`--${key}`, state.themeSchema[key]);

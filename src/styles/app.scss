@@ -126,23 +126,27 @@
 
 	display: flex;
 	gap: 0px;
+	background-color: variables.$back-200;
+	color: variables.$front-300;
 
 	.menus { 
+		background-color: variables.$back-200 !important;
+		color: variables.$front-200;
 		flex-grow: 1;
 		min-width: 150px; 
 		max-width: 150px; 
-		background-color: variables.$back-200;
-		color: variables.$front-200;
 		margin: 0; padding: 2px;
 	}
 	.submenus { 
+		background-color: variables.$back-200;
+		color: variables.$front-300;
 		flex-grow: 3;
 		min-width: 250px; 
 		max-width: 250px; 
 		margin: 0; padding: 2px;
-		background-color: variables.$back-300;
-		color: variables.$front-300;
-		border-right: 4px solid variables.$back-100;
+		border-right: 4px solid variables.$front-500;
+		border-left: 1px dashed variables.$front-100;
+
 		max-width: 300px !important;
 
 		.menuRes
@@ -163,15 +167,18 @@
 			height: 99%;
 			scroll-behavior: smooth;
 			overflow-y: auto;
+			
+			background-color: variables.$back-200 !important;
+			color: variables.$front-300 !important;
 		}
 	}
 	.content { 
+		background-color: variables.$back-300;
+		color: variables.$front-100;
 		margin: 0; padding: 2px;
 		flex-grow: 9; 
 		height: 100%;
 		overflow-y: auto;
-		background-color: variables.$back-100;
-		color: variables.$front-100;
 
 		#naca {
 			height: 80%;
