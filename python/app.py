@@ -136,13 +136,48 @@ def get_dir(username):
     except Exception as e:
         return jsonify({"error": "Error in dir", "description": e}), 404 
 
-@app.route('/naca/4/<number:naca>/<number:n>/dat', methods=['GET'])
-def getNacaAirfoilDat(naca, n):
+@app.route('/naca/<int:version>/<string:naca>/<int:n>/txt', methods=['GET'])
+def getNacaAirfoilTxt(version, naca, n):
     """
         Will generate and fetch the NACA dat file
     """
     try:
-        dat = naca4(naca, n, False, save=False)
+        if version == 4:
+            dat = naca4(naca, n, False, save=False)
+        elif version == 5:
+            dat = naca5(naca, n, False, save=False)
+        else:
+            return jsonify({"success": False, "message": "No naca function."})
+        return jsonify({"success": True, "data": dat})
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
+@app.route('/naca/<int:version>/<string:naca>/<int:n>/dat', methods=['GET'])
+def getNacaAirfoilDat(version, naca, n):
+    """
+        Will generate and fetch the NACA dat file
+    """
+    try:
+        if version == 4:
+            dat = naca4(naca, n, False, save=False)
+        elif version == 5:
+            dat = naca5(naca, n, False, save=False)
+        else:
+            return jsonify({"success": False, "message": "No naca function."})
+        dat_content = '\n'.join(f"{x}   {y}" for x, y in zip(dat[0],dat[1]))
+        
+        dat_io = io.BytesIO()
+        dat_io.write(dat_content.encode('utf-8'))
+        dat_io.seek(0)
+
+        return send_file(
+            dat_io,
+            mimetype='application/txt',
+            as_attachment=True,
+            download_name=f'NACA_{naca}_{n}.dat'
+        )
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
 
 if __name__ == '__main__':
     app.run(debug=True)
