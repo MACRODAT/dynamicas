@@ -1,5 +1,7 @@
 # Dynamicas
 
+![image](https://github.com/user-attachments/assets/2b86bbbb-adfc-49ef-ac4b-b95f24ec9ae3)
+
 What's dynamicas ?
 It is a project aimed at providing tools for non-engineers to design and build their own drones. 
 
