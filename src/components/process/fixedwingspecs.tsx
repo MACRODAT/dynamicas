@@ -4,7 +4,7 @@ import { States, allInterfaces } from '../../helpers'
 import './3dprint.scss'
 import { Form } from 'react-bootstrap'
 import wingspan from '../../res/wingspan.png';
-import { parametersSetFlightSpeed, parametersSetFlightTime, parametersSetFuselage, parametersSetPayloadWeight, parametersSetWingspan } from '../../store/logic/parametersLogic'
+import { parametersSetExpectedWeight, parametersSetFlightSpeed, parametersSetFlightTime, parametersSetFuselage, parametersSetPayloadWeight, parametersSetWingspan } from '../../store/logic/parametersLogic'
 
 
 const FixedWingSpecs: React.FC<States> = (state: States) => {
@@ -239,6 +239,47 @@ const FixedWingSpecs: React.FC<States> = (state: States) => {
 										step={0.05}
 										onChange={(e) => dispatch(parametersSetFuselage(Number(e.target.value)) as any)}
 										value={state.params.fuselageLengthMax}
+									/>
+							</Form>
+						</div>
+					</div>
+				</div>
+				{/* EXPECTED WEIGHT */}
+				<div className='box'>
+					<h4>Expected weight of the aircraft (with payload)</h4>
+					{
+					useHelp ?
+						<>
+							<p>
+								What do you expect your aircraft to weight? 
+							</p>
+							<div className='centerImage'>
+								{/* <img src={wingspan} alt="Nozzle" className='image' /> */}
+							</div>
+						</>
+						:
+						""
+					}
+				
+					<div className='centerImage actionBox'>
+						{
+							useHelp ? 
+								<>
+									Actions:
+									<hr />
+								</> : <></>
+						}
+						<div className="div">
+							<Form>
+								<Form.Label>
+									Expected weight [{state.params.weight.expected} kg]:
+								</Form.Label>
+								<Form.Range
+										min={state.params.payloadWeight}
+										max={20}
+										step={0.05}
+										onChange={(e) => dispatch(parametersSetExpectedWeight(Number(e.target.value)) as any)}
+										value={state.params.weight.expected}
 									/>
 							</Form>
 						</div>

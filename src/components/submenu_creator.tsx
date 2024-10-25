@@ -400,14 +400,14 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 						<p className='italic'>Set up the type aircraft that you're intending to build.</p>
 					</div>
 					<div className="menu-options mt-3">
-            <h6 className={"link" + (state.process.done ? ' done' : ' notdone')}
+            <h6 className={"link" + (state.params.doneInitialSketch ? ' done' : ' notdone')}
                 onClick={() => dispatch(addSubmenu('fixed wing specs', 0) as any)}>
                   {
                     state.process.done ?
                     <MdOutlineDownloadDone /> : 
                     <CiEdit />
                   }
-              Set up initial {state.geo.geometryType} specs. ({state.process.done ? "Complete" : "Incomplete"})
+              Set up initial {state.geo.geometryType} specs. ({state.params.doneInitialSketch ? "Complete" : "Incomplete"})
             </h6>
 					</div>
 				</>

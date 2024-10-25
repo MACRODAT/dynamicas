@@ -12,6 +12,7 @@ export interface ParametersState {
 	streamVelocityX: number;
 	angleOfAttack: number;
 	done: boolean;
+	doneInitialSketch: boolean;
 	simulationType: string,
 }
   
@@ -21,6 +22,7 @@ export interface ParametersState {
 	speed: { margins: 0, expected: 0 },
 	airfoilType: AirfoilType.Airfoil,
 	done: false,
+	doneInitialSketch: false,
 	simulationType: '',
 	angleOfAttack: -1,
 	streamVelocityX: -100,
@@ -41,6 +43,26 @@ export interface ParametersState {
 	}
 	return false;
   }
+
+  const b = (v: number, min_: number,max_: number): boolean => {
+	return v > min_ && v < max_;
+  }
+
+  const max__ = (a: number, b: number): number => {
+	return a > b? a : b; 
+  }
+  
+  const CheckDoneInitialSketch = (e: ParametersState): boolean => {
+	// console.log(e)
+	return (
+		b(e.flightTime.expected, 0, 300) &&
+		b(e.speed.expected, 0, 200) &&
+		b(e.fuselageLengthMax, 0, 301) && 
+		b(e.wingSpanMax, 0, 401) && 
+		b(e.payloadWeight, 0, 10.1) && 
+		b(e.weight.expected, 0, 20) 
+	)
+  }
   
   export function parametersReducer(
 	state = initialParametersState,
@@ -55,6 +77,7 @@ export interface ParametersState {
 	  case SET_FLIGHT_TIME_EXPECTED:
 		return {
 		  ...state,
+		  doneInitialSketch: CheckDoneInitialSketch(state), 
 		  flightTime: { ...state.flightTime, expected: action.payload },
 		};
 	  case SET_SIMULATION_TYPE:
@@ -67,6 +90,7 @@ export interface ParametersState {
 	  case SET_WEIGHT_EXPECTED:
 		return {
 		  ...state,
+		  doneInitialSketch: CheckDoneInitialSketch(state),
 		  weight: { ...state.weight, expected: action.payload },
 		};
 	  case SET_SPEED_MARGINS:
@@ -85,11 +109,19 @@ export interface ParametersState {
 		state.streamVelocityX = action.payload;
 		return {...state, done: CheckDone(state), streamVelocityX: action.payload}
 	  case SET_PAYLOAD_WEIGHT:
-		return {...state, done: CheckDone(state), payloadWeight: action.payload}
+		return {...state, 
+				doneInitialSketch: CheckDoneInitialSketch(state), 
+				payloadWeight: action.payload, 
+				weight: 
+					{
+						expected: max__(action.payload * 1.5, state.weight.expected),
+						margins: state.weight.margins
+					}
+				}
 	  case SET_MAX_FUSELAGE:
-		return {...state, done: CheckDone(state), fuselageLengthMax: action.payload}
+		return {...state, doneInitialSketch: CheckDoneInitialSketch(state), fuselageLengthMax: action.payload}
 	  case SET_MAX_WINGSPAN:
-		return {...state, done: CheckDone(state), wingSpanMax: action.payload}
+		return {...state, doneInitialSketch: CheckDoneInitialSketch(state), wingSpanMax: action.payload}
 	  default:
 		return state;
 	}
