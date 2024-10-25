@@ -21,6 +21,10 @@ export const SET_AIRFOIL_TYPE = 'SET_AIRFOIL_TYPE';
 export const SET_STREAM_VELOCITY_2D = 'SET_STREAM_VELOCITY_2D';
 export const SET_ANGLE_OF_ATTACK = 'SET_ANGLE_OF_ATTACK';
 
+export const SET_PAYLOAD_WEIGHT = 'SET_PAYLOAD_WEIGHT';
+export const SET_MAX_WINGSPAN = 'SET_MAX_WINGSPAN';
+export const SET_MAX_FUSELAGE = 'SET_MAX_FUSELAGE';
+
 // Action interfaces
 interface SetFlightTimeMarginsAction {
   type: typeof SET_FLIGHT_TIME_MARGINS;
@@ -72,6 +76,21 @@ interface SetStreamVelocity2D {
   payload: number;
 }
 
+interface SetPayloadWeight {
+  type: typeof SET_PAYLOAD_WEIGHT;
+  payload: number;
+}
+
+interface SetFuselageLength {
+  type: typeof SET_MAX_FUSELAGE;
+  payload: number;
+}
+
+interface SetMaxWingspan {
+  type: typeof SET_MAX_WINGSPAN;
+  payload: number;
+}
+
 export type ParametersActions =
   | SetFlightTimeMarginsAction
   | SetFlightTimeExpectedAction
@@ -82,4 +101,7 @@ export type ParametersActions =
   | SetSimulationType
   | SetAngleOfAttack
   | SetStreamVelocity2D
+  | SetPayloadWeight
+  | SetFuselageLength
+  | SetMaxWingspan
   | SetAirfoilTypeAction;

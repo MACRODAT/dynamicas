@@ -1,10 +1,13 @@
 import { AirfoilType } from "../../types";
-import { ParametersActions, SET_AIRFOIL_TYPE, SET_ANGLE_OF_ATTACK, SET_FLIGHT_TIME_EXPECTED, SET_FLIGHT_TIME_MARGINS, SET_SIMULATION_TYPE, SET_SPEED_EXPECTED, SET_SPEED_MARGINS, SET_STREAM_VELOCITY_2D, SET_WEIGHT_EXPECTED, SET_WEIGHT_MARGINS } from "../parameters";
+import { ParametersActions, SET_AIRFOIL_TYPE, SET_ANGLE_OF_ATTACK, SET_FLIGHT_TIME_EXPECTED, SET_FLIGHT_TIME_MARGINS, SET_MAX_FUSELAGE, SET_MAX_WINGSPAN, SET_PAYLOAD_WEIGHT, SET_SIMULATION_TYPE, SET_SPEED_EXPECTED, SET_SPEED_MARGINS, SET_STREAM_VELOCITY_2D, SET_WEIGHT_EXPECTED, SET_WEIGHT_MARGINS } from "../parameters";
 
 export interface ParametersState {
 	flightTime: { margins: number; expected: number };
 	weight: { margins: number; expected: number };
 	speed: { margins: number; expected: number };
+	payloadWeight: number;
+	wingSpanMax: number;
+	fuselageLengthMax: number;
 	airfoilType: AirfoilType;
 	streamVelocityX: number;
 	angleOfAttack: number;
@@ -21,6 +24,9 @@ export interface ParametersState {
 	simulationType: '',
 	angleOfAttack: -1,
 	streamVelocityX: -100,
+	payloadWeight: 0.1,
+	wingSpanMax: 100,
+	fuselageLengthMax: 60,
   };
 
   const CheckDone = (e: ParametersState): boolean => {
@@ -78,6 +84,12 @@ export interface ParametersState {
 	  case SET_STREAM_VELOCITY_2D:
 		state.streamVelocityX = action.payload;
 		return {...state, done: CheckDone(state), streamVelocityX: action.payload}
+	  case SET_PAYLOAD_WEIGHT:
+		return {...state, done: CheckDone(state), payloadWeight: action.payload}
+	  case SET_MAX_FUSELAGE:
+		return {...state, done: CheckDone(state), fuselageLengthMax: action.payload}
+	  case SET_MAX_WINGSPAN:
+		return {...state, done: CheckDone(state), wingSpanMax: action.payload}
 	  default:
 		return state;
 	}

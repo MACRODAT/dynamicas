@@ -1,4 +1,4 @@
-import { ParametersActions, SET_ANGLE_OF_ATTACK, SET_FLIGHT_TIME_EXPECTED, SET_SIMULATION_TYPE, SET_SPEED_EXPECTED, SET_STREAM_VELOCITY_2D } from '../parameters';
+import { ParametersActions, SET_ANGLE_OF_ATTACK, SET_FLIGHT_TIME_EXPECTED, SET_MAX_FUSELAGE, SET_MAX_WINGSPAN, SET_PAYLOAD_WEIGHT, SET_SIMULATION_TYPE, SET_SPEED_EXPECTED, SET_STREAM_VELOCITY_2D } from '../parameters';
 
 
 // Action Creators
@@ -43,5 +43,26 @@ export const parametersSetFlightSpeed = (speed: number): ParametersActions => {
 	return {
 		type: SET_SPEED_EXPECTED,
 		payload: speed,
+	};
+};
+
+export const parametersSetPayloadWeight = (minPayload: number): ParametersActions => {
+	return {
+		type: SET_PAYLOAD_WEIGHT,
+		payload: minPayload,
+	};
+};
+
+export const parametersSetWingspan = (val: number): ParametersActions => {
+	return {
+		type: SET_MAX_WINGSPAN,
+		payload: val,
+	};
+};
+
+export const parametersSetFuselage = (val: number): ParametersActions => {
+	return {
+		type: SET_MAX_FUSELAGE,
+		payload: val,
 	};
 };
