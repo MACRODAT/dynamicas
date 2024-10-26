@@ -3,15 +3,36 @@ from flask_cors import CORS
 from create_io import list_files_by_folder, list_files_recursively
 from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, get_airfoil_step, get_airfoil_screenshot, create_geometry, create_mesh, create_screenshot, get_airfoil_description
 from airfoilGen.generator import naca as nacaFunction
-import os
+
+# login stuff
+from secrets.secret_key import secret_key
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
 
 import io
 
-
 app = Flask(__name__)
+app.secret_key = secret_key #TO BE MODIFIED
+
+# adding login functionality
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
+# temporary
+users = {}
 
 # Enable CORS for all origins
 CORS(app)
+
+#login for users
+@login_manager.user_loader
+def load_user(user_avatar):
+    # hardcoded for now
+    return {
+        "name": "Younes FOUQANI"
+    }
 
 @app.route('/', methods=['GET'])
 def home():
