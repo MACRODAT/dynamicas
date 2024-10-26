@@ -1,7 +1,9 @@
 from base import point, airfoilFile
 from typing import List
-import cadquery as cq
+# import cadquery as cq
 import numpy as np
+
+cq = 0
 
 def create_geometry_from_file(points_: airfoilFile, wingspan: float, profiling_method: str, params: List[float], output: str = "airfoil_extruded"):
     # points_geo = [pt.to_point() for pt in points]
