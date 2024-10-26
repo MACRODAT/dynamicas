@@ -13,7 +13,14 @@ from flask_login import UserMixin, LoginManager, login_user, logout_user, login_
 import io
 
 app = Flask(__name__)
+
+
+# sql alchemy stuff
 app.secret_key = secret_key #TO BE MODIFIED
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dynamicas.db'  # Use SQLite for simplicity
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
 
 # adding login functionality
 login_manager = LoginManager()
@@ -25,14 +32,6 @@ users = {}
 
 # Enable CORS for all origins
 CORS(app)
-
-#login for users
-@login_manager.user_loader
-def load_user(user_avatar):
-    # hardcoded for now
-    return {
-        "name": "Younes FOUQANI"
-    }
 
 @app.route('/', methods=['GET'])
 def home():
@@ -217,4 +216,5 @@ def getNacaAirfoilImage(naca, n):
         return jsonify({"success": False, "message": e.args[0]})
 
 if __name__ == '__main__':
+    db.create_all()
     app.run(debug=True)
