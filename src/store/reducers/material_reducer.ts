@@ -23,29 +23,28 @@ export interface MaterialState {
   ): MaterialState {
 	switch (action.type) {
 	  case SET_MATERIAL:
-		state.material = action.payload;
-		switch (state.material)
-		{
+		let customDensity_;
+		switch (action.payload) {
 			case MaterialType.ABS:
-				state.customDensity = 1050;
-				break;
+			  customDensity_ = 1050;
+			  break;
 			case MaterialType.PLA:
-				state.customDensity = 1250;
-				break;
+			  customDensity_ = 1250;
+			  break;
 			case MaterialType.Aluminum:
-				state.customDensity = 2710;
-				break;
+			  customDensity_ = 2710;
+			  break;
 			case MaterialType.PETG:
-				state.customDensity = 1300;
-				break;
-				break;
+			  customDensity_ = 1300;
+			  break;
 			case MaterialType.NYLON:
-				state.customDensity = 1.14;
-				break;
+			  customDensity_ = 1140;
+			  break;
 			default:
-				state.customDensity = 0;
+			  customDensity_ = 0;
 		}
-		return { ...state, done: checkDone(state), material: action.payload};
+		return { ...state, done: checkDone(state), 
+			material: action.payload, customDensity: customDensity_};
 	  case SET_CUSTOM_DENSITY:
 		return { ...state, done: checkDone(state), customDensity: action.payload };
 	  default:

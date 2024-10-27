@@ -39,19 +39,19 @@ export interface ProcessState {
 	  case SET_3D_PRINT:
 		return { ...state, done: checkDone(state), printing: action.payload };
 	  case PROCESS_SET_PROCESS:
-		state.selectedProcess =  action.payload;
+		// state.selectedProcess =  action.payload;
 		return { ...state, done: checkDone(state), selectedProcess: action.payload};
 	  case SET_NOZZLE_DIAMETER:
-		state.nozzleDiameter =  action.payload;
+		// state.nozzleDiameter =  action.payload;
 		return { ...state, done: checkDone(state), nozzleDiameter: action.payload };
 	  case SET_PRINTING_SPEED:
-		state.printingSpeed =  action.payload;
+		// state.printingSpeed =  action.payload;
 		return { ...state, done: checkDone(state), printingSpeed: action.payload };
 	  case SET_FILAMENT_DIAMETER:
-		state.filamentDiameter =  action.payload;
+		// state.filamentDiameter =  action.payload;
 		return { ...state, done: checkDone(state), filamentDiameter: action.payload };
 	  case SET_FILLING_PERCENT:
-		state.fillingPercent =  action.payload;
+		// state.fillingPercent =  action.payload;
 		return { ...state, done: checkDone(state), fillingPercent: action.payload };
 	  default:
 		return state;

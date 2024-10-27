@@ -3,7 +3,8 @@ import { SET_USER, SET_USER_DISCONNECT, UserActions } from "../user";
 
 export interface UserState {
 	user: User,
-	connected: boolean
+	connected: boolean,
+	relogin: boolean
 }
 
 const emptyUser: User = {
@@ -17,7 +18,8 @@ const emptyUser: User = {
 
 const initialResultsState: UserState = {
 	user: emptyUser,
-	connected: false
+	connected: false,
+	relogin: true
 };
   
 export function userReducer(

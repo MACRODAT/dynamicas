@@ -98,20 +98,21 @@ const applicationReducer = (state = initialState, action: any) => {
       };
     
     case ADD_SUBMENUS:
-      if (state.submenus.length >= action.level){
+      let subs: any = Object.assign([], state.submenus);
+      if (subs.length >= action.level){
 
-        state.submenus[action.level] = (action.payload);
-        state.submenus = state.submenus.slice(0, action.level + 1);
+        subs[action.level] = (action.payload);
+        subs = subs.slice(0, action.level + 1);
       }
       else
       {
-        state.submenus.push(action.payload);
+        subs.push(action.payload);
       }
-      historyManager.set(state.menu, state.submenus);
+      historyManager.set(state.menu, subs);
       // console.log(historyManager.get(state.menu))
       return {
         ...state,
-        submenus: state.submenus,
+        submenus: subs,
       };
 
     case SET_OTHER_PARAMS:

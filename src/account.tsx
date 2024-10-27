@@ -20,7 +20,7 @@ const Account: React.FC<States> = (state: States) => {
 				</div>
 				<p style={{margin: '20px'}}><strong>Email:</strong> {user.email}</p>
 				<p style={{margin: '20px'}}>
-					<strong>Last Login:</strong> {user.loginDate.toLocaleDateString()} at {user.loginDate.toLocaleTimeString()}
+					<strong>Last Login:</strong>  {user.loginDate.toString()}
 				</p>
 			</>
 		</div>
