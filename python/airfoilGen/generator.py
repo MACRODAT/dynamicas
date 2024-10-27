@@ -322,7 +322,6 @@ def rotate_points(p, angle_deg):
     
     return rotated_x, rotated_y
 
-
 def naca(number, n, finite_TE = False, half_cosine_spacing = False, rotation = 0,\
             file_name = "", save=False, uploadImage=False):
     if len(number) in [4, 5]:
