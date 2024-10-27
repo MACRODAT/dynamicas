@@ -11,6 +11,7 @@ import GeneralGeo from "./geometry/generalGeo";
 import Fixedwingspecs from "./process/fixedwingspecs";
 import Generator from "./geometry/generator";
 import Account from "../account";
+import Project from "./project/project";
 
 const mapStateToProps = (state : any) => {
 
@@ -37,6 +38,10 @@ const Content : React.FC = (state : any) => {
 		if (selectedMenu == "Account")
 		{
 			return <Account />
+		}
+		if (selectedMenu == "Projects")
+		{
+			return <Project />
 		}
 		if (selectedMenu == "Solver")
 		{

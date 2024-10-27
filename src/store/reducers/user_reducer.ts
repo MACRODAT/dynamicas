@@ -1,8 +1,9 @@
 import { User } from "../../types";
-import { SET_USER, SET_USER_DISCONNECT, UserActions } from "../user";
+import { SET_PROJECT, SET_USER, SET_USER_DISCONNECT, SET_USER_RELOGIN, UserActions } from "../user";
 
 export interface UserState {
 	user: User,
+	project: string,
 	connected: boolean,
 	relogin: boolean
 }
@@ -14,11 +15,13 @@ const emptyUser: User = {
 	loginDate: new Date(),
 	loggedIn: false,
 	email: "",
+	uid: "",
 };
 
 const initialResultsState: UserState = {
 	user: emptyUser,
 	connected: false,
+	project: "",
 	relogin: true
 };
   
@@ -31,6 +34,11 @@ export function userReducer(
 		return { ...state, user: action.payload, connected: true };
 	  case SET_USER_DISCONNECT:
 		return { ...state, user: emptyUser, connected: false};
+	  case SET_PROJECT:
+			return { ...state, project: action.payload};
+	  case SET_USER_RELOGIN:
+		return {...state, relogin: action.payload}
+		return state
 	  default:
 		return state;
 	}

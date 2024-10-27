@@ -1,33 +1,69 @@
 // store.ts
-import { createStore } from 'redux';
+import { Middleware, createStore } from 'redux';
 import rootReducer from './reducers/reducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 
+import { reloginUser } from './logic/initialLogic';
+import { SET_USER_RELOGIN } from './user';
+import { resendLogin } from '../firebase';
+
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['user.relogin'],
+  blacklist: ['user.user.relogin'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer as any);
+
+
+const initializationMiddleware: Middleware = (storeAPI) => (next) => (action: any) => {
+  // On store creation, dispatch the initialization action
+  // if (storeAPI.getState().user.relogin === true && action.type == SET_USER_RELOGIN) {
+  //   storeAPI.dispatch(reloginUser(storeAPI.getState().user.user) as any);
+  // }
+
+  // ADD ANY MIDDLEWARE HERE
+
+
+  return next(action);
+};
 
 const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // necessary for redux-persist
-    }),
+    }).concat(initializationMiddleware),
 });
 
-// const store = createStore(
-//   rootReducer,
-//   // Redux DevTools extension for debugging in browser
-//   (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
-// );
-
-
-const persistor = persistStore(store);
+const persistor = persistStore(store, null, () => {
+  // after rehydration
+  console.log(store.getState())
+  let userReq = (store.getState() as any).user.user;
+  let obj = {
+    firstname: userReq.firstname,
+    lastname: userReq.lastname,
+    email: userReq.email,
+    firebase: true,
+    avatar: userReq.avatar,
+    password: userReq.uid,
+    // loginSuccess: true,
+  }
+  console.log(obj)
+  resendLogin(obj).then((ful) => {
+    return {
+      type: SET_USER_RELOGIN,
+      payload: ful,
+    };
+  }, (rej) => {
+    return {
+      type: SET_USER_RELOGIN,
+      payload: true,
+    };
+  })
+  // store.dispatch(reloginUser((store.getState() as any).user.user) as any)
+});
 
 export { store, persistor };

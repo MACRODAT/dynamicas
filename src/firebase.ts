@@ -4,6 +4,7 @@
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import { User } from "./types";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -68,32 +69,18 @@ const signInWithGoogle = async () => {
 						if (val.success)
 						{
 							// set up redux store
-							// obj.loginSuccess = true
 							resolve(obj)
-							// return obj
 						}
 						else{
-							// obj["loginSuccess"] = false
-							// return obj
 							reject(val.error)
-							// console.log(val.error)
 						}
 					})
 				}).catch((reason) => {
-					// obj["loginSuccess"] = false
 					reject(reason)
-					// return obj
 				})
 				// ...
 			}).catch((error) => {
 				// Handle Errors here.
-				const errorCode = error.code;
-				const errorMessage = error.message;
-				// The email of the user's account used.
-				const email = error.customData.email;
-				// The AuthCredential type that was used.
-				const credential = GoogleAuthProvider.credentialFromError(error);
-				// ...
 		});
 	})
 }
@@ -102,6 +89,35 @@ const signInWithoutGoogle = () => {
 		
 }
 
+const resendLogin = async (user: any) => {
+	return new Promise(
+		(resolve, reject) => {
+			fetch('http://127.0.0.1:5000/register', {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(user)
+			}).then((val) => {
+				val.json().then((val) => {
+					// console.log(val)
+					if (val.success)
+					{
+						// set up redux store
+						resolve(false)
+					}
+					else{
+						resolve(true)
+					}
+				})
+			}).catch((reason) => {
+				reject(true)
+			})
+		}
+	)
+}
+
 export {
-	fb_app, analytics, signInWithGoogle, signInWithoutGoogle
+	fb_app, analytics, signInWithGoogle, signInWithoutGoogle, resendLogin
 }

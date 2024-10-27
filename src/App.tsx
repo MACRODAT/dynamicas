@@ -10,6 +10,7 @@ import { States, allInterfaces } from './helpers';
 import { MdAccountCircle } from "react-icons/md";
 import { Form } from 'react-bootstrap';
 import Login from './login';
+import ProjectMenus from './components/projectMenus';
 
 const App: React.FC<States> = (state: States) => {
 
@@ -53,19 +54,32 @@ const App: React.FC<States> = (state: States) => {
         </div>
 
       </div>
-    
-      <div className="main">
-        <div className="menus">
-          <MenuCreator onSelectMenu={handleMenuSelect} />
-        </div>
-        <div className="submenus">
-          <SubmenuCreator menu={selectedMenu} />
-        </div>
-        <div className="content">
-          {/* You can later extend this for more dynamic content */}
-          <Content />          
-        </div>
-      </div>
+      {
+        state.user.project == undefined || state.user.project == "" ?
+            <div className="main">
+              <div className="menus">
+                <ProjectMenus onSelectMenu={handleMenuSelect} />
+              </div>
+              <div className="content">
+                {/* You can later extend this for more dynamic content */}
+                <Content />          
+              </div>
+            </div>
+            :
+            <div className="main">
+              <div className="menus">
+                <MenuCreator onSelectMenu={handleMenuSelect} />
+              </div>
+              <div className="submenus">
+                <SubmenuCreator menu={selectedMenu} />
+              </div>
+              <div className="content">
+                {/* You can later extend this for more dynamic content */}
+                <Content />          
+              </div>
+            </div>
+
+      }
 
       <div className="footer">
         <h6 className='inlineh6'>

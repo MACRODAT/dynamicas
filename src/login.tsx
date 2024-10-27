@@ -25,6 +25,7 @@ const LoginPage: React.FC<States> = (state: States) => {
 				lastname: res.lastname,
 				email: res.email,
 				loggedIn: true,
+				uid: res.uid,
 				loginDate: new Date(Date.now()),
 			}
 			// console.log(usr)
