@@ -3,21 +3,45 @@ import { connect, useDispatch } from 'react-redux'
 import { States, allInterfaces } from './helpers'
 import './styles/landing.scss'
 
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider } from "firebase/auth";
+import { fb_app, signInWithGoogle } from './firebase';
+import { userSetUser } from './store/logic/userLogic';
+import { User } from './types';
+
+
+
 
 const LoginPage: React.FC<States> = (state: States) => {
 
 	const dispatch = useDispatch();
+	let email = "";
+	let password = "";
 
-	const signInWithGoogle = () => {
-
+	
+	let startSignInWithGoogle = () => {
+		signInWithGoogle().then((res: any) => {
+			let usr: User = {
+				avatar: res.avatar,
+				firstname: res.firstname,
+				lastname: res.lastname,
+				email: res.email,
+				loggedIn: true,
+				loginDate: new Date(Date.now()),
+			}
+			console.log(usr)
+			dispatch(userSetUser(usr) as any)
+		})
 	}
+	
+
 
 	return (
 		<div className="landing-page">
 			<header className="header">
 				<h1>Dynamicas</h1>
 				<p id="description">Your ultimate UAV design tool</p>
-				<button className="cta-button" onClick={signInWithGoogle}>
+				<button className="cta-button" onClick={startSignInWithGoogle}>
 					Start building
 				</button>
 			</header>

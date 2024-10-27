@@ -59,7 +59,7 @@ type Point = {
 	avatar: string;
 	loginDate: Date;
 	loggedIn: boolean;
-
+	email: string;
   }
 
   export type {

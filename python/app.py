@@ -10,6 +10,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
 
+from flask_migrate import Migrate
 
 import io
 
@@ -21,6 +22,7 @@ app.secret_key = my_secret_key #TO BE MODIFIED
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dynamicas.db'  # Use SQLite for simplicity
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # cur folder
 from os import path
@@ -60,6 +62,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     last_name = db.Column(db.String(120), nullable=False)
     first_name = db.Column(db.String(120), nullable=False)
+    email = db.Column(db.String(120), nullable=False, default="example@email.com")
     pass_hash = db.Column(db.String(120), nullable=False)
     avatar = db.Column(db.String(120), unique=True, nullable=False)
     
@@ -82,50 +85,62 @@ def load_user(userid):
     # print(User.query.get(user.id))
     return User.query.get(userid)
 
+def _login_helper(avatar, password):
+    user = User.query.filter_by(avatar=avatar).first()
+    # Check if the user exists and the password is correct
+    if user and user.check_password(password):
+        # load_user(user)
+        login_user(user)
+        return True
+    return False
+
 # Routes
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        avatar = request.args["avatar"]
-        lastname = request.args["lastname"]
-        firstname = request.args["firstname"]
-        password = request.args["password"]
+        avatar = request.json["avatar"]
+        lastname = request.json["lastname"]
+        firstname = request.json["firstname"]
+        password = request.json["password"]
+        email = request.json["email"]
 
         # Check if username already exists
         if User.query.filter_by(avatar=avatar).first():
+            if "firebase" in request.json:
+                if _login_helper(avatar, password):
+                    return {"success": True}
             flash("Username already taken!")
             return {"error": "avatar taken", "success": False}
 
         # Create a new user and save to database
-        new_user = User(avatar=avatar, first_name=firstname, last_name=lastname)
+        new_user = User(avatar=avatar, first_name=firstname, last_name=lastname, email=email)
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
         import os
-        if not os.path.exists(f'{__my_dirname}/{avatar}'):
-            os.makedirs(f'{__my_dirname}/{avatar}')
+        if not os.path.exists(f'{__my_dirname}/users/{avatar}'):
+            os.makedirs(f'{__my_dirname}/users/{avatar}')
         flash("Registered successfully!")
+        if "firebase" in request.json:
+            _login_helper(avatar, password)
         return {"success": True}
 
     return {"error": "Post.", "success": False}
 
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        avatar = request.args["avatar"]
-        password = request.args["password"]
+        avatar = request.json["avatar"]
+        password = request.json["password"]
         
-        user = User.query.filter_by(avatar=avatar).first()
-
-        # Check if the user exists and the password is correct
-        if user and user.check_password(password):
-            # load_user(user)
-            login_user(user)
+        if _login_helper(avatar, password):
             flash("Logged in successfully!")
             return {"success": True}
-        flash("Invalid username or password")
-        return {"success": False, "error": "invalid coordinates"}
-        
+        else:
+            flash("Invalid username or password")
+            return {"success": False, "error": "invalid coordinates"}
     return {"success": False, "error": "invalid method"}
 
 @app.route("/dashboard")

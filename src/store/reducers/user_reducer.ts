@@ -12,6 +12,7 @@ const emptyUser: User = {
 	lastname: "", 
 	loginDate: new Date(),
 	loggedIn: false,
+	email: "",
 };
 
 const initialResultsState: UserState = {
@@ -25,7 +26,7 @@ export function userReducer(
   ): UserState {
 	switch (action?.type) {
 	  case SET_USER:
-		return { ...state, user: action.payload };
+		return { ...state, user: action.payload, connected: true };
 	  case SET_USER_DISCONNECT:
 		return { ...state, user: emptyUser, connected: false};
 	  default:

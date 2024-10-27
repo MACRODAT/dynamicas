@@ -9,28 +9,13 @@ import store from './store/store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './login';
 
-import { initializeApp } from 'firebase/app';
-
-// TODO: Replace the following with your app's Firebase project configuration
-const firebaseConfig = {
-  //...
-};
-
-const app = initializeApp(firebaseConfig);
-
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      {
-        store.getState().user.connected ?
-          <App />
-        :
-        <Login />
-      }
+      <App />
     </Provider>
   </React.StrictMode>
 );

@@ -7,26 +7,16 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import { setMenu, setTheme } from './store/logic/actionLogic';
 import { ApplicationState } from './store/reducers/action_reducer';
 import Content from './components/Content';
-import { toUpperList } from './helpers';
+import { States, allInterfaces, toUpperList } from './helpers';
 import { Form } from 'react-bootstrap';
+import Login from './login';
 
-function mapStateToProps(state: any) {
-  const s : ApplicationState = {
-    menu: state.application.menu,
-    otherParams: state.application.otherParams,
-    submenus: state.application.submenus,
-    theme: state.application.theme,
-    themeSchema: state.application.themeSchema
-  }
-  return s;
-}
-
-const App: React.FC<ApplicationState> = (state: ApplicationState) => {
+const App: React.FC<States> = (state: States) => {
 
   const [selectedMenu, setSelectedMenu] = useState<string>('process');
   const dispatch = useDispatch();
 
-	const selectedSubMenus = toUpperList(state.submenus).join('/ ');
+  
 
   const handleMenuSelect = (menu: string) => {
     setSelectedMenu(menu);
@@ -36,11 +26,15 @@ const App: React.FC<ApplicationState> = (state: ApplicationState) => {
   useEffect(() => {
     const root = document.documentElement;
     // console.log(state.themeSchema)
-    Object.keys(state.themeSchema).forEach((key: string) => {
+    Object.keys(state.action.themeSchema).forEach((key: string) => {
       // console.log(key);
-      root.style.setProperty(`--${key}`, state.themeSchema[key]);
+      root.style.setProperty(`--${key}`, state.action.themeSchema[key]);
     });
-  }, [state.themeSchema]);
+  }, [state.action.themeSchema]);
+
+  if (!state.user.connected) {
+    return <Login />
+  }
 
   return (
     <div className="App container-fluid">
@@ -74,7 +68,7 @@ const App: React.FC<ApplicationState> = (state: ApplicationState) => {
           Set theme:
           <Form className='inline  align-items-center'>
             <Form.Group>
-              <Form.Select as="select" value={state.theme}
+              <Form.Select as="select" value={state.action.theme}
                         onChange={(e) => dispatch(setTheme(e.target.value) as any)}
                         style={{fontSize: '10px', padding: 2, paddingLeft: 6, paddingRight: 40, marginLeft: 12,}}>
                 <option value="blue sky">
@@ -96,4 +90,4 @@ const App: React.FC<ApplicationState> = (state: ApplicationState) => {
   );
 };
 
-export default connect(mapStateToProps)(App);
+export default connect(allInterfaces)(App);
