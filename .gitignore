@@ -13,6 +13,7 @@
 
 #secrets
 /python/secrets
+/python/my_secrets
 
 # misc
 .DS_Store

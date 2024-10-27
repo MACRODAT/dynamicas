@@ -5,10 +5,11 @@ from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, get_airfoil_s
 from airfoilGen.generator import naca as nacaFunction
 
 # login stuff
-from secrets.secret_key import secret_key
+from my_secrets.secret_key_ import my_secret_key
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
+import user
 
 import io
 
@@ -16,7 +17,7 @@ app = Flask(__name__)
 
 
 # sql alchemy stuff
-app.secret_key = secret_key #TO BE MODIFIED
+app.secret_key = my_secret_key #TO BE MODIFIED
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dynamicas.db'  # Use SQLite for simplicity
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -26,9 +27,6 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
-
-# temporary
-users = {}
 
 # Enable CORS for all origins
 CORS(app)
@@ -216,5 +214,6 @@ def getNacaAirfoilImage(naca, n):
         return jsonify({"success": False, "message": e.args[0]})
 
 if __name__ == '__main__':
-    db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)

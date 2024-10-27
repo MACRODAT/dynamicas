@@ -83,8 +83,3 @@ def logout():
     logout_user()
     flash("You have been logged out.")
     return {"success": True}
-
-# Initialize the database
-@app.before_first_request
-def create_tables():
-    db.create_all()
