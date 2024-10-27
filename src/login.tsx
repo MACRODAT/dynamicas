@@ -38,9 +38,9 @@ const LoginPage: React.FC<States> = (state: States) => {
 
 	return (
 		<div className="landing-page">
-			<header className="header">
+			<header className="headerLanding">
 				<h1>Dynamicas</h1>
-				<p id="description">Your ultimate UAV design tool</p>
+				<p id="description">Truly fly your own !</p>
 				<button className="cta-button" onClick={startSignInWithGoogle}>
 					Start building
 				</button>

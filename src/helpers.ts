@@ -65,7 +65,7 @@ export type States = {
 
 let allInterfaces = (state: any, ownProps: any) => {
 	let geo : GeometryState = state.geometry;
-	let action : ApplicationState = state.action;
+	let application : ApplicationState = state.application;
 	let process : ProcessState = state.process;
 	let join : JoiningFastenersState = state.JoiningFasteners;
 	let material : MaterialState = state.material;
@@ -76,7 +76,7 @@ let allInterfaces = (state: any, ownProps: any) => {
 
 	return {
 		geo: geo,
-		action: action,
+		action: application,
 		process: process,
 		join: join,
 		material: material,

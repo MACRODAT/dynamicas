@@ -38,6 +38,13 @@
 			margin-left: 10px;
 			margin-right: 10px;
 		}
+
+		#logger {
+			position: absolute;
+			right: 0;
+			padding-right: 10px;
+			display: inline;
+		}
 	}
 	.main { 
 		grid-area: main;

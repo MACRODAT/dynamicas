@@ -25,9 +25,7 @@ const App: React.FC<States> = (state: States) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    // console.log(state.themeSchema)
     Object.keys(state.action.themeSchema).forEach((key: string) => {
-      // console.log(key);
       root.style.setProperty(`--${key}`, state.action.themeSchema[key]);
     });
   }, [state.action.themeSchema]);
@@ -45,6 +43,13 @@ const App: React.FC<States> = (state: States) => {
         <p id="navdesc">
           Truly fly your own
         </p>
+        <div id="logger">
+          <h6 className='inline' style={{marginRight: '5px'}}>Welcome {state.user.user.lastname}</h6>
+          <p className='link italic inline'>
+            My account
+          </p>
+        </div>
+
       </div>
     
       <div className="main">
