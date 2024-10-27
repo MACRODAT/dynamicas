@@ -44,7 +44,7 @@ def list_files_recursively(directory):
     """
     result = {}
 
-    directory = os.getcwd() + "/users/" + directory
+    directory = os.getcwd() + "/" + directory
 
     # Check if the directory exists
     if os.path.exists(directory):

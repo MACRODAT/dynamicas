@@ -87,6 +87,12 @@ const App: React.FC<States> = (state: States) => {
                 <option value={"green park"}>
                   Green park
                 </option>
+                <option value={"heavenly park"}>
+                  Heavenly park
+                </option>
+                <option value={"white snow"}>
+                  White snow
+                </option>
               </Form.Select>
             </Form.Group>
           </Form>

@@ -62,6 +62,40 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
       'front-500': '#8B9C93',
     }
   }
+  else if (theme == 'heavenly park')
+  {
+    return {
+      'primary-color': '#0f0809',
+      'back-100': '#FFFFFF',
+      'back-200': '#C1E2E0',
+      'back-300': '#A2D4D0',
+      'back-400': '#82C5C0',
+      'back-500': '#63B7B1',
+      'green-100': '#149E59',
+      'front-100': '#021211',
+      'front-200': '#09201E',
+      'front-300': '#475C41',
+      'front-400': '#0C322E',
+      'front-500': '#1B4843',
+    }
+  }
+  else if (theme == 'white snow')
+  {
+    return {
+      'primary-color': '#0f0809',
+      'back-100': '#FFFFFF',
+      'back-200': '#FAFDFD',
+      'back-300': '#F7FCFC',
+      'back-400': '#F4FAFA',
+      'back-500': '#E8F5F4',
+      'green-100': '#149E59',
+      'front-100': '#021211',
+      'front-200': '#09201E',
+      'front-300': '#475C41',
+      'front-400': '#0C322E',
+      'front-500': '#1B4843',
+    }
+  }
   return {
 
   }

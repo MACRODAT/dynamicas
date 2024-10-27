@@ -33,6 +33,8 @@ const ViewFolder: React.FC<States> = (state: States) => {
 
 	let padding_ = 0;
 
+
+
 	return (
 		<div>
 			<h5>
@@ -41,14 +43,16 @@ const ViewFolder: React.FC<States> = (state: States) => {
 			<ul id="" style={{listStyle: 'none', padding: '8px', border: '1px solid black'}}>
 				{
 					Object.entries(dir).map((e, i, _) => {
+						if (!Array.isArray(e[1])) return null;
+						console.log(e, dir)
 						padding_ = e[0].split('/').length * 40 + 4;
 						return (
 							<ul key={e[0]} style={{marginLeft: padding_ + 'px'}}>
 								<em style={{fontSize: '1.1em', fontWeight: 800}}>{e[0]}</em>
 								{
-									e[1].map((s: any) => {
+								 	Array.isArray(e[1]) ? e[1].map((s: any) => {
 										return <li key={s}>....{s}</li>
-									})
+									}): <></>
 								}
 							</ul>
 						)

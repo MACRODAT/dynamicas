@@ -89,6 +89,7 @@ const Airfoil : React.FC = (params: any) => {
 								backgroundSize: "cover", // Cover the entire div
 								backgroundPosition: "center", // Center the image
 								border: "1px solid #ccc", // Optional: border for visibility
+                                color: "variables.$front-100 !important"
 							}}
 							key={airfoil.name}
                             onClick={() => handleSelect(airfoil)}

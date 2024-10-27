@@ -1,3 +1,5 @@
+@use '../../styles/variables.scss';
+
 .airfoil-grid-container {
 	grid-area: mainAirfoilContent;
 
@@ -12,6 +14,7 @@
   
 	justify-content: space-evenly;
 	align-items: flex-start;
+	color: variables.$front-300 !important;
   
 }
 
@@ -21,6 +24,7 @@
 	padding: 10px;
 	text-align: center;
 	cursor: pointer;
+	color: variables.$front-300 !important;
 
 	&.selected {
 		filter: sepia(1) invert(0.1);
