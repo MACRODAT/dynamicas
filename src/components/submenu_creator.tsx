@@ -361,7 +361,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
   ];
 
   const renderMainMenus = () => {
-    // console.log(menu)
+    console.log(menu)
 	switch (menu)
 	{
 		case 'process':
@@ -465,6 +465,8 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 					</div>
         </>
       )
+    default:
+      return <p className='italic'>No actions here.</p>
 	}
   }
 

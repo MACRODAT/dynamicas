@@ -3,11 +3,11 @@ import './styles/app.scss';
 import logo from './res/symbol_nobg.png';
 import MenuCreator from './components/menu_creator';
 import SubmenuCreator from './components/submenu_creator';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { setMenu, setTheme } from './store/logic/actionLogic';
-import { ApplicationState } from './store/reducers/action_reducer';
+import { connect, useDispatch } from 'react-redux';
+import { addSubmenu, setMenu, setSubmenus, setTheme } from './store/logic/actionLogic';
 import Content from './components/Content';
-import { States, allInterfaces, toUpperList } from './helpers';
+import { States, allInterfaces } from './helpers';
+import { MdAccountCircle } from "react-icons/md";
 import { Form } from 'react-bootstrap';
 import Login from './login';
 
@@ -45,8 +45,10 @@ const App: React.FC<States> = (state: States) => {
         </p>
         <div id="logger">
           <h6 className='inline' style={{marginRight: '5px'}}>Welcome {state.user.user.lastname}</h6>
-          <p className='link italic inline'>
-            My account
+          <p className='link italic inline'
+            onClick={() => handleMenuSelect("account")}
+            >
+            <MdAccountCircle /> My account
           </p>
         </div>
 
