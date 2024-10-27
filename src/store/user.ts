@@ -4,6 +4,7 @@ export const SET_USER = 'SET_USER';
 export const SET_USER_DISCONNECT = 'SET_USER_DISCONNECT';
 export const SET_USER_RELOGIN = 'SET_USER_RELOGIN';
 export const SET_PROJECT = 'SET_PROJECT';
+export const SET_TOKEN = 'SET_TOKEN';
 
 // Action interfaces
 interface SetUser {
@@ -24,6 +25,12 @@ interface SetUserRelogin {
 }
 
 // Action interfaces
+interface SetUserToken {
+  type: typeof SET_TOKEN;
+  payload: string;
+}
+
+// Action interfaces
 interface SetProject {
   type: typeof SET_PROJECT;
   payload: string;
@@ -31,6 +38,7 @@ interface SetProject {
 
 export type UserActions = 
 	null |
+  SetUserToken |
 	SetUser |
   SetProject |
   SetUserRelogin |

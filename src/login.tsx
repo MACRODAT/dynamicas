@@ -6,6 +6,7 @@ import './styles/landing.scss'
 import { signInWithGoogle } from './firebase';
 import { userSetUser } from './store/logic/userLogic';
 import { User } from './types';
+import { SET_TOKEN } from './store/user';
 
 
 
@@ -28,8 +29,12 @@ const LoginPage: React.FC<States> = (state: States) => {
 				uid: res.uid,
 				loginDate: new Date(Date.now()),
 			}
-			// console.log(usr)
-			dispatch(userSetUser(usr) as any)
+			// console.log(res.access_token)
+			if (res.access_token)
+			{
+				dispatch(userSetUser(usr) as any)
+				dispatch({type: SET_TOKEN, payload: res.access_token})
+			}
 		})
 	}
 	

@@ -56,28 +56,28 @@ const signInWithGoogle = async () => {
 				}
 	
 				// console.log(obj)
-	
-				fetch('http://127.0.0.1:5000/register', {
-					method: 'POST',
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(obj)
-				}).then((val) => {
-					val.json().then((val) => {
-						if (val.success)
-						{
-							// set up redux store
-							resolve(obj)
-						}
-						else{
-							reject(val.error)
-						}
-					})
-				}).catch((reason) => {
-					reject(reason)
-				})
+				resendLogin(obj).then((resolve_) => resolve({...obj, access_token: resolve_}), (reject_) => reject(reject_))
+				// fetch('http://127.0.0.1:5000/register', {
+				// 	method: 'POST',
+				// 	headers: {
+				// 		'Accept': 'application/json',
+				// 		'Content-Type': 'application/json',
+				// 	},
+				// 	body: JSON.stringify(obj)
+				// }).then((val) => {
+				// 	val.json().then((val) => {
+				// 		if (val.success)
+				// 		{
+				// 			// set up redux store
+				// 			resolve(obj)
+				// 		}
+				// 		else{
+				// 			reject(val.error)
+				// 		}
+				// 	})
+				// }).catch((reason) => {
+				// 	reject(reason)
+				// })
 				// ...
 			}).catch((error) => {
 				// Handle Errors here.
@@ -92,28 +92,31 @@ const signInWithoutGoogle = () => {
 const resendLogin = async (user: any) => {
 	return new Promise(
 		(resolve, reject) => {
-			fetch('http://127.0.0.1:5000/register', {
-				method: 'POST',
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(user)
-			}).then((val) => {
-				val.json().then((val) => {
-					// console.log(val)
-					if (val.success)
-					{
-						// set up redux store
-						resolve(false)
+				fetch('http://127.0.0.1:5000/register', {
+					method: 'POST',
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(user)
+				}).then((response) => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
 					}
-					else{
-						resolve(true)
-					}
+					return response.json(); // Only parse JSON if response is OK
+				}).then((val) => {
+						console.log(val)
+						if (val.success)
+						{
+							// set up redux store
+							resolve(val.access_token)
+						}
+						else{
+							resolve(null)
+						}
+				}).catch((reason) => {
+					reject(null)
 				})
-			}).catch((reason) => {
-				reject(true)
-			})
 		}
 	)
 }

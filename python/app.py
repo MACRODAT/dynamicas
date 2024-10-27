@@ -1,14 +1,20 @@
-from flask import Flask, jsonify, request, send_file
+import json
+from flask import Flask, jsonify, request, send_file, session
 from flask_cors import CORS
 from create_io import list_files_by_folder, list_files_recursively
-from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, get_airfoil_step, get_airfoil_screenshot, create_geometry, create_mesh, create_screenshot, get_airfoil_description
+from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, \
+                            get_airfoil_step, get_airfoil_screenshot, \
+                            create_geometry, create_mesh, create_screenshot, get_airfoil_description
 from airfoilGen.generator import naca as nacaFunction
 
 # login stuff
 from my_secrets.secret_key_ import my_secret_key
-from flask_login import LoginManager
+
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
+
+from datetime import datetime, timedelta, timezone
+from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
+                               unset_jwt_cookies, jwt_required, JWTManager
 
 from flask_migrate import Migrate
 
@@ -19,9 +25,12 @@ app = Flask(__name__)
 
 # sql alchemy stuff
 app.secret_key = my_secret_key #TO BE MODIFIED
+app.config["JWT_SECRET_KEY"] = my_secret_key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dynamicas.db'  # Use SQLite for simplicity
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 db = SQLAlchemy(app)
+jwt = JWTManager(app)
 migrate = Migrate(app, db)
 
 # cur folder
@@ -30,9 +39,6 @@ __my_dirname = path.dirname(path.realpath(__file__))
 
 
 # adding login functionality
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "login"
 
 # Enable CORS for all origins
 # CORS(app, origins="http://localhost:3000")
@@ -43,7 +49,6 @@ CORS(app)
 
 from flask import flash, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_required, logout_user, current_user
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -58,7 +63,7 @@ class Project(db.Model):
     # Foreign key linking to the User model
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-class User(UserMixin, db.Model):
+class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     last_name = db.Column(db.String(120), nullable=False)
@@ -68,6 +73,9 @@ class User(UserMixin, db.Model):
     avatar = db.Column(db.String(120), unique=True, nullable=False)
     
     projects = db.relationship('Project', backref='User', lazy=True)
+
+    def is_authenticated(self):
+        return True
 
     def set_password(self, password):
         self.pass_hash = generate_password_hash(password)
@@ -80,24 +88,26 @@ class User(UserMixin, db.Model):
 
 
 #login for users
-@login_manager.user_loader
-def load_user(userid):
-    # hardcoded for now
-    # print(User.query.get(user.id))
-    return User.query.get(userid)
-
 def _login_helper(avatar, password):
     user = User.query.filter_by(avatar=avatar).first()
     # Check if the user exists and the password is correct
     if user and user.check_password(password):
-        # load_user(user)
-        login_user(user)
-        return True
-    return False
+        access_token = create_access_token(identity=user.id, 
+                                           additional_claims={"avatar": user.avatar, 
+                                                              "firstname": user.first_name,
+                                                              "email": user.email})
+        response = {"access_token":access_token, "success": True}
+        return response
+    return {"access_token":"", "success": False}
 
 # Routes
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    # if current_user.is_authenticated:
+    #     return {
+    #         "success": True,
+    #         "message": "Already authenticated."
+    #     }
     if request.method == "POST":
         avatar = request.json["avatar"]
         lastname = request.json["lastname"]
@@ -108,8 +118,7 @@ def register():
         # Check if username already exists
         if User.query.filter_by(avatar=avatar).first():
             if "firebase" in request.json:
-                if _login_helper(avatar, password):
-                    return {"success": True}
+                return _login_helper(avatar, password)
             flash("Username already taken!")
             return {"error": "avatar taken", "success": False}
 
@@ -123,45 +132,69 @@ def register():
             os.makedirs(f'{__my_dirname}/users/{avatar}')
         flash("Registered successfully!")
         if "firebase" in request.json:
-            _login_helper(avatar, password)
+            return _login_helper(avatar, password)
         return {"success": True}
 
     return {"error": "Post.", "success": False}
 
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    # if current_user.is_authenticated:
+    #     return {
+    #         "success": True,
+    #         "message": "Already authenticated."
+    #     }
     if request.method == "POST":
         avatar = request.json["avatar"]
         password = request.json["password"]
         
-        if _login_helper(avatar, password):
-            flash("Logged in successfully!")
-            return {"success": True}
-        else:
-            flash("Invalid username or password")
-            return {"success": False, "error": "invalid coordinates"}
+        return _login_helper(avatar, password)
     return {"success": False, "error": "invalid method"}
 
+@app.after_request
+def refresh_expiring_jwts(response):
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            data = response.get_json()
+            if type(data) is dict:
+                data["access_token"] = access_token 
+                response.data = json.dumps(data)
+        return response
+    except (RuntimeError, KeyError):
+        # Case where there is not a valid JWT. Just return the original respone
+        return response
+
+
+def getUser():
+    claims = get_jwt()
+    user = User.query.filter_by(avatar=claims.get("avatar")).first()
+    return user
+
 @app.route("/dashboard")
-@login_required
+@jwt_required()
 def dashboard():
-    return f"Hello, {current_user.last_name}! Welcome to your dashboard."
+    # Get additional claims if you stored any
+    claims = get_jwt()
+    id = get_jwt_identity()
+    user = User.query.filter_by(avatar=claims.get("avatar")).first()
+    return f"Hello, {user.first_name}! Welcome to your dashboard."
 
 @app.route("/logout")
-@login_required
 def logout():
-    logout_user()
-    flash("You have been logged out.")
-    return {"success": True}
+    response = jsonify({"msg": "logout successful", "success": True})
+    unset_jwt_cookies(response)
+    return response
 
 # Teardown context to close database session
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    db.session.remove()  # Properly close and release any sessions
-    if db.engine:
-        db.engine.dispose()  # Dispose of engine connections if necessary
+# @app.teardown_appcontext
+# def shutdown_session(exception=None):
+#     db.session.remove()  # Properly close and release any sessions
+#     if db.engine:
+#         db.engine.dispose()  # Dispose of engine connections if necessary
 
 @app.route('/', methods=['GET'])
 def home():
@@ -287,7 +320,7 @@ def get_dir(username):
         return jsonify({"error": "Error in dir", "description": e}), 404 
 
 @app.route('/naca/<string:naca>/<int:n>/txt', methods=['GET'])
-@login_required
+@jwt_required()
 def getNacaAirfoilTxt(naca, n):
     """
         Will generate and fetch the NACA dat file
@@ -346,8 +379,8 @@ def getNacaAirfoilImage(naca, n):
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 
-@login_required
 @app.route('/airfoil/<string:airfoil>', methods=['POST'])
+@jwt_required()
 def setAirfoil(airfoil):
     """
         Will set airfoil for later exploitation
@@ -369,14 +402,15 @@ def setAirfoil(airfoil):
         return jsonify({"success": False, "message": e.args[0]})
 
 
-@login_required
 @app.route('/myprojects', methods=['GET'])
+@jwt_required()
 def getProjects():
     """
         Fetches the user's projects
     """
     try:
         lines = []
+        current_user = getUser()
         try:
             for project in current_user.projects:
                 lines.push({"name": project.name, "description": project.description})
