@@ -40,7 +40,7 @@ from flask_login import UserMixin, login_required, logout_user, current_user
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(UserMixin):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     last_name = db.Column(db.String(120), nullable=False)
@@ -60,18 +60,19 @@ class User(UserMixin):
 
 #login for users
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(userid):
     # hardcoded for now
-    return User.query.get(int(user_id))
+    # print(User.query.get(user.id))
+    return User.query.get(userid)
 
 # Routes
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        avatar = request.form.get("avatar")
-        lastname = request.form.get("lastname")
-        firstname = request.form.get("firstname")
-        password = request.form.get("password")
+        avatar = request.args["avatar"]
+        lastname = request.args["lastname"]
+        firstname = request.args["firstname"]
+        password = request.args["password"]
         
         # Check if username already exists
         if User.query.filter_by(avatar=avatar).first():
@@ -79,7 +80,7 @@ def register():
             return {"error": "avatar taken", "success": False}
 
         # Create a new user and save to database
-        new_user = User(avatar=avatar, firstname=firstname, lastname=lastname)
+        new_user = User(avatar=avatar, first_name=firstname, last_name=lastname)
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
@@ -91,16 +92,15 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        avatar = request.form.get("avatar")
-        lastname = request.form.get("lastname")
-        firstname = request.form.get("firstname")
-        password = request.form.get("password")
+        avatar = request.args["avatar"]
+        password = request.args["password"]
         
         user = User.query.filter_by(avatar=avatar).first()
 
         # Check if the user exists and the password is correct
         if user and user.check_password(password):
-            load_user(user)
+            # load_user(user)
+            login_user(user)
             flash("Logged in successfully!")
             return {"success": True}
         flash("Invalid username or password")
@@ -111,7 +111,7 @@ def login():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return f"Hello, {current_user.username}! Welcome to your dashboard."
+    return f"Hello, {current_user.last_name}! Welcome to your dashboard."
 
 @app.route("/logout")
 @login_required
@@ -120,6 +120,12 @@ def logout():
     flash("You have been logged out.")
     return {"success": True}
 
+# Teardown context to close database session
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()  # Properly close and release any sessions
+    if db.engine:
+        db.engine.dispose()  # Dispose of engine connections if necessary
 
 @app.route('/', methods=['GET'])
 def home():
