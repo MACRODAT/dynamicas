@@ -1,0 +1,69 @@
+.landing-page {
+	font-family: Arial, sans-serif;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	background-color: #f8f9fa;
+  }
+
+  #description {
+	font-style: italic;
+  }
+  
+  .header {
+	// background-color: #01060b;
+	background-color: rgba(12,11,11, 0.2);
+	color: white;
+	padding: 40px;
+	background-image: url('../res/symbol_nobg.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: 10%;
+	
+  }
+  
+  .cta-button {
+	background-color: #28a745;
+	color: white;
+	padding: 15px 30px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 18px;
+  }
+  
+  .features, .how-it-works {
+	padding: 20px;
+	margin: 20px 0;
+  }
+  
+  .feature-list {
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+  }
+  
+  #keys{
+	font-weight: 500;
+	font-style: italic;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
+
+  .feature {
+	background: white;
+	flex-grow: 1;
+	border: 1px solid #dee2e6;
+	border-radius: 5px;
+	padding: 40px;
+	min-width: 200px;
+	max-width: 500px;
+	width: fit-content;
+	margin: 10px;
+  }
+  
+  .footer {
+	background-color: #343a40;
+	color: white;
+	padding: 10px 0;
+  }
+  

@@ -44,6 +44,17 @@ from flask_login import UserMixin, login_required, logout_user, current_user
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# Define Project model
+class Project(db.Model):
+    __tablename__ = 'projects'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(500))
+    foldername = db.Column(db.String(100))
+    
+    # Foreign key linking to the User model
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
@@ -51,6 +62,8 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(120), nullable=False)
     pass_hash = db.Column(db.String(120), nullable=False)
     avatar = db.Column(db.String(120), unique=True, nullable=False)
+    
+    projects = db.relationship('Project', backref='owner', lazy=True)
 
     def set_password(self, password):
         self.pass_hash = generate_password_hash(password)
@@ -77,7 +90,7 @@ def register():
         lastname = request.args["lastname"]
         firstname = request.args["firstname"]
         password = request.args["password"]
-        
+
         # Check if username already exists
         if User.query.filter_by(avatar=avatar).first():
             flash("Username already taken!")
@@ -314,6 +327,28 @@ def getNacaAirfoilImage(naca, n):
             as_attachment=True,
             download_name=f'NACA_{naca}_{n}.png'
         )
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
+@login_required
+@app.route('/airfoil/<string:airfoil>', methods=['POST'])
+def setAirfoil(airfoil):
+    """
+        Will set airfoil for later exploitation
+    """
+    try:
+        lines = []
+        try:
+            for line in airfoil.split('\n'):
+                lines.push((line.split(' ')[0], lines.split(' ')[1]))
+        except Exception as e:
+            return jsonify({"success": False, "message": "Invalid airfoil."})
+        
+
+
+        # SETTING AIRFOIL FOR THIS USER
+
+        return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 

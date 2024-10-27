@@ -1,8 +1,13 @@
 import numpy as np
 from airfoilGen import generator
+from flask_login import current_user
 
 DENSITY_AIR = 1.225
 VISCOSITY_AIR = 1.81 * 10 ^ (-5)
+
+# cur folder
+from os import path
+__my_root = path.pardir(path.realpath(__file__)) 
 
 class interval:
     def __init__(self, val, margins) -> None:
@@ -64,4 +69,6 @@ class airfoil_data:
         if self.naca == "" or len(self.naca) not in [4,5]:
             return False
         naca = generator.naca(self.naca, self.n_points)
+        with open(f'{__my_root}\{current_user.avatar}', 'w') as f:
+            f.write(naca)
         self.pts = np.array(naca)

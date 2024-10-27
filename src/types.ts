@@ -58,6 +58,7 @@ type Point = {
 	lastname: string;
 	avatar: string;
 	loginDate: Date;
+	loggedIn: boolean;
 
   }
 

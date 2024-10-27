@@ -7,6 +7,16 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Login from './login';
+
+import { initializeApp } from 'firebase/app';
+
+// TODO: Replace the following with your app's Firebase project configuration
+const firebaseConfig = {
+  //...
+};
+
+const app = initializeApp(firebaseConfig);
 
 
 const root = ReactDOM.createRoot(
@@ -15,7 +25,12 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      {
+        store.getState().user.connected ?
+          <App />
+        :
+        <Login />
+      }
     </Provider>
   </React.StrictMode>
 );

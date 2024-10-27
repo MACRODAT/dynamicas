@@ -10,7 +10,8 @@ const emptyUser: User = {
 	avatar: "user001", 
 	firstname: "", 
 	lastname: "", 
-	loginDate: new Date()
+	loginDate: new Date(),
+	loggedIn: false,
 };
 
 const initialResultsState: UserState = {

@@ -42,7 +42,6 @@ const App: React.FC<ApplicationState> = (state: ApplicationState) => {
     });
   }, [state.themeSchema]);
 
-
   return (
     <div className="App container-fluid">
       {/* Top Navbar */}
