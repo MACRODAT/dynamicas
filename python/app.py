@@ -22,6 +22,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dynamicas.db'  # Use SQLite f
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# cur folder
+from os import path
+__my_dirname = path.dirname(path.realpath(__file__)) 
+
 
 # adding login functionality
 login_manager = LoginManager()
@@ -84,6 +88,9 @@ def register():
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
+        import os
+        if not os.path.exists(f'{__my_dirname}/{avatar}'):
+            os.makedirs(f'{__my_dirname}/{avatar}')
         flash("Registered successfully!")
         return {"success": True}
 
