@@ -3,9 +3,7 @@ import { connect, useDispatch } from 'react-redux'
 import { States, allInterfaces } from './helpers'
 import './styles/landing.scss'
 
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { GoogleAuthProvider } from "firebase/auth";
-import { fb_app, signInWithGoogle } from './firebase';
+import { signInWithGoogle } from './firebase';
 import { userSetUser } from './store/logic/userLogic';
 import { User } from './types';
 
@@ -29,7 +27,7 @@ const LoginPage: React.FC<States> = (state: States) => {
 				loggedIn: true,
 				loginDate: new Date(Date.now()),
 			}
-			console.log(usr)
+			// console.log(usr)
 			dispatch(userSetUser(usr) as any)
 		})
 	}

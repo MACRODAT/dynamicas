@@ -35,7 +35,7 @@ const OwnGenerator: React.FC<States> = (state: States) => {
 			setUrl(screenshotURL);
 			// setAirfoils(airfoilData);
 		} catch (err: any) {
-			console.log(err.message);
+			// console.log(err.message);
 		} finally {
 			setLoading(false);
 		}
@@ -56,7 +56,7 @@ const OwnGenerator: React.FC<States> = (state: States) => {
 			};
 			dispatch(geometrySetAirfoilName(a) as any)
 		} catch (err: any) {
-			console.log(err.message);
+			// console.log(err.message);
 		} finally {
 			setLoading(false);
 		}
@@ -79,7 +79,7 @@ const OwnGenerator: React.FC<States> = (state: States) => {
 			document.body.removeChild(link);
 			window.URL.revokeObjectURL(url); // Clean up the URL object
 		} catch (err: any) {
-			console.log(err.message);
+			// console.log(err.message);
 		} finally {
 			setLoading(false);
 		}

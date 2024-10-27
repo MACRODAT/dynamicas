@@ -21,7 +21,7 @@ const firebaseConfig = {
 const fb_app = initializeApp(firebaseConfig);
 
 const analytics = getAnalytics(fb_app);
-console.log(analytics)
+// console.log(analytics)
 
 
 const provider = new GoogleAuthProvider();
@@ -76,7 +76,7 @@ const signInWithGoogle = async () => {
 							// obj["loginSuccess"] = false
 							// return obj
 							reject(val.error)
-							console.log(val.error)
+							// console.log(val.error)
 						}
 					})
 				}).catch((reason) => {

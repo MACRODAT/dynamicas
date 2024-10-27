@@ -22,7 +22,7 @@ const ViewFolder: React.FC<States> = (state: States) => {
 		}
 		catch (err: any)
 		{
-			console.log(err);
+			// console.log(err);
 		}
 	}
 	useEffect( () => {

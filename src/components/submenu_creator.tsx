@@ -361,7 +361,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
   ];
 
   const renderMainMenus = () => {
-    console.log(menu)
+    // console.log(menu)
 	switch (menu)
 	{
 		case 'process':
