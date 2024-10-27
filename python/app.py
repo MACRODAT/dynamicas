@@ -35,7 +35,8 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 
 # Enable CORS for all origins
-CORS(app, origins="http://localhost:3000")
+# CORS(app, origins="http://localhost:3000")
+CORS(app)
 
 
 
@@ -66,7 +67,7 @@ class User(UserMixin, db.Model):
     pass_hash = db.Column(db.String(120), nullable=False)
     avatar = db.Column(db.String(120), unique=True, nullable=False)
     
-    projects = db.relationship('Project', backref='owner', lazy=True)
+    projects = db.relationship('Project', backref='User', lazy=True)
 
     def set_password(self, password):
         self.pass_hash = generate_password_hash(password)
@@ -364,6 +365,24 @@ def setAirfoil(airfoil):
         # SETTING AIRFOIL FOR THIS USER
 
         return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
+
+@login_required
+@app.route('/myprojects', methods=['GET'])
+def getProjects():
+    """
+        Fetches the user's projects
+    """
+    try:
+        lines = []
+        try:
+            for project in current_user.projects:
+                lines.push({"name": project.name, "description": project.description})
+        except Exception as e:
+            return jsonify({"success": False, "message": "Invalid request or server error."})
+        return jsonify({"success": True, "projects": lines})
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 
