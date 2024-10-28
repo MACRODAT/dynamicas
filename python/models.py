@@ -52,10 +52,6 @@ class User(db.Model):
 
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
     last_name: Mapped[str] = mapped_column(nullable=False)
-    # first_name = db.Column(db.String(120), nullable=False)
-    # email = db.Column(db.String(120), nullable=False, default="example@email.com")
-    # pass_hash = db.Column(db.String(120), nullable=False)
-    # avatar = db.Column(db.String(120), unique=True, nullable=False)
     first_name: Mapped[str] = mapped_column(nullable=False)
     email: Mapped[str]  = mapped_column(nullable=False, default="example@email.com")
     pass_hash: Mapped[str]  = mapped_column(nullable=False)

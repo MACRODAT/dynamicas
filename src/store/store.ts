@@ -1,15 +1,10 @@
 // store.ts
-import { Middleware, createStore } from 'redux';
 import rootReducer from './reducers/reducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-
-import { reloginUser } from './logic/initialLogic';
-import { SET_USER_DISCONNECT, SET_USER_RELOGIN } from './user';
 import { resendLogin } from '../firebase';
 import { userDisconnect } from './logic/userLogic';
-import { AllGeometryActions, GeometryActions, isAllGeometryAction } from './geometry';
 import { isFlightAction } from './parameters';
 
 const persistConfig = {
@@ -30,7 +25,7 @@ const logger = (store: any) => (next: any) => (action: any) => {
   if (isFlightAction(action.type))
   {
     let st = store.getState();
-    console.log(st)
+    // console.log(st)
     // send the data to python
     fetch("")
   }

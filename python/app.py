@@ -376,6 +376,18 @@ def newProject():
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 
+@app.route('/myprojects/<string:project_name>/comms', methods=['POST'])
+@jwt_required()
+def comms(project_name):
+    """
+        Get data from react
+    """
+    try:
+        user = getUser()
+        user.projects[]
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

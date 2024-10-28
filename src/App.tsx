@@ -55,7 +55,8 @@ const App: React.FC<States> = (state: States) => {
                                   dispatch({type: SET_PROJECT, payload: ""})
                                   dispatch({type: SET_MENU, payload: "Account"})
 
-                              }}>
+                              }
+                    }>
                   <IoCloseCircleSharp />
                   Close Project
                 </h6>

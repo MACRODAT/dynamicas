@@ -3,7 +3,7 @@ import { connect, useDispatch } from 'react-redux'
 import { States, allInterfaces } from '../../helpers'
 import "../../styles/project.scss"
 import { Button, Form } from 'react-bootstrap'
-import { SET_PROJECT } from '../../store/user'
+import { SET_PROJECT, SET_USER_DISCONNECT } from '../../store/user'
 import { setMenu } from '../../store/logic/actionLogic'
 
 
@@ -25,7 +25,10 @@ const Projects: React.FC<States> = (state: States) => {
 			}
 		}).then((val) => {
 			val.json().then((json) => {
-				console.log(json)
+				if (json.msg && json.msg == "Token has expired")
+				{
+					dispatch({type: SET_USER_DISCONNECT})
+				}
 				if (json.success)
 				{
 					setProjects(json.projects)
@@ -50,7 +53,10 @@ const Projects: React.FC<States> = (state: States) => {
 			})
 		}).then((val) => {
 			val.json().then((json) => {
-				// console.log(json)
+				if (json.msg && json.msg == "Token has expired")
+				{
+					dispatch({type: SET_USER_DISCONNECT})
+				}
 				if (json.success)
 				{
 					setProjects(json.projects)
