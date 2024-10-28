@@ -1,21 +1,17 @@
 import json
-from flask import Flask, jsonify, request, send_file
-from create_io import list_files_by_folder, list_files_recursively
+from flask import jsonify, request, send_file
+from create_io import list_files_recursively
 from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, \
                             get_airfoil_step, get_airfoil_screenshot, \
                             create_geometry, create_mesh, create_screenshot, get_airfoil_description
 from airfoilGen.generator import naca as nacaFunction
 
 # login stuff
-from my_secrets.secret_key_ import my_secret_key
-
-from flask_sqlalchemy import SQLAlchemy
-
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
 
-from configs import app, db, migrate
+from configs import app, db
 
 import io
 
@@ -29,33 +25,10 @@ __my_dirname = path.dirname(path.realpath(__file__))
 
 
 from flask import flash, request
-from werkzeug.security import generate_password_hash, check_password_hash
+from users import User
 from airfoilData import Project
 
 
-
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    last_name = db.Column(db.String(120), nullable=False)
-    first_name = db.Column(db.String(120), nullable=False)
-    email = db.Column(db.String(120), nullable=False, default="example@email.com")
-    pass_hash = db.Column(db.String(120), nullable=False)
-    avatar = db.Column(db.String(120), unique=True, nullable=False)
-    
-    projects = db.relationship('Project', backref='User', lazy=True)
-
-    def is_authenticated(self):
-        return True
-
-    def set_password(self, password):
-        self.pass_hash = generate_password_hash(password)
-    
-    def check_password(self, password):
-        return check_password_hash(self.pass_hash, password)
-    
-    def __repr__(self):
-        return f'<User {self.avatar}>'
 
 #login for users
 def _login_helper(avatar, password):

@@ -1,6 +1,7 @@
 import numpy as np
 from airfoilGen import generator
-from flask_login import current_user
+from sqlalchemy import MetaData
+# from flask_login import current_user
 
 from configs import db
 from math import pow
@@ -34,7 +35,12 @@ class interval:
 
 # Define Project model
 class Project(db.Model):
-    __tablename__ = 'projects'
+    # __tablename__ = 'projects'
+    metadata = MetaData()
+
+    if not metadata.tables.get('projects'):
+        __tablename__ = "projects"
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500))
@@ -80,7 +86,7 @@ class Project(db.Model):
         self._forceProduce
 
 
-
+current_user = ""
 
 class airfoil_data:
     
@@ -102,7 +108,7 @@ class airfoil_data:
         if self.naca == "" or len(self.naca) not in [4,5]:
             return False
         naca = generator.naca(self.naca, self.n_points)
-        with open(f'{__my_root}\{current_user.avatar}', 'w') as f:
+        with open(f'{__my_root}\{current_user}', 'w') as f:
             f.write(naca)
         self.pts = np.array(naca)
 
