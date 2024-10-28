@@ -19,14 +19,9 @@ import io
 from os import path
 __my_dirname = path.dirname(path.realpath(__file__)) 
 
-
 # adding login functionality
-
-
-
 from flask import flash, request
-from users import User
-from airfoilData import Project
+from models import User, Project
 
 
 
@@ -42,6 +37,20 @@ def _login_helper(avatar, password):
         response = {"access_token":access_token, "success": True}
         return response
     return {"access_token":"", "success": False}
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    # if current_user.is_authenticated:
+    #     return {
+    #         "success": True,
+    #         "message": "Already authenticated."
+    #     }
+    if request.method == "POST":
+        avatar = request.json["avatar"]
+        password = request.json["password"]
+        
+        return _login_helper(avatar, password)
+    return {"success": False, "error": "invalid method"}
 
 # Routes
 @app.route("/register", methods=["GET", "POST"])
@@ -79,20 +88,6 @@ def register():
         return {"success": True}
 
     return {"error": "Post.", "success": False}
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    # if current_user.is_authenticated:
-    #     return {
-    #         "success": True,
-    #         "message": "Already authenticated."
-    #     }
-    if request.method == "POST":
-        avatar = request.json["avatar"]
-        password = request.json["password"]
-        
-        return _login_helper(avatar, password)
-    return {"success": False, "error": "invalid method"}
 
 @app.after_request
 def refresh_expiring_jwts(response):
@@ -133,11 +128,11 @@ def logout():
     return response
 
 # Teardown context to close database session
-# @app.teardown_appcontext
-# def shutdown_session(exception=None):
-#     db.session.remove()  # Properly close and release any sessions
-#     if db.engine:
-#         db.engine.dispose()  # Dispose of engine connections if necessary
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()  # Properly close and release any sessions
+    if db.engine:
+        db.engine.dispose()  # Dispose of engine connections if necessary
 
 @app.route('/', methods=['GET'])
 def home():

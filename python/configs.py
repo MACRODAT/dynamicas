@@ -22,3 +22,4 @@ migrate = Migrate(app, db)
 # Enable CORS for all origins
 # CORS(app, origins="http://localhost:3000")
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
