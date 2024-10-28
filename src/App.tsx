@@ -11,6 +11,9 @@ import { MdAccountCircle } from "react-icons/md";
 import { Form } from 'react-bootstrap';
 import Login from './login';
 import ProjectMenus from './components/projectMenus';
+import { IoCloseCircleSharp } from "react-icons/io5";
+import { SET_PROJECT } from './store/user';
+import { SET_MENU } from './store/action';
 
 const App: React.FC<States> = (state: States) => {
 
@@ -44,14 +47,28 @@ const App: React.FC<States> = (state: States) => {
         <p id="navdesc">
           Truly fly your own
         </p>
-        <div id="logger">
-          <h6 className='inline' style={{marginRight: '5px'}}>Welcome {state.user.user.lastname}</h6>
-          <p className='link italic inline'
-            onClick={() => handleMenuSelect("account")}
-            >
-            <MdAccountCircle /> My account
-          </p>
-        </div>
+        {
+          state.user.project != "" ?
+              <div id="logger">
+                <h6 className="inline headerLink" onClick={
+                        () => {
+                                  dispatch({type: SET_PROJECT, payload: ""})
+                                  dispatch({type: SET_MENU, payload: "Account"})
+
+                              }}>
+                  <IoCloseCircleSharp />
+                  Close Project
+                </h6>
+                <h6 className='inline' style={{marginRight: '5px'}}>Welcome {state.user.user.lastname}</h6>
+                <p className='link italic inline'
+                  onClick={() => handleMenuSelect("account")}
+                  >
+                  <MdAccountCircle /> My account
+                </p>
+              </div>
+          :
+          <></>
+        }
 
       </div>
       {

@@ -26,6 +26,7 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
       'front-300': '#d7d7d7',
       'front-400': '#a5a5a5',
       'front-500': '#757575',
+      'color-red': '#903829',
     }
   }
   else if (theme == 'black space')
@@ -43,6 +44,7 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
       'front-300': '#E3F2FD',
       'front-400': '#CEDBE5',
       'front-500': '#B9C4CC',
+      'color-red': '#954849',
     }
   }
   else if (theme == 'green park')
@@ -60,6 +62,7 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
       'front-300': '#2D4526',
       'front-400': '#475C41',
       'front-500': '#8B9C93',
+      'color-red': '#ffdde4',
     }
   }
   else if (theme == 'heavenly park')
@@ -77,6 +80,7 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
       'front-300': '#475C41',
       'front-400': '#0C322E',
       'front-500': '#1B4843',
+      'color-red': '#ffdde4',
     }
   }
   else if (theme == 'white snow')
@@ -94,6 +98,7 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
       'front-300': '#475C41',
       'front-400': '#0C322E',
       'front-500': '#1B4843',
+      'color-red': '#ffdde4',
     }
   }
   return {
