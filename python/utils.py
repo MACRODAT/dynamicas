@@ -5,7 +5,8 @@ from create_view import create_screenshot as cs
 from typing import List
 
 # Specify the folder path
-folder_path = os.getcwd() + '/airfoils/'
+from os import path
+folder_path = path.dirname(path.realpath(__file__)) + '/airfoils/'
 
 def list_airfoils() -> List[str]:
     # List all .dat files in the folder

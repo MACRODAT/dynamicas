@@ -1,6 +1,5 @@
 import json
-from flask import Flask, jsonify, request, send_file, session
-from flask_cors import CORS
+from flask import Flask, jsonify, request, send_file
 from create_io import list_files_by_folder, list_files_recursively
 from utils import list_airfoils, get_airfoil_stl, get_airfoil_dat, \
                             get_airfoil_step, get_airfoil_screenshot, \
@@ -16,22 +15,9 @@ from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
 
-from flask_migrate import Migrate
+from configs import app, db, migrate
 
 import io
-
-app = Flask(__name__)
-
-
-# sql alchemy stuff
-app.secret_key = my_secret_key #TO BE MODIFIED
-app.config["JWT_SECRET_KEY"] = my_secret_key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dynamicas.db'  # Use SQLite for simplicity
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
-db = SQLAlchemy(app)
-jwt = JWTManager(app)
-migrate = Migrate(app, db)
 
 # cur folder
 from os import path
@@ -40,28 +26,14 @@ __my_dirname = path.dirname(path.realpath(__file__))
 
 # adding login functionality
 
-# Enable CORS for all origins
-# CORS(app, origins="http://localhost:3000")
-CORS(app)
-
-
 
 
 from flask import flash, request
-from flask_sqlalchemy import SQLAlchemy
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from airfoilData import Project
 
-# Define Project model
-class Project(db.Model):
-    __tablename__ = 'projects'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(500))
-    foldername = db.Column(db.String(100))
-    
-    # Foreign key linking to the User model
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -85,7 +57,6 @@ class User(db.Model):
     
     def __repr__(self):
         return f'<User {self.avatar}>'
-
 
 #login for users
 def _login_helper(avatar, password):

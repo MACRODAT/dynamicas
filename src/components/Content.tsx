@@ -12,6 +12,7 @@ import Fixedwingspecs from "./process/fixedwingspecs";
 import Generator from "./geometry/generator";
 import Account from "../account";
 import Project from "./project/project";
+import Priorities from "./priority/priorities";
 
 const mapStateToProps = (state : any) => {
 
@@ -42,6 +43,10 @@ const Content : React.FC = (state : any) => {
 		if (selectedMenu == "Projects")
 		{
 			return <Project />
+		}
+		if (selectedMenu == "Priorities")
+		{
+			return <Priorities />
 		}
 		if (selectedMenu == "Solver")
 		{
