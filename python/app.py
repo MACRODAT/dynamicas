@@ -413,10 +413,28 @@ def getProjects():
         current_user = getUser()
         try:
             for project in current_user.projects:
-                lines.push({"name": project.name, "description": project.description})
+                lines.append({"name": project.name, "description": project.description})
         except Exception as e:
             return jsonify({"success": False, "message": "Invalid request or server error."})
         return jsonify({"success": True, "projects": lines})
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
+@app.route('/myprojects/new', methods=['POST'])
+@jwt_required()
+def newProject():
+    """
+        new project
+    """
+    try:
+        json_ = request.json
+        cur_user = getUser()
+        p = Project()
+        p.description = json_['description']
+        p.name = json_['name']
+        p.user_id = cur_user.id
+        db.session.add(p)
+        db.session.commit()
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 

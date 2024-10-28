@@ -59,6 +59,7 @@ const persistor = persistStore(store, null, () => {
   resendLogin(obj)
 
   let timer = setInterval(() => {
+    // console.log("Recalled ", trials, "  ", relogin_)
     if (trials == 0)
     {
       clearInterval(timer)
@@ -70,12 +71,13 @@ const persistor = persistStore(store, null, () => {
       return;
     }
     resendLogin(obj).then((ful : any) => {
-      relogin_ = ful;
-      if (ful)
+      if (ful == null)
       {
         trials -= 1;
+        relogin_ = true;
       }else {
         trials = 3;
+        relogin_ = false;
       }
       return; 
     }, (rej) => {
@@ -83,7 +85,7 @@ const persistor = persistStore(store, null, () => {
       trials -= 1;
       return; 
     })
-  }, 100000)
+  }, 4000)
   // store.dispatch(reloginUser((store.getState() as any).user.user) as any)
 });
 

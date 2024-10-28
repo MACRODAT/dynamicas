@@ -105,7 +105,7 @@ const resendLogin = async (user: any) => {
 					}
 					return response.json(); // Only parse JSON if response is OK
 				}).then((val) => {
-						console.log(val)
+						// console.log(val)
 						if (val.success)
 						{
 							// set up redux store

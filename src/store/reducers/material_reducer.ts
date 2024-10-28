@@ -14,6 +14,7 @@ export interface MaterialState {
   };
   
   const checkDone = (e: MaterialState): boolean => {
+	// console.log(e, e.customDensity > 0 && e.customDensity < 10000 && e.material != MaterialType.ANY)
 	return (e.customDensity > 0 && e.customDensity < 10000 && e.material != MaterialType.ANY)
   }
 
@@ -43,7 +44,7 @@ export interface MaterialState {
 			default:
 			  customDensity_ = 0;
 		}
-		return { ...state, done: checkDone(state), 
+		return { ...state, done: checkDone({...state, material: action.payload, customDensity: customDensity_}), 
 			material: action.payload, customDensity: customDensity_};
 	  case SET_CUSTOM_DENSITY:
 		return { ...state, done: checkDone(state), customDensity: action.payload };
