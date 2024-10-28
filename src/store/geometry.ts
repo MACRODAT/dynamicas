@@ -1,3 +1,4 @@
+import { type } from "os";
 import { airfoilData } from "../components/geometry/airfoil";
 import { Point, Shape } from "../types";
 
@@ -10,6 +11,31 @@ export const ADD_SHAPE = 'ADD_SHAPE';
 export const SET_GEOMETRY_TYPE = 'SET_GEOMETRY_TYPE';
 export const SET_GEOMETRY_CLASS = 'SET_GEOMETRY_CLASS';
 export const SET_GEOMETRY_AIRFOIL_NAME = 'SET_GEOMETRY_AIRFOIL_NAME';
+
+export type AllGeometryActions = 
+                      typeof IMPORT_GEOMETRY 
+                      | typeof PREVIEW_GEOMETRY
+                      | typeof PREVIEW_MESH
+                      | typeof LIST_SHAPES
+                      | typeof SET_MESH_QUALITY
+                      | typeof ADD_SHAPE
+                      | typeof SET_GEOMETRY_TYPE
+                      | typeof SET_GEOMETRY_CLASS
+                      | typeof SET_GEOMETRY_AIRFOIL_NAME
+// Type guard function to check if action is of type AllGeometryActions
+export function isAllGeometryAction(actionType: string): actionType is AllGeometryActions {
+  return [
+    IMPORT_GEOMETRY,
+    PREVIEW_GEOMETRY,
+    PREVIEW_MESH,
+    LIST_SHAPES,
+    SET_MESH_QUALITY,
+    ADD_SHAPE,
+    SET_GEOMETRY_TYPE,
+    SET_GEOMETRY_CLASS,
+    SET_GEOMETRY_AIRFOIL_NAME
+  ].includes(actionType as AllGeometryActions);
+}
 
 // Action interfaces
 interface ImportGeometryAction {

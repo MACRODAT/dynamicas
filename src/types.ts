@@ -63,8 +63,18 @@ type Point = {
 	uid: string;
   }
 
+  type aircraftPriorities = {
+	maneuverability: number;
+	stability: number;
+	payload: number;
+	speed: number;
+	endurance: number;
+	stallBehavior: number;
+	manufacturability: number;
+  }
+
   export type {
-	Point, Shape, User
+	Point, Shape, User, aircraftPriorities
   }
   export {
 	ShapeName, JoiningMethod, MaterialType, AirfoilType

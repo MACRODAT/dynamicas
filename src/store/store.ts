@@ -9,6 +9,8 @@ import { reloginUser } from './logic/initialLogic';
 import { SET_USER_DISCONNECT, SET_USER_RELOGIN } from './user';
 import { resendLogin } from '../firebase';
 import { userDisconnect } from './logic/userLogic';
+import { AllGeometryActions, GeometryActions, isAllGeometryAction } from './geometry';
+import { isFlightAction } from './parameters';
 
 const persistConfig = {
   key: 'root',
@@ -22,24 +24,26 @@ let relogin_ = true;
 let trials = 3;
 
 
-const initializationMiddleware: Middleware = (storeAPI) => (next) => (action: any) => {
-  // On store creation, dispatch the initialization action
-  // if (storeAPI.getState().user.relogin === true && action.type == SET_USER_RELOGIN) {
-  //   storeAPI.dispatch(reloginUser(storeAPI.getState().user.user) as any);
-  // }
-
-  // ADD ANY MIDDLEWARE HERE
-
-
-  return next(action);
-};
+const logger = (store: any) => (next: any) => (action: any) => {
+  // console.log(action.type)
+  let result = next(action)
+  if (isFlightAction(action.type))
+  {
+    let st = store.getState();
+    console.log(st)
+    // send the data to python
+    fetch("")
+  }
+  // console.log('next state', store.getState())
+  return result
+}
 
 const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // necessary for redux-persist
-    }).concat(initializationMiddleware),
+    }).concat(logger),
 });
 
 const persistor = persistStore(store, null, () => {

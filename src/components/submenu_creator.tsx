@@ -13,6 +13,7 @@ import { solverSetMaxIterations } from '../store/logic/solverLogic';
 
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDownloadDone } from "react-icons/md";
+import Priorities from './priority/priorities';
 
 // interface SubmenuProps {
 //   menu: string;
@@ -453,6 +454,8 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 					</div>
 				</>
 			)
+    case 'Priorities':
+      return <Priorities />
     case 'results':
       return (
         <>

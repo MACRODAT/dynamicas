@@ -1,4 +1,4 @@
-import { AirfoilType } from "../types";
+import { AirfoilType, aircraftPriorities } from "../types";
 
 // Flight Time
 export const SET_FLIGHT_TIME_MARGINS = 'SET_FLIGHT_TIME_MARGINS';
@@ -24,6 +24,44 @@ export const SET_ANGLE_OF_ATTACK = 'SET_ANGLE_OF_ATTACK';
 export const SET_PAYLOAD_WEIGHT = 'SET_PAYLOAD_WEIGHT';
 export const SET_MAX_WINGSPAN = 'SET_MAX_WINGSPAN';
 export const SET_MAX_FUSELAGE = 'SET_MAX_FUSELAGE';
+export const SET_PRIORITIES = 'SET_PRIORITIES';
+
+// Define the union type for all actions
+export type AllFlightActions = 
+    | typeof SET_FLIGHT_TIME_MARGINS
+    | typeof SET_FLIGHT_TIME_EXPECTED
+    | typeof SET_SIMULATION_TYPE
+    | typeof SET_WEIGHT_MARGINS
+    | typeof SET_WEIGHT_EXPECTED
+    | typeof SET_SPEED_MARGINS
+    | typeof SET_SPEED_EXPECTED
+    | typeof SET_AIRFOIL_TYPE
+    | typeof SET_STREAM_VELOCITY_2D
+    | typeof SET_ANGLE_OF_ATTACK
+    | typeof SET_PAYLOAD_WEIGHT
+    | typeof SET_MAX_WINGSPAN
+    | typeof SET_MAX_FUSELAGE
+    | typeof SET_PRIORITIES;
+
+// Type guard function to check if action is of type AllFlightActions
+export function isFlightAction(actionType: string): actionType is AllFlightActions {
+  return [
+    SET_FLIGHT_TIME_MARGINS,
+    SET_FLIGHT_TIME_EXPECTED,
+    SET_SIMULATION_TYPE,
+    SET_WEIGHT_MARGINS,
+    SET_WEIGHT_EXPECTED,
+    SET_SPEED_MARGINS,
+    SET_SPEED_EXPECTED,
+    SET_AIRFOIL_TYPE,
+    SET_STREAM_VELOCITY_2D,
+    SET_ANGLE_OF_ATTACK,
+    SET_PAYLOAD_WEIGHT,
+    SET_MAX_WINGSPAN,
+    SET_MAX_FUSELAGE,
+    SET_PRIORITIES
+  ].includes(actionType as AllFlightActions);
+}
 
 // Action interfaces
 interface SetFlightTimeMarginsAction {
@@ -91,6 +129,11 @@ interface SetMaxWingspan {
   payload: number;
 }
 
+interface SetPriorities {
+  type: typeof SET_PRIORITIES;
+  payload: aircraftPriorities;
+}
+
 export type ParametersActions =
   | SetFlightTimeMarginsAction
   | SetFlightTimeExpectedAction
@@ -102,6 +145,7 @@ export type ParametersActions =
   | SetAngleOfAttack
   | SetStreamVelocity2D
   | SetPayloadWeight
+  | SetPriorities
   | SetFuselageLength
   | SetMaxWingspan
   | SetAirfoilTypeAction;

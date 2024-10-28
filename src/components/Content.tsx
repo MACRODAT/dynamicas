@@ -13,6 +13,7 @@ import Generator from "./geometry/generator";
 import Account from "../account";
 import Project from "./project/project";
 import Priorities from "./priority/priorities";
+import PriorityDetails from "./priority/priorityDetails";
 
 const mapStateToProps = (state : any) => {
 
@@ -46,7 +47,7 @@ const Content : React.FC = (state : any) => {
 		}
 		if (selectedMenu == "Priorities")
 		{
-			return <Priorities />
+			return <PriorityDetails />
 		}
 		if (selectedMenu == "Solver")
 		{

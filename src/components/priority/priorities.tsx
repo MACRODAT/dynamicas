@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { States, allInterfaces } from '../../helpers'
-import { Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
+import { aircraftPriorities } from '../../types';
+import { SET_PRIORITIES } from '../../store/parameters';
 
 
 const Priorities: React.FC<States> = (state: States) => {
 
 	const dispatch = useDispatch();
 
-	const [priorities, setPriorities] = useState({
+	const [priorities, setPriorities] = useState<aircraftPriorities>({
 		maneuverability: 3,
 		stability: 3,
 		payload: 3,
@@ -25,125 +27,122 @@ const Priorities: React.FC<States> = (state: States) => {
 		  [name]: Number(value),
 		}));
 	  };
-	
-	  const renderTooltip = (text: any) => (
-		<Tooltip>{text}</Tooltip>
-	  );
+
+	  useEffect(() => {
+		dispatch({
+			type: SET_PRIORITIES,
+			payload: priorities
+		})
+	  }, [priorities])
 	
 	  return (
-		<Form>
-		  <Form.Group>
-			<Form.Label>Maneuverability</Form.Label>
-			<OverlayTrigger
-			  placement="right"
-			  overlay={renderTooltip("Higher values favor sharper turning and agility, affecting stability margins.")}
-			>
-			  <Form.Range
-				name="maneuverability"
-				min="1"
-				max="5"
-				value={priorities.maneuverability}
-				onChange={handleSliderChange}
-			  />
-			</OverlayTrigger>
-		  </Form.Group>
-	
-		  <Form.Group>
-			<Form.Label>Stability</Form.Label>
-			<OverlayTrigger
-			  placement="right"
-			  overlay={renderTooltip("Increases stability by adjusting center of gravity and damping, affecting maneuverability.")}
-			>
-			  <Form.Range
-				name="stability"
-				min="1"
-				max="5"
-				value={priorities.stability}
-				onChange={handleSliderChange}
-			  />
-			</OverlayTrigger>
-		  </Form.Group>
-	
-		  <Form.Group>
-			<Form.Label>Payload Carry Capacity</Form.Label>
-			<OverlayTrigger
-			  placement="right"
-			  overlay={renderTooltip("Higher values increase payload capability, impacting lift and drag characteristics.")}
-			>
-			  <Form.Range
-				name="payload"
-				min="1"
-				max="5"
-				value={priorities.payload}
-				onChange={handleSliderChange}
-			  />
-			</OverlayTrigger>
-		  </Form.Group>
-	
-		  <Form.Group>
-			<Form.Label>Max Speed</Form.Label>
-			<OverlayTrigger
-			  placement="right"
-			  overlay={renderTooltip("Higher values improve speed by optimizing lift-to-drag ratios, reducing payload capacity.")}
-			>
-			  <Form.Range
-				name="speed"
-				min="1"
-				max="5"
-				value={priorities.speed}
-				onChange={handleSliderChange}
-			  />
-			</OverlayTrigger>
-		  </Form.Group>
-	
-		  <Form.Group>
-			<Form.Label>Endurance (Time in Air)</Form.Label>
-			<OverlayTrigger
-			  placement="right"
-			  overlay={renderTooltip("Higher values increase fuel efficiency and glide ratio, affecting max speed and weight.")}
-			>
-			  <Form.Range
-				name="endurance"
-				min="1"
-				max="5"
-				value={priorities.endurance}
-				onChange={handleSliderChange}
-			  />
-			</OverlayTrigger>
-		  </Form.Group>
-	
-		  <Form.Group>
-			<Form.Label>Stall Behavior</Form.Label>
-			<OverlayTrigger
-			  placement="right"
-			  overlay={renderTooltip("Affects stall angle and control at low speeds, balancing between safety and performance.")}
-			>
-			  <Form.Range
-				name="stallBehavior"
-				min="1"
-				max="5"
-				value={priorities.stallBehavior}
-				onChange={handleSliderChange}
-			  />
-			</OverlayTrigger>
-		  </Form.Group>
-	
-		  <Form.Group>
-			<Form.Label>Manufacturability</Form.Label>
-			<OverlayTrigger
-			  placement="right"
-			  overlay={renderTooltip("Higher values improve ease of assembly and cost efficiency, affecting design complexity.")}
-			>
-			  <Form.Range
-				name="manufacturability"
-				min="1"
-				max="5"
-				value={priorities.manufacturability}
-				onChange={handleSliderChange}
-			  />
-			</OverlayTrigger>
-		  </Form.Group>
-		</Form>
+		<div className='' style={{width: '100%', height: '100%', overflowY: 'auto'}}>
+				<h4>Set priorities</h4>
+				<p className='italic'>
+					What's more relevant to you? Set your parameters, and we'll shape your aircraft for you. 
+					Setting everything at the highest values would just mean equal consideration for all parameters,
+					as they are competitive in nature. Therefore, <em>prioritize</em> and be conservative.
+				</p>
+				<Form>
+					<Form.Group>
+						<Form.Label className='bold'>Maneuverability</Form.Label>
+						<p className='italic small'>
+							Higher values favor sharper turning and agility, affecting stability margins.
+						</p>
+						<Form.Range
+							name="maneuverability"
+							min="1"
+							max="5"
+							value={priorities.maneuverability}
+							onChange={handleSliderChange}
+						/>
+					</Form.Group>
+				
+					<Form.Group>
+						<Form.Label className='bold'>Stability</Form.Label>
+						<p className='italic small'>
+						Increases stability by adjusting center of gravity and damping, affecting maneuverability.
+						</p>
+						<Form.Range
+							name="stability"
+							min="1"
+							max="5"
+							value={priorities.stability}
+							onChange={handleSliderChange}
+						/>
+					</Form.Group>
+				
+					<Form.Group>
+						<Form.Label className='bold'>Payload Carry Capacity</Form.Label>
+						<p className='italic small'>
+							Higher values increase payload capability, impacting lift and drag characteristics.
+						</p>
+						<Form.Range
+							name="payload"
+							min="1"
+							max="5"
+							value={priorities.payload}
+							onChange={handleSliderChange}
+						/>
+					</Form.Group>
+				
+					<Form.Group>
+						<Form.Label className='bold'>Max Speed</Form.Label>
+						<p className='italic small'>
+							Higher values improve speed by optimizing lift-to-drag ratios, reducing payload capacity.
+						</p>
+						<Form.Range
+							name="speed"
+							min="1"
+							max="5"
+							value={priorities.speed}
+							onChange={handleSliderChange}
+						/>
+					</Form.Group>
+				
+					<Form.Group>
+						<Form.Label className='bold'>Endurance (Time in Air)</Form.Label>
+						<p className='italic small'>
+							Higher values increase efficiency and glide ratio, affecting max speed and weight.
+						</p>
+						<Form.Range
+							name="endurance"
+							min="1"
+							max="5"
+							value={priorities.endurance}
+							onChange={handleSliderChange}
+						/>
+					</Form.Group>
+				
+					<Form.Group>
+						<Form.Label className='bold'>Stall Behavior</Form.Label>
+						<p className='italic small'>
+							Affects stall angle and control at low speeds, balancing between safety and performance.
+						</p>
+						<Form.Range
+							name="stallBehavior"
+							min="1"
+							max="5"
+							value={priorities.stallBehavior}
+							onChange={handleSliderChange}
+						/>
+					</Form.Group>
+				
+					<Form.Group>
+						<Form.Label className='bold'>Manufacturability</Form.Label>
+						<p className='italic small'>
+							Higher values improve ease of assembly and cost efficiency, affecting design complexity.
+						</p>
+						<Form.Range
+							name="manufacturability"
+							min="1"
+							max="5"
+							value={priorities.manufacturability}
+							onChange={handleSliderChange}
+						/>
+					</Form.Group>
+				</Form>
+		</div>
 	  );
 }
 
