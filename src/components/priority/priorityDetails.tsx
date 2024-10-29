@@ -18,7 +18,7 @@ const PriorityDetails: React.FC<States> = (state: States) => {
 			}).catch((err) => {
 				afterRequest(err)
 			});
-	}, [])
+	}, [state.params.updateCount])
 	const dispatch = useDispatch();
 	
 

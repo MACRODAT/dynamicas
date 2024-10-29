@@ -1,5 +1,5 @@
 import { AirfoilType, aircraftPriorities } from "../../types";
-import { ParametersActions, SET_AIRFOIL_TYPE, SET_ANGLE_OF_ATTACK, SET_FLIGHT_TIME_EXPECTED, SET_FLIGHT_TIME_MARGINS, SET_MAX_FUSELAGE, SET_MAX_WINGSPAN, SET_PAYLOAD_WEIGHT, SET_PRIORITIES, SET_SIMULATION_TYPE, SET_SPEED_EXPECTED, SET_SPEED_MARGINS, SET_STREAM_VELOCITY_2D, SET_WEIGHT_EXPECTED, SET_WEIGHT_MARGINS } from "../parameters";
+import { INCREMENT_PRIORITY, ParametersActions, SET_AIRFOIL_TYPE, SET_ANGLE_OF_ATTACK, SET_FLIGHT_TIME_EXPECTED, SET_FLIGHT_TIME_MARGINS, SET_MAX_FUSELAGE, SET_MAX_WINGSPAN, SET_PAYLOAD_WEIGHT, SET_PRIORITIES, SET_SIMULATION_TYPE, SET_SPEED_EXPECTED, SET_SPEED_MARGINS, SET_STREAM_VELOCITY_2D, SET_WEIGHT_EXPECTED, SET_WEIGHT_MARGINS } from "../parameters";
 
 
 
@@ -17,6 +17,7 @@ export interface ParametersState {
 	doneInitialSketch: boolean;
 	simulationType: string,
 	priorities: aircraftPriorities;
+	updateCount: number;
 }
   
   const initialParametersState: ParametersState = {
@@ -32,6 +33,7 @@ export interface ParametersState {
 	payloadWeight: 0.1,
 	wingSpanMax: 100,
 	fuselageLengthMax: 60,
+	updateCount: 0,
 	priorities: {
 		maneuverability: 3,
 		stability: 3,
@@ -136,6 +138,8 @@ export interface ParametersState {
 		return {...state, doneInitialSketch: CheckDoneInitialSketch(state), wingSpanMax: action.payload}
 	  case SET_PRIORITIES:
 		return {...state, priorities: action.payload}
+	  case INCREMENT_PRIORITY:
+		return {...state, updateCount: (state.updateCount + 1) || 0}
 	  default:
 		return state;
 	}

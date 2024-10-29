@@ -5,7 +5,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { afterRequest, checkLogin, resendLogin } from '../firebase';
 import { userDisconnect } from './logic/userLogic';
-import { isFlightAction } from './parameters';
+import { INCREMENT_PRIORITY, isFlightAction } from './parameters';
 import { AirfoilType } from '../types';
 import { SET_USER_DISCONNECT } from './user';
 import axios from 'axios';
@@ -32,6 +32,10 @@ const logger = (store: any) => (next: any) => (action: any) => {
     // console.log(st)
     // send the data to python
     const p = st.parameters
+    if (action.type == INCREMENT_PRIORITY)
+    {
+      return result
+    }
     fetch(`http://127.0.0.1:5000/myprojects/${st.user.project}/comms`, {
         method: "POST",
         headers: {
@@ -44,7 +48,8 @@ const logger = (store: any) => (next: any) => (action: any) => {
           ...p
         })
     }).then((val: any) => {
-      // console.log(val)
+      console.log(val)
+      store.dispatch({type: INCREMENT_PRIORITY})
       // afterRequest(val)
     }).catch((err: any) => {
       // console.log(err)

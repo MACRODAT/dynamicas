@@ -25,6 +25,7 @@ export const SET_PAYLOAD_WEIGHT = 'SET_PAYLOAD_WEIGHT';
 export const SET_MAX_WINGSPAN = 'SET_MAX_WINGSPAN';
 export const SET_MAX_FUSELAGE = 'SET_MAX_FUSELAGE';
 export const SET_PRIORITIES = 'SET_PRIORITIES';
+export const INCREMENT_PRIORITY = 'INCREMENT_PRIORITY';
 
 // Define the union type for all actions
 export type AllFlightActions = 
@@ -40,6 +41,7 @@ export type AllFlightActions =
     | typeof SET_ANGLE_OF_ATTACK
     | typeof SET_PAYLOAD_WEIGHT
     | typeof SET_MAX_WINGSPAN
+    | typeof INCREMENT_PRIORITY
     | typeof SET_MAX_FUSELAGE
     | typeof SET_PRIORITIES;
 
@@ -58,6 +60,7 @@ export function isFlightAction(actionType: string): actionType is AllFlightActio
     SET_ANGLE_OF_ATTACK,
     SET_PAYLOAD_WEIGHT,
     SET_MAX_WINGSPAN,
+    INCREMENT_PRIORITY,
     SET_MAX_FUSELAGE,
     SET_PRIORITIES
   ].includes(actionType as AllFlightActions);
@@ -134,6 +137,10 @@ interface SetPriorities {
   payload: aircraftPriorities;
 }
 
+interface IncrementUpdate {
+  type: typeof INCREMENT_PRIORITY;
+}
+
 export type ParametersActions =
   | SetFlightTimeMarginsAction
   | SetFlightTimeExpectedAction
@@ -148,4 +155,5 @@ export type ParametersActions =
   | SetPriorities
   | SetFuselageLength
   | SetMaxWingspan
+  | IncrementUpdate
   | SetAirfoilTypeAction;

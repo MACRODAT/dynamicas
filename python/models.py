@@ -203,6 +203,16 @@ class Project(db.Model):
         [CONSTRUCTION]
         - Material: {self.material}
         - Density: {self.density}
+
+        [PRIORITIES]
+        - maneuverability: {self.flightPriorities.maneuverability} pts
+        - stability: {self.flightPriorities.stability} pts
+        - payload: {self.flightPriorities.payload} pts
+        - speed: {self.flightPriorities.speed} pts
+        - endurance: {self.flightPriorities.endurance} pts
+        - stall_behavior: {self.flightPriorities.stall_behavior} pts
+        - manufacturability: {self.flightPriorities.manufacturability} pts
+
         --------------------------------------------------
 
         [COMPUTED]

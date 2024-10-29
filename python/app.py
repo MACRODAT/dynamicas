@@ -404,12 +404,18 @@ def comms(project_name):
         project_.fuselageLengthMax = j['fuselageLengthMax']
         project_.streamVelocityX = j['streamVelocityX']
         project_.AOA = j['angleOfAttack']
-        project_.refresh()
         # project_.airfoilType = j['airfoilType']
         # project_.doneInitialSketch = j['doneInitialSketch']
         # project_.simulationType = j['simulationType']
         # project_.done = j['done']
-        # project_.flightPriorities.maneuverability = int(j['priorities']['maneuverability'])
+        project_.flightPriorities.maneuverability = int(j['priorities']['maneuverability'])
+        project_.flightPriorities.stability = int(j['priorities']['stability'])
+        project_.flightPriorities.payload = int(j['priorities']['payload'])
+        project_.flightPriorities.speed = int(j['priorities']['speed'])
+        project_.flightPriorities.stall_behavior = int(j['priorities']['stallBehavior'])
+        project_.flightPriorities.manufacturability = int(j['priorities']['manufacturability'])
+        project_.flightPriorities.endurance = int(j['priorities']['endurance'])
+        project_.refresh()
         # print(project_.flightPriorities.speed)
         db.session.commit()
 

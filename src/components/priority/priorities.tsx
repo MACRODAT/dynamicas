@@ -4,6 +4,7 @@ import { States, allInterfaces } from '../../helpers'
 import { Form } from 'react-bootstrap';
 import { aircraftPriorities } from '../../types';
 import { SET_PRIORITIES } from '../../store/parameters';
+import axios from 'axios';
 
 
 const Priorities: React.FC<States> = (state: States) => {
@@ -19,6 +20,7 @@ const Priorities: React.FC<States> = (state: States) => {
 		stallBehavior: 3,
 		manufacturability: 3,
 	  });
+
 	
 	  const handleSliderChange = (e: any) => {
 		const { name, value } = e.target;
