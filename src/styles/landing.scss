@@ -22,7 +22,7 @@
 	
   }
   
-  .cta-button {
+  .cta-buttonGoogle {
 	background-color: #28a745;
 	color: white;
 	padding: 15px 30px;
@@ -30,6 +30,27 @@
 	border-radius: 5px;
 	cursor: pointer;
 	font-size: 18px;
+	margin: 4px;
+
+	&:hover{
+		filter: invert(0.1);
+	}
+  }
+  
+  .cta-buttonRegister {
+	background-color: #2a28a7;
+	color: white;
+	padding: 15px 30px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 18px;
+	margin: 4px;
+	align-content: baseline;
+
+	&:hover{
+		filter: invert(0.1);
+	}
   }
   
   .features, .how-it-works {

@@ -5,6 +5,7 @@ from airfoilGen import generator
 from sqlalchemy import MetaData, ForeignKey
 import sqlalchemy as sa
 from sqlalchemy.orm import mapped_column, Mapped, relationship
+from datetime import datetime
 # from flask_login import current_user
 
 from configs import db
@@ -24,6 +25,20 @@ def abs(n):
         return -n
     return n
 # db = app.db
+
+class AircraftPriorities(db.Model):
+    __tablename__ = "aircraft_priorities"
+    
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    maneuverability: Mapped[int] = mapped_column(db.Integer, nullable=False)
+    stability: Mapped[int] = mapped_column(db.Integer, nullable=False)
+    payload: Mapped[int] = mapped_column(db.Integer, nullable=False)
+    speed: Mapped[int] = mapped_column(db.Integer, nullable=False)
+    endurance: Mapped[int] = mapped_column(db.Integer, nullable=False)
+    stall_behavior: Mapped[int] = mapped_column(db.Integer, nullable=False)
+    manufacturability: Mapped[int] = mapped_column(db.Integer, nullable=False)
+
+    project_id: Mapped[int]= mapped_column(ForeignKey("projects.id"))
 
 class interval:
     def __init__(self, a, b, minMaxFlag=False) -> None:
@@ -80,7 +95,7 @@ class Project(db.Model):
     __tablename__ = "projects"
     
     id: Mapped[int]= mapped_column(primary_key=True)
-    name: Mapped[int]= mapped_column(nullable=False)
+    name: Mapped[int]= mapped_column(nullable=False, unique=True)
     description: Mapped[int]= mapped_column()
     foldername: Mapped[int]= mapped_column()    
 
@@ -104,10 +119,17 @@ class Project(db.Model):
     meshQuality: Mapped[int]= mapped_column(server_default='0', nullable=False)
     chordLength: Mapped[int]= mapped_column(server_default='0', nullable=False)
 
+    flightPriorities: Mapped[AircraftPriorities]= relationship()
+
+    initialized: bool = False
 
     def __init__(self) -> None:
         super().__init__()
+        self.intialize()
 
+    def intialize(self):
+        if self.initialized:
+            return
         self.foldername = f'{my_root}/users/user_sample'
 
         self.flightTime = self.flightTime if self.flightTime is not None else 0  
@@ -126,16 +148,45 @@ class Project(db.Model):
         self.selectedAirfoil = self.selectedAirfoil if self.selectedAirfoil is not None else 0 
         self.meshQuality = self.meshQuality if self.meshQuality is not None else 0 
         self.chordLength = self.chordLength if self.chordLength is not None else 0 
+        self.refresh()
+        self.initialized = True
 
+    def refresh(self):
         self.speed = interval(self.speedExpected, self.speedMargins)
         self.weight = interval(self.weightExpected, self.weightMargins)
         self.updateCritical()
 
+
     def computeReynoldsUnitArea(self):
         return pow(self.streamVelocityX, 2) * DENSITY_AIR * self.chordLength / VISCOSITY_AIR
+    
+    def computeDetails(self):
+        return f"""
+        -------------| AIRFOIL INFORMATION  | ------------
+        User information:
+        Folder: {self.foldername}
+        Last updated: {datetime.now().ctime()}
+
+        [GEOMETRY - FIXED WING] 
+        - Max wingspan: {self.AirfoilLengthMax}
+        - Max fuselage length: {self.fuselageLengthMax}
+        - Suggested airfoil: {self.selectedAirfoil}
+        - Suggested chord length: {self.chordLength}
+
+        [FLIGHT PARAMETERS]
+        - Weight: min ({self.weight.min()}) Kg; max ({self.weight.max()}) Kg
+        - Payload weight (max): {self.payloadWeight} Kg
+        - Endurance: about ({self.flightTime}) minutes
+        - Speed: min ({self.speed.min()}) m/s; max ({self.speed.max()}) m/s
+
+        [CONSTRUCTION]
+        - Material: {self.material}
+        - Density: {self.density}
+        --------------------------------------------------
+        """
 
     def updateCritical(self):
-        if self.weight.min() == 0:
+        if self.speed.min() == 0:
             return
         # update the critical parameters
         self._reynolds = self.computeReynoldsUnitArea()

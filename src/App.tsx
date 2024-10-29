@@ -14,6 +14,8 @@ import ProjectMenus from './components/projectMenus';
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { SET_PROJECT } from './store/user';
 import { SET_MENU } from './store/action';
+import Signup from './signup';
+import LoginForm from './loginForm';
 
 const App: React.FC<States> = (state: States) => {
 
@@ -35,6 +37,14 @@ const App: React.FC<States> = (state: States) => {
   }, [state.action.themeSchema]);
 
   if (!state.user.connected) {
+    if (state.action.menu == "register")
+    {
+      return <Signup />
+    }
+    else if (state.action.menu == "login")
+    {
+      return <LoginForm />
+    }
     return <Login />
   }
 

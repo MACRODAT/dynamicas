@@ -5,6 +5,9 @@ import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { User } from "./types";
+import { SET_USER_DISCONNECT } from "./store/user";
+import { store } from "./store/store";
+import axios from "axios";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -89,6 +92,21 @@ const signInWithoutGoogle = () => {
 		
 }
 
+const checkLogin = async (token_: string) => {
+	return new Promise((resolve, reject) => {
+		const config = {
+			headers: { Authorization: `Bearer ${token_}` }
+		};
+		axios.get("http://127.0.0.1:5000/dashboard", config).then((res) => {
+
+			// console.log(res)
+			return res.status == 200;
+		}, (rej) => {
+			// console.log(rej)
+			return false;
+		})
+	})
+}
 const resendLogin = async (user: any) => {
 	return new Promise(
 		(resolve, reject) => {
@@ -121,6 +139,25 @@ const resendLogin = async (user: any) => {
 	)
 }
 
+const afterRequest = (res: any) => {
+	if (res.type === 'cors' || (res.msg && res.msg == "Token has expired"))
+	{
+		store.dispatch({type: SET_USER_DISCONNECT})
+	}
+	if (res.status == 401)
+	{
+		store.dispatch({type: SET_USER_DISCONNECT})
+	}
+}
+
+const generateConfigToken = (token_: string) => {
+	const config = {
+		headers: { Authorization: `Bearer ${token_}` }
+	};
+	return config;
+}
+
 export {
-	fb_app, analytics, signInWithGoogle, signInWithoutGoogle, resendLogin
+	fb_app, analytics, signInWithGoogle, signInWithoutGoogle, resendLogin,
+	afterRequest, checkLogin, generateConfigToken
 }

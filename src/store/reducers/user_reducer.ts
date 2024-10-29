@@ -13,6 +13,7 @@ const emptyUser: User = {
 	firstname: "", 
 	lastname: "", 
 	loginDate: new Date(),
+	firebase: false,
 	loggedIn: false,
 	email: "",
 	uid: "",

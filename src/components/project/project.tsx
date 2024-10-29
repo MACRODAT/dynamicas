@@ -5,6 +5,7 @@ import "../../styles/project.scss"
 import { Button, Form } from 'react-bootstrap'
 import { SET_PROJECT, SET_USER_DISCONNECT } from '../../store/user'
 import { setMenu } from '../../store/logic/actionLogic'
+import { afterRequest } from '../../firebase'
 
 
 const Projects: React.FC<States> = (state: States) => {
@@ -25,10 +26,7 @@ const Projects: React.FC<States> = (state: States) => {
 			}
 		}).then((val) => {
 			val.json().then((json) => {
-				if (json.msg && json.msg == "Token has expired")
-				{
-					dispatch({type: SET_USER_DISCONNECT})
-				}
+				afterRequest(json)
 				if (json.success)
 				{
 					setProjects(json.projects)
@@ -52,11 +50,9 @@ const Projects: React.FC<States> = (state: States) => {
 			    description: projectDesc
 			})
 		}).then((val) => {
+			console.log(val)
 			val.json().then((json) => {
-				if (json.msg && json.msg == "Token has expired")
-				{
-					dispatch({type: SET_USER_DISCONNECT})
-				}
+				afterRequest(json)
 				if (json.success)
 				{
 					setProjects(json.projects)
@@ -91,6 +87,7 @@ const Projects: React.FC<States> = (state: States) => {
 									// console.log(project_)
 									return (
 										<li className='link' 
+											key={project_?.name}
 											onClick={() => {
 												dispatch(
 													{

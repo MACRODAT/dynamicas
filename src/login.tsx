@@ -7,7 +7,10 @@ import { signInWithGoogle } from './firebase';
 import { userSetUser } from './store/logic/userLogic';
 import { User } from './types';
 import { SET_TOKEN } from './store/user';
-
+import { FaGoogle } from "react-icons/fa";
+import { FaWpforms } from "react-icons/fa6";
+import { CiLogin } from "react-icons/ci";
+import { setMenu } from './store/logic/actionLogic';
 
 
 
@@ -26,6 +29,7 @@ const LoginPage: React.FC<States> = (state: States) => {
 				lastname: res.lastname,
 				email: res.email,
 				loggedIn: true,
+				firebase: true,
 				uid: res.uid,
 				loginDate: new Date(Date.now()),
 			}
@@ -37,6 +41,14 @@ const LoginPage: React.FC<States> = (state: States) => {
 			}
 		})
 	}
+
+	let startSignInWithoutGoogle = () => {
+		dispatch(setMenu("login") as any)
+	}
+	
+	let startRegisterWithoutGoogle = () => {
+		dispatch(setMenu("register") as any)
+	}
 	
 
 
@@ -45,8 +57,17 @@ const LoginPage: React.FC<States> = (state: States) => {
 			<header className="headerLanding">
 				<h1>Dynamicas</h1>
 				<p id="description">Truly fly your own !</p>
-				<button className="cta-button" onClick={startSignInWithGoogle}>
-					Start building
+				<button className="cta-buttonGoogle" onClick={startSignInWithGoogle}>
+					<FaGoogle style={{margin: '6px'}} />
+					Start building with Google
+				</button>
+				<button className="cta-buttonRegister" onClick={startRegisterWithoutGoogle}>
+					<FaWpforms style={{margin: '6px'}} />
+					Register and Start building 
+				</button>
+				<button className="cta-buttonRegister" onClick={startSignInWithoutGoogle}>
+					<CiLogin style={{margin: '6px'}} />
+					Login 
 				</button>
 			</header>
 

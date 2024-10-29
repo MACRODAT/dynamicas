@@ -60,6 +60,7 @@ type Point = {
 	loginDate: Date;
 	loggedIn: boolean;
 	email: string;
+	firebase: boolean;
 	uid: string;
   }
 

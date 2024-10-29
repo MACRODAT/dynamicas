@@ -34,7 +34,12 @@ def _login_helper(avatar, password):
                                            additional_claims={"avatar": user.avatar, 
                                                               "firstname": user.first_name,
                                                               "email": user.email})
-        response = {"access_token":access_token, "success": True}
+        response = {"access_token":access_token, "success": True, "user": {
+            "lastname": user.last_name,
+            "firstname": user.first_name,
+            "email": user.email,
+            "avatar": user.avatar
+        }}
         return response
     return {"access_token":"", "success": False}
 
@@ -112,6 +117,9 @@ def getUser():
     user = User.query.filter_by(avatar=claims.get("avatar")).first()
     return user
 
+def get_project_by_name(user_id: int, project_name: str) -> Project:
+    return db.session.query(Project).filter_by(user_id=user_id, name=project_name).first()
+
 @app.route("/dashboard")
 @jwt_required()
 def dashboard():
@@ -119,7 +127,7 @@ def dashboard():
     claims = get_jwt()
     id = get_jwt_identity()
     user = User.query.filter_by(avatar=claims.get("avatar")).first()
-    return f"Hello, {user.first_name}! Welcome to your dashboard."
+    return {"data": f"Hello, {user.first_name}! Welcome to your dashboard.", "success": True}
 
 @app.route("/logout")
 def logout():
@@ -127,12 +135,12 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
-# Teardown context to close database session
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    db.session.remove()  # Properly close and release any sessions
-    if db.engine:
-        db.engine.dispose()  # Dispose of engine connections if necessary
+# # Teardown context to close database session
+# @app.teardown_appcontext
+# def shutdown_session(exception=None):
+#     db.session.remove()  # Properly close and release any sessions
+#     if db.engine:
+#         db.engine.dispose()  # Dispose of engine connections if necessary
 
 @app.route('/', methods=['GET'])
 def home():
@@ -373,6 +381,7 @@ def newProject():
         p.user_id = cur_user.id
         db.session.add(p)
         db.session.commit()
+        return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 
@@ -384,7 +393,43 @@ def comms(project_name):
     """
     try:
         user = getUser()
-        user.projects[]
+        j = request.json
+        project_ = get_project_by_name(user.id, project_name)
+        project_.refresh()
+        project_.flightTime = j['flightTime']['expected']
+        project_.weightExpected = j['weight']['expected']
+        project_.speedExpected = j['speed']['expected']
+        project_.payloadWeight = j['payloadWeight']
+        project_.AirfoilLengthMax = j['wingSpanMax']
+        project_.fuselageLengthMax = j['fuselageLengthMax']
+        project_.streamVelocityX = j['streamVelocityX']
+        project_.AOA = j['angleOfAttack']
+        project_.refresh()
+        # project_.airfoilType = j['airfoilType']
+        # project_.doneInitialSketch = j['doneInitialSketch']
+        # project_.simulationType = j['simulationType']
+        # project_.done = j['done']
+        # project_.flightPriorities.maneuverability = int(j['priorities']['maneuverability'])
+        # print(project_.flightPriorities.speed)
+        db.session.commit()
+
+        # print(project_)
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
+@app.route('/myprojects/<string:project_name>/summary', methods=['GET'])
+@jwt_required()
+def summary(project_name):
+    """
+        Get data from react
+    """
+    try:
+        user = getUser()
+        project_ = get_project_by_name(user.id, project_name)
+        project_.intialize()
+        # print(project_)
+        return jsonify({"success": True, "summary": project_.computeDetails()})
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 

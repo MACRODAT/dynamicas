@@ -13,6 +13,10 @@ const toUpper = (s : string) => {
 	{
 		return "";
 	}
+	if (s.length == 0)
+	{
+		return "";
+	}
 	return s[0].toUpperCase() + s.slice(1);
 }
 
