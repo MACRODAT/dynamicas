@@ -16,6 +16,9 @@ DENSITY_AIR = 1.225
 VISCOSITY_AIR = 1.81 * pow(10, -5)
 GRAVITY = 9.81
 
+ASPECT_RATIO_LOW = 5
+ASPECT_RATIO_HIGH = 50
+
 # cur folder
 from os import path
 my_root = path.dirname(path.realpath(__file__)) 
@@ -40,6 +43,16 @@ class AircraftPriorities(db.Model):
 
     project_id: Mapped[int]= mapped_column(ForeignKey("projects.id"))
 
+    def __init__(self) -> None:
+        super().__init__()
+        self.maneuverability = 3
+        self.stability = 3
+        self.payload = 3
+        self.speed = 3
+        self.endurance = 3
+        self.stall_behavior = 3
+        self.manufacturability = 3
+
 class interval:
     def __init__(self, a, b, minMaxFlag=False) -> None:
         if not minMaxFlag:
@@ -61,6 +74,8 @@ class interval:
             mar_ /= 1.2
             val_ = self.val - mar_
         return val_
+    def __repr__(self) -> str:
+        return f'min: {self.min()} -- max: {self.max()}'
 
 class User(db.Model):
     __tablename__ = "users"
@@ -117,7 +132,7 @@ class Project(db.Model):
     density: Mapped[int]= mapped_column(server_default='0', nullable=False)
     selectedAirfoil: Mapped[int]= mapped_column(server_default='0', nullable=False)
     meshQuality: Mapped[int]= mapped_column(server_default='0', nullable=False)
-    chordLength: Mapped[int]= mapped_column(server_default='0', nullable=False)
+    chordLength: Mapped[int]= mapped_column(server_default='0', nullable=False) # in mm
 
     flightPriorities: Mapped[AircraftPriorities]= relationship()
 
@@ -147,7 +162,13 @@ class Project(db.Model):
         self.density = self.density if self.density is not None else 0 
         self.selectedAirfoil = self.selectedAirfoil if self.selectedAirfoil is not None else 0 
         self.meshQuality = self.meshQuality if self.meshQuality is not None else 0 
-        self.chordLength = self.chordLength if self.chordLength is not None else 0 
+        self.chordLength = self.chordLength if self.chordLength is not None else 1 # mm 
+
+        if self.flightPriorities == None:
+            f = AircraftPriorities()
+            self.flightPriorities = f
+            db.session.add(f)
+            db.session.commit()
         self.refresh()
         self.initialized = True
 
@@ -183,9 +204,20 @@ class Project(db.Model):
         - Material: {self.material}
         - Density: {self.density}
         --------------------------------------------------
+
+        [COMPUTED]
+        - Reynolds Number: {self._reynolds}
+        - Required lift force: {self._liftForceRequired} Newtons
+        - CL Required per area: {self._CLRequiredForWeightPerArea}
+        - Aspect Ratio (AR): {self._aspectRatio}
         """
 
     def updateCritical(self):
+        self._reynolds = -1
+        self._liftForceRequired = interval(-1, -1)
+        self._CLRequiredForWeightPerArea = interval(-1, -1)
+        self._aspectRatio = interval(-1, -1)
+
         if self.speed.min() == 0:
             return
         # update the critical parameters
@@ -195,4 +227,15 @@ class Project(db.Model):
                                                     self._liftForceRequired.min() / (0.5 * pow(self.speed.max() , 2) * DENSITY_AIR), \
                                                     self._liftForceRequired.max() / (0.5 * pow(self.speed.min() , 2) * DENSITY_AIR)
                                                 )
+        # aspect ratio calculations
+
+
+        
+        a = self.flightPriorities.endurance - self.flightPriorities.maneuverability
+        self._aspectRatio = \
+                interval( \
+                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * a * 2 / 5 \
+                ,
+                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * a * 0.9 / 5)
+
         # self._forceProduce

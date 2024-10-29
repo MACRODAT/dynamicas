@@ -395,7 +395,7 @@ def comms(project_name):
         user = getUser()
         j = request.json
         project_ = get_project_by_name(user.id, project_name)
-        project_.refresh()
+        project_.intialize()
         project_.flightTime = j['flightTime']['expected']
         project_.weightExpected = j['weight']['expected']
         project_.speedExpected = j['speed']['expected']
