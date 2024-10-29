@@ -16,8 +16,8 @@ const MenuCreator: React.FC<States> = (state: States) => {
 
   menus = [
     {process: 'process', done: state.process.done && state.material.done && state.params.doneInitialSketch},
-    {process: 'geometry', done: state.geo.done},
     {process: 'Priorities', done: true},
+    {process: 'geometry', done: state.geo.done},
     {process: 'parameters', done: state.params.done},
     {process: 'solver', done: true},
     {process: 'results', done: false},

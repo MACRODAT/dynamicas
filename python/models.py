@@ -16,6 +16,10 @@ DENSITY_AIR = 1.225
 VISCOSITY_AIR = 1.81 * pow(10, -5)
 GRAVITY = 9.81
 
+COST_MANOEUVRABILITY_ON_SPEED = 0.12
+COST_PAYLOAD_ON_SPEED = 0.2
+COST_SPEED_ON_SPEED = 0.4
+
 ASPECT_RATIO_LOW = 5
 ASPECT_RATIO_HIGH = 50
 
@@ -28,6 +32,14 @@ def abs(n):
         return -n
     return n
 # db = app.db
+
+def kmh_ms(_speed_):
+    return _speed_ / 3.6
+def ms_kmh(_speed_):
+    return _speed_ * 3.6
+def format_large_number(number):
+    # Format the number with commas
+    return (f"{number:,}")
 
 class AircraftPriorities(db.Model):
     __tablename__ = "aircraft_priorities"
@@ -60,7 +72,7 @@ class interval:
             self.margins = b
         else:
             self.val = a + abs(b - a) / 2
-            self.margins = abs(b - a)
+            self.margins = abs(b - a) / 2
     def max(self):
         return self.val + self.margins
     def min(self):
@@ -75,7 +87,7 @@ class interval:
             val_ = self.val - mar_
         return val_
     def __repr__(self) -> str:
-        return f'min: {self.min()} -- max: {self.max()}'
+        return f'min: {format_large_number(self.min())} -- max: {format_large_number(self.max())}'
 
 class User(db.Model):
     __tablename__ = "users"
@@ -173,14 +185,31 @@ class Project(db.Model):
         self.initialized = True
 
     def refresh(self):
-        self.speed = interval(self.speedExpected, self.speedMargins)
+        # refresh parameters
+        if self.speedExpected > 0:
+            a = self.flightPriorities.maneuverability * COST_MANOEUVRABILITY_ON_SPEED \
+                 + self.flightPriorities.speed * COST_SPEED_ON_SPEED
+            b = self.flightPriorities.payload * COST_PAYLOAD_ON_SPEED
+            self.speed = interval(
+                    kmh_ms(self.speedExpected - b * self.speedExpected / 5), 
+                    kmh_ms(self.speedExpected + a * self.speedExpected / 10),
+                    True
+                )
+        else:
+            self.speed = interval(kmh_ms(self.speedExpected), kmh_ms(self.speedMargins))
         self.weight = interval(self.weightExpected, self.weightMargins)
         self.updateCritical()
 
-
     def computeReynoldsUnitArea(self):
-        return pow(self.streamVelocityX, 2) * DENSITY_AIR * self.chordLength / VISCOSITY_AIR
-    
+        # return pow(self.streamVelocityX, 2) * DENSITY_AIR * self.chordLength / VISCOSITY_AIR
+        return  interval(
+                pow(self.speed.min(), 2) * DENSITY_AIR * (self._chordLength.min() / 100) / VISCOSITY_AIR
+                ,
+                pow(self.speed.max(), 2) * DENSITY_AIR * (self._chordLength.max() / 100) / VISCOSITY_AIR
+                ,
+                True
+        )
+
     def computeDetails(self):
         return f"""
         -------------| AIRFOIL INFORMATION  | ------------
@@ -198,7 +227,7 @@ class Project(db.Model):
         - Weight: min ({self.weight.min()}) Kg; max ({self.weight.max()}) Kg
         - Payload weight (max): {self.payloadWeight} Kg
         - Endurance: about ({self.flightTime}) minutes
-        - Speed: min ({self.speed.min()}) m/s; max ({self.speed.max()}) m/s
+        - Speed: min ({ms_kmh(self.speed.min())}) km/h; max ({ms_kmh(self.speed.max())}) km/h
 
         [CONSTRUCTION]
         - Material: {self.material}
@@ -220,6 +249,7 @@ class Project(db.Model):
         - Required lift force: {self._liftForceRequired} Newtons
         - CL Required per area: {self._CLRequiredForWeightPerArea}
         - Aspect Ratio (AR): {self._aspectRatio}
+        - Chord length : {self._chordLength} cm
         """
 
     def updateCritical(self):
@@ -227,15 +257,16 @@ class Project(db.Model):
         self._liftForceRequired = interval(-1, -1)
         self._CLRequiredForWeightPerArea = interval(-1, -1)
         self._aspectRatio = interval(-1, -1)
+        self._chordLength = interval(-1, -1)
 
         if self.speed.min() == 0:
             return
         # update the critical parameters
-        self._reynolds = self.computeReynoldsUnitArea()
         self._liftForceRequired = interval(self.weight.min() * GRAVITY, self.weight.max() * GRAVITY, True)
         self._CLRequiredForWeightPerArea = interval( \
                                                     self._liftForceRequired.min() / (0.5 * pow(self.speed.max() , 2) * DENSITY_AIR), \
-                                                    self._liftForceRequired.max() / (0.5 * pow(self.speed.min() , 2) * DENSITY_AIR)
+                                                    self._liftForceRequired.max() / (0.5 * pow(self.speed.min() , 2) * DENSITY_AIR),
+                                                    True
                                                 )
         # aspect ratio calculations
 
@@ -244,8 +275,14 @@ class Project(db.Model):
         a = self.flightPriorities.endurance - self.flightPriorities.maneuverability
         self._aspectRatio = \
                 interval( \
-                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * a * 2 / 5 \
+                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * (a + 5) * 0.8 / 10 \
                 ,
-                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * a * 0.9 / 5)
+                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * (a + 5) * 1.25 / 10, True)
+        # For a constant-chord wing of chord c and span b, the aspect ratio is given by b/c
+        self._chordLength = interval(
+            self.AirfoilLengthMax / self._aspectRatio.max(),
+            self.AirfoilLengthMax / self._aspectRatio.min(), True
+        )
+        self._reynolds = self.computeReynoldsUnitArea()
 
         # self._forceProduce
