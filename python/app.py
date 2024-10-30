@@ -424,6 +424,24 @@ def comms(project_name):
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 
+@app.route('/myprojects/<string:project_name>/airfoilData', methods=['POST'])
+@jwt_required()
+def setAirfoilData(project_name):
+    """
+        Get data from react
+    """
+    try:
+        user = getUser()
+        j = request.json
+        project_ = get_project_by_name(user.id, project_name)
+        project_.intialize()
+        project_.airfoilData = '$'.join(j['airfoilData'].split('\n'))
+        project_.refresh()
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
 @app.route('/myprojects/<string:project_name>/summary', methods=['GET'])
 @jwt_required()
 def summary(project_name):

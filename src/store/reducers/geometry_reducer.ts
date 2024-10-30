@@ -1,6 +1,6 @@
 import { airfoilData } from "../../components/geometry/airfoil";
 import { Point, Shape } from "../../types";
-import { ADD_SHAPE, GeometryActions, IMPORT_GEOMETRY, LIST_SHAPES, PREVIEW_GEOMETRY, PREVIEW_MESH, SET_GEOMETRY_AIRFOIL_NAME, SET_GEOMETRY_CLASS, SET_GEOMETRY_TYPE, SET_MESH_QUALITY } from "../geometry";
+import { ADD_SHAPE, GeometryActions, IMPORT_GEOMETRY, LIST_SHAPES, PREVIEW_GEOMETRY, PREVIEW_MESH, SET_GEOMETRY_AIRFOIL_NAME, SET_GEOMETRY_CLASS, SET_GEOMETRY_TYPE, SET_GEO_UNDONE, SET_MESH_QUALITY } from "../geometry";
 
 export interface GeometryState {
 	geometryType: string,
@@ -12,9 +12,11 @@ export interface GeometryState {
 	shapes: Shape[];
 	meshQuality: number;
 	done: boolean;
+	geometryData: string[];
 }
 
 const initialGeometryState: GeometryState = {
+	geometryData: [],
 	geometrySelectedAirfoil: {name: "", description: "", screenshot: ""},
 	geometryType: "",
 	selectedGeometry: "",
@@ -36,9 +38,9 @@ export function geometryReducer(
 	  case SET_GEOMETRY_AIRFOIL_NAME:
 		if (action.payload.name != "" && action.payload.description != "")
 		{
-			return { ...state, done:true, geometrySelectedAirfoil: action.payload };
+			return { ...state, done:true, geometrySelectedAirfoil: action.payload, geometryData: action.data };
 		}else{
-			return { ...state, done:false, geometrySelectedAirfoil: action.payload };
+			return { ...state, done:false, geometrySelectedAirfoil: action.payload, geometryData: action.data  };
 		}
 	  case SET_GEOMETRY_TYPE:
 		// console.log("type: ", state.done);
@@ -56,6 +58,8 @@ export function geometryReducer(
 		return { ...state, meshQuality: action.payload };
 	  case ADD_SHAPE:
 		return { ...state, shapes: [...state.shapes, action.payload] };
+	  case SET_GEO_UNDONE:
+		return { ...state, done: false}
 	  default:
 		return state;
 	}

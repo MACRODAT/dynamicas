@@ -18,6 +18,7 @@ const MenuCreator: React.FC<States> = (state: States) => {
     {process: 'process', done: state.process.done && state.material.done && state.params.doneInitialSketch},
     {process: 'Priorities', done: true},
     {process: 'geometry', done: state.geo.done},
+    {process: 'Prediction', done: true},
     {process: 'parameters', done: state.params.done},
     {process: 'solver', done: true},
     {process: 'results', done: false},
@@ -54,7 +55,7 @@ const MenuCreator: React.FC<States> = (state: States) => {
                 {el.process.charAt(0).toUpperCase() + el.process.slice(1)}
             </>
           {moveNext = el.done}
-          {/* {moveNext = true} */}
+          {moveNext = true}
         </div> : ""
       ))}
     </div>

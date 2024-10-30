@@ -14,6 +14,7 @@ import { solverSetMaxIterations } from '../store/logic/solverLogic';
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDownloadDone } from "react-icons/md";
 import Priorities from './priority/priorities';
+import PredictionMenu from './prediction/predictionMenu';
 
 // interface SubmenuProps {
 //   menu: string;
@@ -51,7 +52,7 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
     // dispatch(geometrySetClass(val) as any);
     dispatch(setGeometryType(val) as any);
     let d: airfoilData = {description: "", name: "", screenshot: ""};
-    dispatch(geometrySetAirfoilName(d) as any);
+    dispatch(geometrySetAirfoilName(d, []) as any);
   }
 
   const handleSimulationType = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -456,6 +457,8 @@ const SubmenuCreator: React.FC<States> = (state: States) => {
 			)
     case 'Priorities':
       return <Priorities />
+    case 'Prediction':
+      return <PredictionMenu />
     case 'results':
       return (
         <>

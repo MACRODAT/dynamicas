@@ -3,13 +3,14 @@ import rootReducer from './reducers/reducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { afterRequest, checkLogin, resendLogin } from '../firebase';
+import { afterRequest, checkLogin, generateConfigToken, resendLogin } from '../firebase';
 import { userDisconnect } from './logic/userLogic';
 import { INCREMENT_PRIORITY, isFlightAction } from './parameters';
 import { AirfoilType } from '../types';
 import { SET_USER_DISCONNECT } from './user';
 import axios from 'axios';
 import { config } from 'process';
+import { SET_GEOMETRY_AIRFOIL_NAME, SET_GEO_UNDONE, isAllGeometryAction } from './geometry';
 
 const persistConfig = {
   key: 'root',
@@ -26,7 +27,7 @@ let trials = 3;
 const logger = (store: any) => (next: any) => (action: any) => {
   // console.log(action.type)
   let result = next(action)
-  if (isFlightAction(action.type))
+  if (isFlightAction(action.type) || isAllGeometryAction(action.type))
   {
     let st = store.getState();
     // console.log(st)
@@ -35,6 +36,46 @@ const logger = (store: any) => (next: any) => (action: any) => {
     if (action.type == INCREMENT_PRIORITY)
     {
       return result
+    }
+    if (isAllGeometryAction(action.type) && action.type != SET_GEOMETRY_AIRFOIL_NAME)
+    {
+      return result;
+    }
+    let geometry_dat = []
+    if (action.type == SET_GEOMETRY_AIRFOIL_NAME)
+    {
+      if (action.payload && action.payload.name != "")
+      {
+        if (action.data.length > 0)
+        {
+          return Response;
+        }
+        axios.get(`http://127.0.0.1:5000/airfoil/${action.payload.name}/dat`).then((data_txt) => {
+          if (data_txt.status == 200)
+          {
+            geometry_dat = data_txt.data
+            axios.post(`http://127.0.0.1:5000/myprojects/${st.user.project}/airfoilData`,
+            {
+              name: st.user.project,
+              airfoilData: geometry_dat
+            }, generateConfigToken(st.user.jwt_token_)).then((res) => {
+              console.log(res)
+              if (res.status == 200 && res.data.success)
+              {
+
+              }
+              else
+              {
+                store.dispatch({type: SET_GEO_UNDONE})
+              }
+            }).catch((err_) => {
+              console.log(err_);
+              store.dispatch({type: SET_GEO_UNDONE})
+            })
+          }
+        })
+      }
+      return result;
     }
     fetch(`http://127.0.0.1:5000/myprojects/${st.user.project}/comms`, {
         method: "POST",
@@ -45,6 +86,7 @@ const logger = (store: any) => (next: any) => (action: any) => {
         },
         body: JSON.stringify({
           name: st.user.project,
+          ...st.geometrySelectedAirfoil,
           ...p
         })
     }).then((val: any) => {

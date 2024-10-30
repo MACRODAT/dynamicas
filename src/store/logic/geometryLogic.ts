@@ -11,12 +11,13 @@ export const geometrySetClass = (class_: string) : GeometryActions => {
 	}
 }
 
-export const geometrySetAirfoilName = (class_: airfoilData) : GeometryActions => {
+export const geometrySetAirfoilName = (class_: airfoilData, data: string[]) : GeometryActions => {
 
 	// add any relevant action here !!!
 
 	return {
 		payload: class_,
+		data: data,
 		type: SET_GEOMETRY_AIRFOIL_NAME
 	}
 }

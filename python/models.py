@@ -148,6 +148,8 @@ class Project(db.Model):
 
     flightPriorities: Mapped[AircraftPriorities]= relationship()
 
+    airfoilData: Mapped[str] = mapped_column(nullable=True)
+
     initialized: bool = False
 
     def __init__(self) -> None:
@@ -286,3 +288,13 @@ class Project(db.Model):
         self._reynolds = self.computeReynoldsUnitArea()
 
         # self._forceProduce
+
+    def computeAirfoilInfo(self):
+        return f"""
+            -------------| AIRFOIL INFORMATION  | ------------
+        * User information:
+        * Folder: {self.foldername}
+        * Last updated: {datetime.now().ctime()}
+        ------------------------------------------------------
+        
+        """

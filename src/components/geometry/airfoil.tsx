@@ -30,7 +30,7 @@ const Airfoil : React.FC = (params: any) => {
 
     const handleSelect = (airfoil: airfoilData) => {
         setSelectedAirfoil(airfoil);
-        dispatch(geometrySetAirfoilName(airfoil) as any);
+        dispatch(geometrySetAirfoilName(airfoil, []) as any);
     }
 
 	// Fetch airfoils from the server

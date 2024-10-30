@@ -14,6 +14,7 @@ import Account from "../account";
 import Project from "./project/project";
 import Priorities from "./priority/priorities";
 import PriorityDetails from "./priority/priorityDetails";
+import PredictionReport from "./prediction/predictionReport";
 
 const mapStateToProps = (state : any) => {
 
@@ -48,6 +49,14 @@ const Content : React.FC = (state : any) => {
 		if (selectedMenu == "Priorities")
 		{
 			return <PriorityDetails />
+		}
+		if (selectedMenu == "Prediction")
+		{
+			if (state.application.submenus[0].toUpperCase() == "AIRFOIL REPORT")
+			{
+				return <PredictionReport />
+			}
+			return defaultComponent
 		}
 		if (selectedMenu == "Solver")
 		{

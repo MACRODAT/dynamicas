@@ -16,7 +16,8 @@ const EngineeringConsole: React.FC<EngineeringConsoleProps> = ({datatext}) => {
           style={{height: '30px'}}
           className={index % 2 === 0 ? 'line-grey' : 'line-white'}
         >
-          <p className='inline' style={{opacity: 0.25, borderRight: '2px solid grey', marginRight: '3px'}}>
+          <p className='inline' style={{opacity: 0.25, borderRight: '2px solid grey', 
+                                        paddingRight: '2px', marginRight: '5px'}}>
             {String(index).padStart(3, '0') + " "}
           </p>
           <p className='inline'>

@@ -184,9 +184,15 @@
 			margin-top: 6px;
 			padding: 4px;
 			border-radius: 4px 4px;
-			background-color: variables.$back-200;
+			background-color: variables.$back-400;
+			color: variables.$front-400;
+			border: 1px solid variables.$front-100;
 
 			cursor: pointer;
+
+			&:hover {
+				filter: invert(0.1);
+			}
 		}
 
 
