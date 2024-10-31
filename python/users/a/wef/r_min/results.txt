@@ -50,19 +50,21 @@
 
  XFOIL   c>  
  XFOIL   c>  
- Labeled airfoil file.  Name:  NACA 23012  12%                                 
+ Plain airfoil file
 
- Number of input coordinate points:  61
+Enter airfoil name   s>  
+ Number of input coordinate points: 401
  Counterclockwise ordering
- Max thickness =     0.120050  at x =   0.297
- Max camber    =     0.014608  at x =   0.165
+ Max thickness =     0.050033  at x =   0.299
+ Max camber    =     0.019964  at x =   0.700
 
-  LE  x,y  =  -0.00061   0.00439  |   Chord =   1.00062
+  LE  x,y  =  -0.00000   0.00012  |   Chord =   1.00000
   TE  x,y  =   1.00000   0.00000  |
+ Maximum number of panel nodes  :          365
+ Number of buffer airfoil points:          401
+ Current airfoil cannot be set.
+ Try executing PANE at Top Level instead.
 
- Current airfoil nodes set from buffer airfoil nodes (  61 )
-
- XFOIL   c>  
  XFOIL   c>   ...............................................
 
   G raphics-enable flag:        T
@@ -93,20 +95,19 @@
 
       Option, Value   (or <Return>)    c>  
  XFOIL   c>  
-.OPERi   c>  
- M  =    0.0000
- Re =  0.1667    
+ ***  No airfoil available  ***
 
-.OPERv   c>  
- Polar  1 newly created for accumulation
- Airfoil archived with polar: NACA 23012  12%                                 
+ XFOIL   c>   VISC command not recognized.  Type a "?" for list
 
-Enter  polar save filename  OR  <return> for no file   s>  
- New polar save file available
+ XFOIL   c>   ITER command not recognized.  Type a "?" for list
 
-Enter  polar dump filename  OR  <return> for no file   s>  
- New polar dump file available
+ XFOIL   c>   PACC command not recognized.  Type a "?" for list
 
- Polar accumulation enabled
+ XFOIL   c>   /HOM command not recognized.  Type a "?" for list
 
-.OPERva   c>  
+ XFOIL   c>   /HOM command not recognized.  Type a "?" for list
+
+ XFOIL   c>   ASEQ command not recognized.  Type a "?" for list
+
+ XFOIL   c>  
+ XFOIL   c>  

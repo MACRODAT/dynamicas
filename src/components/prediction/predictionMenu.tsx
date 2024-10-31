@@ -19,8 +19,11 @@ const Prediction: React.FC<States> = (state: States) => {
 			</p>
 			<hr />
 			<div className='p-1'>
-				<div className='menuRes' onClick={() => null}>
+				<div className='menuRes' onClick={() => dispatch(addSubmenu("AIRFOIL INTRO", 0) as any)}>
 					Intro
+				</div>
+				<div className='menuRes' onClick={() => dispatch(addSubmenu("AIRFOIL RECALC", 0) as any)}>
+					Recalculate
 				</div>
 				<div className='menuRes' onClick={() => dispatch(addSubmenu("AIRFOIL REPORT", 0) as any)}>
 					View report

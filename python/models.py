@@ -334,8 +334,8 @@ class Project(db.Model):
             remove_all_files(_path_to_user_reynolds_max)
 
         # running for min reynolds
-        run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_min, self._reynolds.min(), 2, 3, 1)
-        run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_max, self._reynolds.max(), 2, 3, 1)
+        run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_min, self._reynolds.min(), -2, 10, 1)
+        run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_max, self._reynolds.max(), -2, 10, 1)
 
     def parse_xfoil_polar(self, file_path):
         data = {

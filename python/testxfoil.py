@@ -19,6 +19,7 @@ def run_xfoil(airfoil="load ClarkY.dat", userFolder="users/user001",
     
     OPER
     VISC {reynolds}
+    ITER 500
     PACC
     {res}
     {err}

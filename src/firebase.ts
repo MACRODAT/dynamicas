@@ -140,18 +140,31 @@ const resendLogin = async (user: any) => {
 }
 
 const afterRequest = (res: any) => {
-	if (res && res.data && res.data.access_token)
-	{
-		store.dispatch({type: SET_TOKEN, payload: res.data.access_token})
-	}
-	if (res.type === 'cors' || (res.msg && res.msg == "Token has expired"))
-	{
-		store.dispatch({type: SET_USER_DISCONNECT})
-	}
-	if (res.status == 401)
-	{
-		store.dispatch({type: SET_USER_DISCONNECT})
-	}
+	try{
+		if (res && res.data && res.data.access_token)
+		{
+			store.dispatch({type: SET_TOKEN, payload: res.data.access_token})
+		}
+	}catch {}
+	try{
+		if (res && res.data.relogin)
+		{
+			// the user needs to reconnect
+			store.dispatch({type: SET_USER_DISCONNECT})
+		}
+	}catch {}
+	try{
+		if (res.type === 'cors' || (res.msg && res.msg == "Token has expired"))
+		{
+			store.dispatch({type: SET_USER_DISCONNECT})
+		}
+	}catch {}
+	try{
+		if (res.status == 401)
+		{
+			store.dispatch({type: SET_USER_DISCONNECT})
+		}
+	}catch {}
 }
 
 const generateConfigToken = (token_: string) => {

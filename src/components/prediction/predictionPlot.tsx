@@ -13,19 +13,6 @@ const PredictionPlot: React.FC<States> = (state: States) => {
 
 	useEffect(() => {
 		const config = generateConfigToken(state.user.jwt_token_);
-		// axios.get(`http://127.0.0.1:5000/myprojects/${state.user.project}/prediction/plots`, {
-		// 			...config,
-		// 			responseType: 'blob' // Ensure axios expects binary data	
-		// 		}
-		// 	)
-		// 	.then((res: any) => {
-		// 		afterRequest(res);
-		// 		// setDetails(res.data.summary.split('\n'))
-		// 		const url = window.URL.createObjectURL(res.data); // `res.data` is already a blob
-		// 		setUrlCL(url); // This will set the URL for display in an image or download link
-		// 	}).catch((err) => {
-		// 		afterRequest(err)
-		// 	});
 		axios.get(`http://127.0.0.1:5000/myprojects/${state.user.project}/prediction/plots`, {
 				...config,
 				responseType: 'blob'

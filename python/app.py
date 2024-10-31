@@ -127,6 +127,8 @@ def dashboard():
     claims = get_jwt()
     id = get_jwt_identity()
     user = User.query.filter_by(avatar=claims.get("avatar")).first()
+    if user == None:
+        return {"success": False, "relogin": True}
     return {"data": f"Hello, {user.first_name}! Welcome to your dashboard.", "success": True}
 
 @app.route("/logout")
@@ -338,9 +340,6 @@ def setAirfoil(airfoil):
                 lines.push((line.split(' ')[0], lines.split(' ')[1]))
         except Exception as e:
             return jsonify({"success": False, "message": "Invalid airfoil."})
-        
-
-
         # SETTING AIRFOIL FOR THIS USER
 
         return jsonify({"success": True})
@@ -357,6 +356,8 @@ def getProjects():
     try:
         lines = []
         current_user = getUser()
+        if current_user == None:
+            return {"success": False, "relogin": True}
         try:
             for project in current_user.projects:
                 lines.append({"name": project.name, "description": project.description})
@@ -375,6 +376,8 @@ def newProject():
     try:
         json_ = request.json
         cur_user = getUser()
+        if cur_user == None:
+            return {"success": False, "relogin": True}
         f = AircraftPriorities()
         # f.project_id = self.id
         p = Project(f)
@@ -396,6 +399,8 @@ def comms(project_name):
     """
     try:
         user = getUser()
+        if user == None:
+            return {"success": False, "relogin": True}
         j = request.json
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
@@ -435,11 +440,13 @@ def setAirfoilData(project_name):
     """
     try:
         user = getUser()
+        if user == None:
+            return {"success": False, "relogin": True}
         j = request.json
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
         project_.airfoilData = '$'.join(j['airfoilData'].split('\n'))
-        project_.selectedAirfoil = j['airfoilName']
+        project_.selectedAirfoil = ''.join(j['airfoilName'].split(' '))
         project_.writeAirfoilToDat()
         project_.refresh()
         db.session.commit()
@@ -481,6 +488,22 @@ def predictionReport(project_name):
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 
+@app.route('/myprojects/<string:project_name>/prediction/calculate', methods=['GET'])
+@jwt_required()
+def predictionCalc(project_name):
+    """
+        Get data from react
+    """
+    try:
+        user = getUser()
+        project_ = get_project_by_name(user.id, project_name)
+        project_.intialize()
+        project_.runxFoilAseq()
+        return jsonify({"success": True
+                        })
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
 @app.route('/myprojects/<string:project_name>/prediction/report/<string:subexec>', methods=['GET'])
 @jwt_required()
 def predictionReportSpecific(project_name, subexec):
@@ -491,7 +514,7 @@ def predictionReportSpecific(project_name, subexec):
         user = getUser()
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
-        project_.runxFoilAseq()
+        # project_.runxFoilAseq()
         return jsonify({"success": True, 
                         "summary": project_.printAirfoilInfo(subexec=subexec)
                         })

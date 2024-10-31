@@ -1,19 +1,21 @@
+At line 135 of file ../src/userio.f (unit = 5, file = 'stdin')
+Fortran runtime error: End of file
 
-Program received signal SIGFPE: Floating-point exception - erroneous arithmetic operation.
-
-Backtrace for this error:
-#0  0x7fbf7e0e7960 in ???
-#1  0x7fbf7e0e6ac5 in ???
-#2  0x7fbf7ddd451f in ???
-	at ./signal/../sysdeps/unix/sysv/linux/x86_64/libc_sigaction.c:0
-#3  0x55aa6d6a4ee4 in ???
-#4  0x55aa6d65cf47 in ???
-#5  0x55aa6d61874d in ???
-#6  0x55aa6d604406 in ???
-#7  0x55aa6d5fa758 in ???
-#8  0x7fbf7ddbbd8f in __libc_start_call_main
+Error termination. Backtrace:
+#0  0x7fec1e191960 in ???
+#1  0x7fec1e1924d9 in ???
+#2  0x7fec1e19310f in ???
+#3  0x7fec1e3e617b in ???
+#4  0x7fec1e3e6752 in ???
+#5  0x7fec1e3e2f1b in ???
+#6  0x7fec1e3e7e3c in ???
+#7  0x7fec1e3e8e55 in ???
+#8  0x560d829309f1 in ???
+#9  0x560d8289613a in ???
+#10  0x560d8288c758 in ???
+#11  0x7fec1de65d8f in __libc_start_call_main
 	at ../sysdeps/nptl/libc_start_call_main.h:58
-#9  0x7fbf7ddbbe3f in __libc_start_main_impl
+#12  0x7fec1de65e3f in __libc_start_main_impl
 	at ../csu/libc-start.c:392
-#10  0x55aa6d5fa784 in ???
-#11  0xffffffffffffffff in ???
+#13  0x560d8288c784 in ???
+#14  0xffffffffffffffff in ???

@@ -16,6 +16,8 @@ import Priorities from "./priority/priorities";
 import PriorityDetails from "./priority/priorityDetails";
 import PredictionReport from "./prediction/predictionReport";
 import PredictionPlot from "./prediction/predictionPlot";
+import PredictionIntro from "./prediction/predictionIntro";
+import PredictionCalc from "./prediction/predictionCalc";
 
 const mapStateToProps = (state : any) => {
 
@@ -56,6 +58,14 @@ const Content : React.FC = (state : any) => {
 			if (state.application.submenus[0].toUpperCase() == "AIRFOIL REPORT")
 			{
 				return <PredictionReport />
+			}
+			if (state.application.submenus[0].toUpperCase() == "AIRFOIL INTRO")
+			{
+				return <PredictionIntro />
+			}
+			if (state.application.submenus[0].toUpperCase() == "AIRFOIL RECALC")
+			{
+				return <PredictionCalc />
 			}
 			if (state.application.submenus[0].toUpperCase() == "AIRFOIL PLOT")
 			{

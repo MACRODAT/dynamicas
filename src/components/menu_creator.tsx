@@ -3,6 +3,7 @@ import { connect, useDispatch } from 'react-redux';
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDownloadDone } from "react-icons/md";
 import { States, allInterfaces } from '../helpers';
+import { addSubmenu } from '../store/logic/actionLogic';
 
 type menu = {
   process: string,
@@ -28,6 +29,10 @@ const MenuCreator: React.FC<States> = (state: States) => {
   let onSelectMenu = state.ownProps.onSelectMenu;
 
   const handleMenuClick = (menu: string) => {
+    if (menu == 'Prediction')
+    {
+      dispatch(addSubmenu("AIRFOIL INTRO", 0) as any);
+    }
     setActiveMenu(menu);
     onSelectMenu(menu);
   };
