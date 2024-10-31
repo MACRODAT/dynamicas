@@ -6,17 +6,19 @@ import axios from 'axios';
 import { afterRequest, generateConfigToken } from '../../firebase';
 import { Button, Form } from 'react-bootstrap';
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
-
+import { MdError } from "react-icons/md";
 
 const PredictionRecalc: React.FC<States> = (state: States) => {
 	let [processing, setProcessing] = useState(false);
 	let [success, setSuccess] = useState(false);
+	let [started, setStarted] = useState(false);
 	let [date_success, setDateSuccess] = useState(new Date());
 
 
 	const startCalc = () => 
 	{
 		setProcessing(true);
+		setStarted(true);
 		setSuccess(false);
 		const config = generateConfigToken(state.user.jwt_token_);
 		axios.get(`http://127.0.0.1:5000/myprojects/${state.user.project}/prediction/calculate`, {
@@ -26,8 +28,14 @@ const PredictionRecalc: React.FC<States> = (state: States) => {
 			.then(async (res) => {
 				afterRequest(res);
 				setProcessing(false);
-				setSuccess(true);
 				setDateSuccess(new Date())
+				if (res.data.success)
+				{
+					setSuccess(true);
+				}else{
+					setSuccess(false);
+
+				}
 			})
 			.catch((err) => {
 				afterRequest(err);
@@ -50,14 +58,24 @@ const PredictionRecalc: React.FC<States> = (state: States) => {
 				<></>
 			}
 			{
-				success ?
+				started && success ?
 				<h6 className='success'>
 					<IoCheckmarkDoneCircle size={50} />
 					Have performed successful calculations for {state.geo.geometrySelectedAirfoil.name + " "} 
 					 at {date_success.toTimeString()}
 				</h6>
 				:
+				(
+				started ? 
+				<h6 className=''>
+					<MdError size={50} />
+					Failed at calculations for {state.geo.geometrySelectedAirfoil.name + " "} 
+					 at {date_success.toTimeString()}
+				</h6>
+				
+				:
 				<></>
+				)
 			}
 			<Form>
 				<Form.Group>

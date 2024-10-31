@@ -462,6 +462,8 @@ def summary(project_name):
     """
     try:
         user = getUser()
+        if user == None:
+            return {"success": False, "relogin": True}
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
         # print(project_)
@@ -478,6 +480,8 @@ def predictionReport(project_name):
     """
     try:
         user = getUser()
+        if user == None:
+            return {"success": False, "relogin": True}
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
         project_.runxFoilAseq()
@@ -496,10 +500,12 @@ def predictionCalc(project_name):
     """
     try:
         user = getUser()
+        if user == None:
+            return {"success": False, "relogin": True}
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
-        project_.runxFoilAseq()
-        return jsonify({"success": True
+        
+        return jsonify({"success": project_.runxFoilAseq()
                         })
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
@@ -512,6 +518,8 @@ def predictionReportSpecific(project_name, subexec):
     """
     try:
         user = getUser()
+        if user == None:
+            return {"success": False, "relogin": True}
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
         # project_.runxFoilAseq()
@@ -529,6 +537,8 @@ def predictionPlot(project_name):
     """
     try:
         user = getUser()
+        if user == None:
+            return {"success": False, "relogin": True}
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
         # return send_file(
@@ -542,12 +552,10 @@ def predictionPlot(project_name):
         zip_buffer = io.BytesIO()
         plots_rmax = project_.returnPredictionPlots(subexec='r_max')
         with zipfile.ZipFile(zip_buffer, "w") as zf:
-            for i, plot in enumerate(plots_rmax):
+            for i, (plot, plot2) in enumerate(zip(plots_rmax, plots)):
                 # Save each plot image as a PNG in the ZIP file
                 zf.writestr(f'plot_{i + 1}_rmax.png', plot)
-            for i, plot in enumerate(plots):
-                # Save each plot image as a PNG in the ZIP file
-                zf.writestr(f'plot_{i + 1}.png', plot)
+                zf.writestr(f'plot_{i + 1}.png', plot2)
         
         # Move to the beginning of the BytesIO buffer
         zip_buffer.seek(0)

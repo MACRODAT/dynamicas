@@ -36,14 +36,10 @@ def run_xfoil(airfoil="load ClarkY.dat", userFolder="users/user001",
         f.write(error)
 
     # Load the results from the output file
-    try:
-        data = np.loadtxt(res, skiprows=13)  # Skip XFOIL header rows
-        alpha, cl, cd, cm = data[:, 0], data[:, 1], data[:, 2], data[:, 4]
-        ld_ratio = cl / cd
-        return alpha, cl, cd, ld_ratio
-    except Exception as e:
-        print(f"Error loading results: {e}")
-        return None
+    data = np.loadtxt(res, skiprows=13)  # Skip XFOIL header rows
+    alpha, cl, cd, cm = data[:, 0], data[:, 1], data[:, 2], data[:, 4]
+    ld_ratio = cl / cd
+    return alpha, cl, cd, ld_ratio
 
 if __name__ == "__main__":
     # Example usage

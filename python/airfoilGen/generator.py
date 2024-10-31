@@ -330,8 +330,10 @@ def naca(number, n, finite_TE = False, half_cosine_spacing = False, rotation = 0
                 naca5(number, n, finite_TE, half_cosine_spacing)
         if rotation != 0:
             points = rotate_points(points, rotation)
+
         # file_name = "", save=False, uploadImage=False
         naca_code = number
+        points = [[round(num, 4) for num in row] for row in points]
         X,Z = points
         if save:
             # Set the file name if not provided

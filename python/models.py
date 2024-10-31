@@ -295,12 +295,12 @@ class Project(db.Model):
 
 
         
-        a = self.flightPriorities.endurance - self.flightPriorities.maneuverability
+        a = 5 + self.flightPriorities.endurance - self.flightPriorities.maneuverability
         self._aspectRatio = \
                 interval( \
-                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * (a + 5) * 0.8 / 10 \
+                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * (a + 5) * 0.8 / 50 \
                 ,
-                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * (a + 5) * 1.25 / 10, True)
+                ASPECT_RATIO_LOW + (ASPECT_RATIO_HIGH - ASPECT_RATIO_LOW) * (a + 5) * 1.25 / 50, True)
         # For a constant-chord wing of chord c and span b, the aspect ratio is given by b/c
         self._chordLength = interval(
             self.AirfoilLengthMax / self._aspectRatio.max(),
@@ -334,12 +334,16 @@ class Project(db.Model):
             remove_all_files(_path_to_user_reynolds_max)
 
         # running for min reynolds
-        run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_min, self._reynolds.min(), -2, 10, 1)
-        run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_max, self._reynolds.max(), -2, 10, 1)
+        try:
+            run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_min, self._reynolds.min(), -2, 10, 1)
+            run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_max, self._reynolds.max(), -2, 10, 1)
+            return True
+        except ():
+            return False
 
     def parse_xfoil_polar(self, file_path):
         data = {
-            "alpha": [], "CL": [], "CD": [], "CDp": [], "CM": [],
+            "alpha": [], "CL": [], "CD": [], "CLCD": [], "CDp": [], "CM": [],
             "Top_Xtr": [], "Bot_Xtr": [], "Top_Itr": [], "Bot_Itr": []
         }
         
@@ -362,13 +366,14 @@ class Project(db.Model):
                             data["alpha"].append(float(columns[0]))
                             data["CL"].append(float(columns[1]))
                             data["CD"].append(float(columns[2]))
+                            data["CLCD"].append(float(float(columns[1]) / float(columns[2])))
                             data["CDp"].append(float(columns[3]))
                             data["CM"].append(float(columns[4]))
                             data["Top_Xtr"].append(float(columns[5]))
                             data["Bot_Xtr"].append(float(columns[6]))
                             data["Top_Itr"].append(float(columns[7]))
                             data["Bot_Itr"].append(float(columns[8]))
-                    except ValueError:
+                    except Exception as e:
                         # Skip any lines that cannot be parsed as floats
                         continue
 
@@ -397,7 +402,7 @@ class Project(db.Model):
         plots = [
             {"x": "alpha", "y": "CL", "title": f"CL vs Alpha ({subexec})", "xlabel": "Alpha", "ylabel": "CL"},
             {"x": "alpha", "y": "CD", "title": f"CD vs Alpha ({subexec})", "xlabel": "Alpha", "ylabel": "CD"},
-            {"x": "CL", "y": "CD", "title": f"CL vs CD ({subexec})", "xlabel": "CL", "ylabel": "CD"},
+            {"x": "alpha", "y": "CLCD", "title": f"CL/CD vs Alpha ({subexec})", "xlabel": "CL", "ylabel": "CD"},
             {"x": "alpha", "y": "Top_Xtr", "title": f"Top_Xtr vs Alpha ({subexec})", "xlabel": "Alpha", "ylabel": "Top_Xtr"},
             {"x": "alpha", "y": "Bot_Xtr", "title": f"Bot_Xtr vs Alpha ({subexec})", "xlabel": "Alpha", "ylabel": "Bot_Xtr"},
         ]

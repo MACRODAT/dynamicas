@@ -4,22 +4,13 @@ import { States, allInterfaces } from '../../helpers'
 import { Form } from 'react-bootstrap';
 import { aircraftPriorities } from '../../types';
 import { SET_PRIORITIES } from '../../store/parameters';
-import axios from 'axios';
 
 
 const Priorities: React.FC<States> = (state: States) => {
 
 	const dispatch = useDispatch();
 
-	const [priorities, setPriorities] = useState<aircraftPriorities>({
-		maneuverability: 3,
-		stability: 3,
-		payload: 3,
-		speed: 3,
-		endurance: 3,
-		stallBehavior: 3,
-		manufacturability: 3,
-	  });
+	const [priorities, setPriorities] = useState<aircraftPriorities>(state.params.priorities);
 
 	
 	  const handleSliderChange = (e: any) => {
