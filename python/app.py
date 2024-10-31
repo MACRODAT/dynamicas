@@ -436,6 +436,8 @@ def setAirfoilData(project_name):
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
         project_.airfoilData = '$'.join(j['airfoilData'].split('\n'))
+        project_.selectedAirfoil = j['airfoilName']
+        project_.writeAirfoilToDat()
         project_.refresh()
         db.session.commit()
         return jsonify({"success": True})
@@ -453,6 +455,22 @@ def summary(project_name):
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
         # print(project_)
+        return jsonify({"success": True, "summary": project_.computeDetails()})
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
+@app.route('/myprojects/<string:project_name>/prediction/report', methods=['GET'])
+@jwt_required()
+def predictionReport(project_name):
+    """
+        Get data from react
+    """
+    try:
+        user = getUser()
+        project_ = get_project_by_name(user.id, project_name)
+        project_.intialize()
+        project_.computeAirfoilInfo()
+        print(project_)
         return jsonify({"success": True, "summary": project_.computeDetails()})
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})

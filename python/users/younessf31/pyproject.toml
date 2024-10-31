@@ -1,8 +1,0 @@
-[project]
-name = "aiero"
-version = "0.1.1"
-description = "Python handler for dynamicas"
-
-[build-system]
-build-backend = "flit_core.buildapi"
-requires = ["flit_core >=3.2,<4"]

@@ -12,6 +12,7 @@ export const SET_GEOMETRY_TYPE = 'SET_GEOMETRY_TYPE';
 export const SET_GEOMETRY_CLASS = 'SET_GEOMETRY_CLASS';
 export const SET_GEOMETRY_AIRFOIL_NAME = 'SET_GEOMETRY_AIRFOIL_NAME';
 export const SET_GEO_UNDONE = 'SET_GEO_UNDONE';
+export const SET_GEO_DONE = 'SET_GEO_DONE';
 
 export type AllGeometryActions = 
                       typeof IMPORT_GEOMETRY 
@@ -23,6 +24,7 @@ export type AllGeometryActions =
                       | typeof SET_GEOMETRY_TYPE
                       | typeof SET_GEOMETRY_CLASS
                       | typeof SET_GEO_UNDONE
+                      | typeof SET_GEO_DONE
                       | typeof SET_GEOMETRY_AIRFOIL_NAME
 // Type guard function to check if action is of type AllGeometryActions
 export function isAllGeometryAction(actionType: string): actionType is AllGeometryActions {
@@ -35,6 +37,7 @@ export function isAllGeometryAction(actionType: string): actionType is AllGeomet
     ADD_SHAPE,
     SET_GEOMETRY_TYPE,
     SET_GEOMETRY_CLASS,
+    SET_GEO_DONE,
     SET_GEO_UNDONE,
     SET_GEOMETRY_AIRFOIL_NAME
   ].includes(actionType as AllGeometryActions);
@@ -86,8 +89,13 @@ interface SetGeometryAirfoilName {
   payload: airfoilData;
   data: string[];
 }
+
 interface SetGeoUndone {
   type: typeof SET_GEO_UNDONE;
+}
+
+interface SetGeoDone {
+  type: typeof SET_GEO_DONE;
 }
 
 export type GeometryActions =
@@ -99,5 +107,6 @@ export type GeometryActions =
   | AddShapeAction
   | SetGeometryType
   | SetGeoUndone
+  | SetGeoDone
   | SetGeometryAirfoilName
   | SetGeometryClass ;

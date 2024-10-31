@@ -57,6 +57,7 @@ const logger = (store: any) => (next: any) => (action: any) => {
             axios.post(`http://127.0.0.1:5000/myprojects/${st.user.project}/airfoilData`,
             {
               name: st.user.project,
+              airfoilName: action.payload.name,
               airfoilData: geometry_dat
             }, generateConfigToken(st.user.jwt_token_)).then((res) => {
               console.log(res)

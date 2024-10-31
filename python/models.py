@@ -12,6 +12,8 @@ from configs import db
 from math import pow
 from typing import List
 
+from testxfoil import run_xfoil
+
 DENSITY_AIR = 1.225
 VISCOSITY_AIR = 1.81 * pow(10, -5)
 GRAVITY = 9.81
@@ -24,7 +26,7 @@ ASPECT_RATIO_LOW = 5
 ASPECT_RATIO_HIGH = 50
 
 # cur folder
-from os import path
+from os import path, mkdir
 my_root = path.dirname(path.realpath(__file__)) 
 
 def abs(n):
@@ -128,6 +130,7 @@ class Project(db.Model):
 
     # Foreign key linking to the User model
     user_id: Mapped[int]= mapped_column(ForeignKey("users.id"))
+    user: Mapped[User]= relationship("User", back_populates="projects")
 
     flightTime: Mapped[int]= mapped_column(server_default='0', nullable=False) 
     weightExpected: Mapped[int]= mapped_column(server_default='0', nullable=False) 
@@ -142,7 +145,7 @@ class Project(db.Model):
     simulationType: Mapped[int]= mapped_column(server_default='0', nullable=False)
     material: Mapped[int]= mapped_column(server_default='0', nullable=False) 
     density: Mapped[int]= mapped_column(server_default='0', nullable=False)
-    selectedAirfoil: Mapped[int]= mapped_column(server_default='0', nullable=False)
+    selectedAirfoil: Mapped[str]= mapped_column(server_default='', nullable=False)
     meshQuality: Mapped[int]= mapped_column(server_default='0', nullable=False)
     chordLength: Mapped[int]= mapped_column(server_default='0', nullable=False) # in mm
 
@@ -174,9 +177,15 @@ class Project(db.Model):
         self.simulationType = self.simulationType if self.simulationType is not None else 0 
         self.material = self.material if self.material is not None else 0  
         self.density = self.density if self.density is not None else 0 
-        self.selectedAirfoil = self.selectedAirfoil if self.selectedAirfoil is not None else 0 
+        self.selectedAirfoil = self.selectedAirfoil if self.selectedAirfoil is not None else ""
         self.meshQuality = self.meshQuality if self.meshQuality is not None else 0 
         self.chordLength = self.chordLength if self.chordLength is not None else 1 # mm 
+
+        if not path.exists(f"{my_root}/users/{self.user.avatar}"):
+            mkdir(f"{my_root}/users/{self.user.avatar}")
+
+        if not path.exists(f"{my_root}/users/{self.user.avatar}/{self.name}"):
+            mkdir(f"{my_root}/users/{self.user.avatar}/{self.name}")
 
         if self.flightPriorities == None:
             f = AircraftPriorities()
@@ -289,7 +298,16 @@ class Project(db.Model):
 
         # self._forceProduce
 
+    def writeAirfoilToDat(self):
+        with open(f"{my_root}/users/{self.user.avatar}/{self.name}/{self.selectedAirfoil}.dat", 'w') as f:
+            f.writelines(self.airfoilData.split('$'))
+
+    def runxFoilAseq(self):
+        # with open(f"")
+        run_xfoil("")
+
     def computeAirfoilInfo(self):
+
         return f"""
             -------------| AIRFOIL INFORMATION  | ------------
         * User information:
