@@ -43,9 +43,7 @@ const MenuCreator: React.FC<States> = (state: States) => {
           className={`menu-item ${activeMenu === el.process ? 'active' : ''} ${el.done ? " done" : ""}`}
           onClick={() => handleMenuClick(el.process)}
         >
-          
             <>
-            
                 {
                   el.done ? 
                   <MdOutlineDownloadDone className='mx-2' />
@@ -55,7 +53,7 @@ const MenuCreator: React.FC<States> = (state: States) => {
                 {el.process.charAt(0).toUpperCase() + el.process.slice(1)}
             </>
           {moveNext = el.done}
-          {moveNext = true}
+          {/* {moveNext = true} */}
         </div> : ""
       ))}
     </div>

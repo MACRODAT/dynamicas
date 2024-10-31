@@ -25,7 +25,7 @@ const Prediction: React.FC<States> = (state: States) => {
 				<div className='menuRes' onClick={() => dispatch(addSubmenu("AIRFOIL REPORT", 0) as any)}>
 					View report
 				</div>
-				<div className='menuRes'>
+				<div className='menuRes' onClick={() => dispatch(addSubmenu("AIRFOIL PLOT", 0) as any)}>
 					View plots
 				</div>
 				<div className='menuRes'>

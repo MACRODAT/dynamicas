@@ -13,7 +13,7 @@ const EngineeringConsole: React.FC<EngineeringConsoleProps> = ({datatext}) => {
       {datatext.map((line, index) => (
         <div
           key={index}
-          style={{height: '30px'}}
+          style={{height: '30px', width: '100%', overflow: 'hidden'}}
           className={index % 2 === 0 ? 'line-grey' : 'line-white'}
         >
           <p className='inline' style={{opacity: 0.25, borderRight: '2px solid grey', 

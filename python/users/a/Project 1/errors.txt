@@ -1,0 +1,23 @@
+At line 85 of file ../src/userio.f (unit = 5, file = 'stdin')
+Fortran runtime error: End of file
+
+Error termination. Backtrace:
+#0  0x7fb4ca12e960 in ???
+#1  0x7fb4ca12f4d9 in ???
+#2  0x7fb4ca13010f in ???
+#3  0x7fb4ca38317b in ???
+#4  0x7fb4ca383752 in ???
+#5  0x7fb4ca37ff1b in ???
+#6  0x7fb4ca384e3c in ???
+#7  0x7fb4ca385e55 in ???
+#8  0x55c78f7fd720 in ???
+#9  0x55c78f7b79d5 in ???
+#10  0x55c78f778158 in ???
+#11  0x55c78f763406 in ???
+#12  0x55c78f759758 in ???
+#13  0x7fb4c9e02d8f in __libc_start_call_main
+	at ../sysdeps/nptl/libc_start_call_main.h:58
+#14  0x7fb4c9e02e3f in __libc_start_main_impl
+	at ../csu/libc-start.c:392
+#15  0x55c78f759784 in ???
+#16  0xffffffffffffffff in ???

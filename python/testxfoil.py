@@ -6,13 +6,14 @@ from matplotlib import pyplot as plt
 from os import path, environ
 path_ = path.dirname(path.realpath(__file__))
 
-def run_xfoil(airfoil="DATA ClarkY.dat", userFolder="users/user001", 
+def run_xfoil(airfoil="load ClarkY.dat", userFolder="users/user001", 
                 reynolds=2000000, alpha_start=0, alpha_end=10, alpha_step=1):
-    res = f"{path_}/users/{userFolder}/res.txt"
-    err = f"{path_}/users/{userFolder}/err.txt"
+    res = f"{userFolder}/res.txt"
+    err = f"{userFolder}/err.txt"
     # Prepare the commands to input to XFOIL
     commands = f"""
     {airfoil}
+    
     PLOP
     G
     
@@ -22,16 +23,15 @@ def run_xfoil(airfoil="DATA ClarkY.dat", userFolder="users/user001",
     {res}
     {err}
     ASEQ {alpha_start} {alpha_end} {alpha_step}
-    QUIT
     """
 
     process = subprocess.Popen(['xfoil'], stdin=subprocess.PIPE, \
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     output, error = process.communicate(commands)
 
-    with open("results.txt", 'w') as f:
+    with open(f"{userFolder}/results.txt", 'w') as f:
         f.write(output)
-    with open("errors.txt", 'w') as f:
+    with open(f"{userFolder}/errors.txt", 'w') as f:
         f.write(error)
 
     # Load the results from the output file

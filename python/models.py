@@ -7,10 +7,14 @@ import sqlalchemy as sa
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from datetime import datetime
 # from flask_login import current_user
+import os
+import io
+import glob
 
 from configs import db
 from math import pow
 from typing import List
+import matplotlib.pyplot as plt
 
 from testxfoil import run_xfoil
 
@@ -42,6 +46,12 @@ def ms_kmh(_speed_):
 def format_large_number(number):
     # Format the number with commas
     return (f"{number:,}")
+def remove_all_files(folder_path):
+    files = glob.glob(os.path.join(folder_path, '*'))  # Get all files in the folder
+    for f in files:
+        if os.path.isfile(f):  # Check if it is a file
+            os.remove(f)  # Delete the file
+
 
 class AircraftPriorities(db.Model):
     __tablename__ = "aircraft_priorities"
@@ -149,14 +159,19 @@ class Project(db.Model):
     meshQuality: Mapped[int]= mapped_column(server_default='0', nullable=False)
     chordLength: Mapped[int]= mapped_column(server_default='0', nullable=False) # in mm
 
-    flightPriorities: Mapped[AircraftPriorities]= relationship()
+    flightPriorities: Mapped[AircraftPriorities]= \
+        relationship(lazy="joined", uselist=False)
 
     airfoilData: Mapped[str] = mapped_column(nullable=True)
 
     initialized: bool = False
 
-    def __init__(self) -> None:
+    def __init__(self, _flightPriorities: None) -> None:
         super().__init__()
+        if _flightPriorities != None:
+            # f = AircraftPriorities()
+            _flightPriorities.project_id = self.id
+            self.flightPriorities = _flightPriorities
         self.intialize()
 
     def intialize(self):
@@ -181,19 +196,15 @@ class Project(db.Model):
         self.meshQuality = self.meshQuality if self.meshQuality is not None else 0 
         self.chordLength = self.chordLength if self.chordLength is not None else 1 # mm 
 
+        self.refresh()
+        self.initialized = True
+
+    def init_create_folders(self):
         if not path.exists(f"{my_root}/users/{self.user.avatar}"):
             mkdir(f"{my_root}/users/{self.user.avatar}")
 
         if not path.exists(f"{my_root}/users/{self.user.avatar}/{self.name}"):
             mkdir(f"{my_root}/users/{self.user.avatar}/{self.name}")
-
-        if self.flightPriorities == None:
-            f = AircraftPriorities()
-            self.flightPriorities = f
-            db.session.add(f)
-            db.session.commit()
-        self.refresh()
-        self.initialized = True
 
     def refresh(self):
         # refresh parameters
@@ -213,7 +224,7 @@ class Project(db.Model):
 
     def computeReynoldsUnitArea(self):
         # return pow(self.streamVelocityX, 2) * DENSITY_AIR * self.chordLength / VISCOSITY_AIR
-        return  interval(
+        return interval(
                 pow(self.speed.min(), 2) * DENSITY_AIR * (self._chordLength.min() / 100) / VISCOSITY_AIR
                 ,
                 pow(self.speed.max(), 2) * DENSITY_AIR * (self._chordLength.max() / 100) / VISCOSITY_AIR
@@ -222,6 +233,7 @@ class Project(db.Model):
         )
 
     def computeDetails(self):
+     
         return f"""
         -------------| AIRFOIL INFORMATION  | ------------
         User information:
@@ -264,11 +276,11 @@ class Project(db.Model):
         """
 
     def updateCritical(self):
-        self._reynolds = -1
-        self._liftForceRequired = interval(-1, -1)
-        self._CLRequiredForWeightPerArea = interval(-1, -1)
-        self._aspectRatio = interval(-1, -1)
-        self._chordLength = interval(-1, -1)
+        self._reynolds = interval(1, 1)
+        self._liftForceRequired = interval(1, 1)
+        self._CLRequiredForWeightPerArea = interval(1, 1)
+        self._aspectRatio = interval(1, 1)
+        self._chordLength = interval(1, 1)
 
         if self.speed.min() == 0:
             return
@@ -299,20 +311,141 @@ class Project(db.Model):
         # self._forceProduce
 
     def writeAirfoilToDat(self):
-        with open(f"{my_root}/users/{self.user.avatar}/{self.name}/{self.selectedAirfoil}.dat", 'w') as f:
-            f.writelines(self.airfoilData.split('$'))
+        with open(f"{my_root}/users/{self.user.avatar}/{self.name}/{self.selectedAirfoil}.dat", 'w', encoding="utf-8") as f:
+            f.writelines([line + '\n' for line in self.airfoilData.split('$')])
 
     def runxFoilAseq(self):
         # with open(f"")
-        run_xfoil("")
+        self.writeAirfoilToDat()
+        _path_to_file = f"{my_root}/users/{self.user.avatar}/{self.name}/{self.selectedAirfoil}.dat"
+        _path_to_user = f"{my_root}/users/{self.user.avatar}/{self.name}"
 
-    def computeAirfoilInfo(self):
+        # tests
+        _path_to_user_reynolds_min = f"{_path_to_user}/r_min"
+        _path_to_user_reynolds_max = f"{_path_to_user}/r_max"
+
+        if not path.exists(_path_to_user_reynolds_min):
+            mkdir(_path_to_user_reynolds_min)
+        else:
+            remove_all_files(_path_to_user_reynolds_min)
+        if not path.exists(_path_to_user_reynolds_max):
+            mkdir(_path_to_user_reynolds_max)
+        else:
+            remove_all_files(_path_to_user_reynolds_max)
+
+        # running for min reynolds
+        run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_min, self._reynolds.min(), 2, 3, 1)
+        run_xfoil(f"LOAD {_path_to_file}", _path_to_user_reynolds_max, self._reynolds.max(), 2, 3, 1)
+
+    def parse_xfoil_polar(self, file_path):
+        data = {
+            "alpha": [], "CL": [], "CD": [], "CDp": [], "CM": [],
+            "Top_Xtr": [], "Bot_Xtr": [], "Top_Itr": [], "Bot_Itr": []
+        }
+        
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+
+            # Locate the start of data (usually after a fixed number of header lines)
+            data_start = False
+            for line in lines:
+                # Look for line that has alpha CL CD as header
+                if 'alpha' in line and 'CL' in line:
+                    data_start = True
+                    continue
+                
+                # Once data starts, parse each line and append to the dictionary
+                if data_start:
+                    try:
+                        columns = line.split()
+                        if len(columns) >= 9:  # Check if the line has all columns
+                            data["alpha"].append(float(columns[0]))
+                            data["CL"].append(float(columns[1]))
+                            data["CD"].append(float(columns[2]))
+                            data["CDp"].append(float(columns[3]))
+                            data["CM"].append(float(columns[4]))
+                            data["Top_Xtr"].append(float(columns[5]))
+                            data["Bot_Xtr"].append(float(columns[6]))
+                            data["Top_Itr"].append(float(columns[7]))
+                            data["Bot_Itr"].append(float(columns[8]))
+                    except ValueError:
+                        # Skip any lines that cannot be parsed as floats
+                        continue
+
+        return data
+
+    def returnPredictionPlots(self, subexec='r_min'):
+        # Provided data
+        # data = {
+        #     "alpha": [1.000, 2.000, 3.000, 4.000, 5.000, 6.000, 7.000, 8.000, 9.000, 10.000],
+        #     "CL": [0.0206, 0.0582, 0.0995, 0.1357, 0.1955, 0.2727, 0.3679, 0.4582, 0.5439, 0.6255],
+        #     "CD": [0.00773, 0.00786, 0.00808, 0.00839, 0.00876, 0.00923, 0.00980, 0.01053, 0.01145, 0.01261],
+        #     "Top_Xtr": [0.3048, 0.2906, 0.2769, 0.2640, 0.2507, 0.2372, 0.2237, 0.2111, 0.1990, 0.1872],
+        #     "Bot_Xtr": [0.3331, 0.3497, 0.3665, 0.3849, 0.4050, 0.4271, 0.4522, 0.4785, 0.5063, 0.5366]
+        # }
+        
+        path_folder = f"{my_root}/users/{self.user.avatar}/{self.name}"
+        res = f"{my_root}/users/{self.user.avatar}/{self.name}/{subexec}/res.txt"
+        err = f"{my_root}/users/{self.user.avatar}/{self.name}/{subexec}/errors.txt"
+
+        data = self.parse_xfoil_polar(res)
+
+        # List to store binary images
+        figures_binary_list = []
+
+        # Plot configurations
+        plots = [
+            {"x": "alpha", "y": "CL", "title": f"CL vs Alpha ({subexec})", "xlabel": "Alpha", "ylabel": "CL"},
+            {"x": "alpha", "y": "CD", "title": f"CD vs Alpha ({subexec})", "xlabel": "Alpha", "ylabel": "CD"},
+            {"x": "CL", "y": "CD", "title": f"CL vs CD ({subexec})", "xlabel": "CL", "ylabel": "CD"},
+            {"x": "alpha", "y": "Top_Xtr", "title": f"Top_Xtr vs Alpha ({subexec})", "xlabel": "Alpha", "ylabel": "Top_Xtr"},
+            {"x": "alpha", "y": "Bot_Xtr", "title": f"Bot_Xtr vs Alpha ({subexec})", "xlabel": "Alpha", "ylabel": "Bot_Xtr"},
+        ]
+
+        # Generate and save plots
+        for plot in plots:
+            fig, ax = plt.subplots()
+            ax.plot(data[plot["x"]], data[plot["y"]], marker='o')
+            ax.set_title(plot["title"])
+            ax.set_xlabel(plot["xlabel"])
+            ax.set_ylabel(plot["ylabel"])
+            ax.grid(True)
+            
+            # Save figure as binary
+            buf = io.BytesIO()
+            fig.show()
+            fig.savefig(buf, format='png')
+            buf.seek(0)
+            figures_binary_list.append(buf.read())
+            plt.close(fig)
+        # figures_binary_list will contain binary data of each plot
+        return figures_binary_list
+
+
+    def printAirfoilInfo(self, subexec='r_min'):
+        path_folder = f"{my_root}/users/{self.user.avatar}/{self.name}/{subexec}"
+        res = f"{my_root}/users/{self.user.avatar}/{self.name}/{subexec}/res.txt"
+        err = f"{my_root}/users/{self.user.avatar}/{self.name}/{subexec}/errors.txt"
+        with open(res, 'r') as f:
+            res_txt = f.readlines() 
+        with open(err, 'r') as f:
+            err_txt = f.readlines() 
+        
+        res_txt = ''.join(res_txt[10:])
+        err_txt = ''.join(err_txt)
+
 
         return f"""
             -------------| AIRFOIL INFORMATION  | ------------
         * User information:
-        * Folder: {self.foldername}
+        * Folder: {path_folder}
         * Last updated: {datetime.now().ctime()}
+        * Selected airfoil: {self.selectedAirfoil}
         ------------------------------------------------------
         
+        [OUTPUT FROM XFOIL]
+        {res_txt}
+
+        [ERRORS - IGNORE IF NOT FOR DEBUG]
+        {err_txt}
         """

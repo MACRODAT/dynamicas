@@ -5,7 +5,7 @@ import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { User } from "./types";
-import { SET_USER_DISCONNECT } from "./store/user";
+import { SET_TOKEN, SET_USER_DISCONNECT } from "./store/user";
 import { store } from "./store/store";
 import axios from "axios";
 
@@ -140,6 +140,10 @@ const resendLogin = async (user: any) => {
 }
 
 const afterRequest = (res: any) => {
+	if (res && res.data && res.data.access_token)
+	{
+		store.dispatch({type: SET_TOKEN, payload: res.data.access_token})
+	}
 	if (res.type === 'cors' || (res.msg && res.msg == "Token has expired"))
 	{
 		store.dispatch({type: SET_USER_DISCONNECT})

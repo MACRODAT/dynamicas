@@ -21,8 +21,8 @@ __my_dirname = path.dirname(path.realpath(__file__))
 
 # adding login functionality
 from flask import flash, request
-from models import User, Project
-
+from models import User, Project, AircraftPriorities
+import zipfile
 
 
 #login for users
@@ -375,12 +375,15 @@ def newProject():
     try:
         json_ = request.json
         cur_user = getUser()
-        p = Project()
+        f = AircraftPriorities()
+        # f.project_id = self.id
+        p = Project(f)
         p.description = json_['description']
         p.name = json_['name']
         p.user_id = cur_user.id
         db.session.add(p)
         db.session.commit()
+        p.init_create_folders()
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
@@ -455,7 +458,8 @@ def summary(project_name):
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
         # print(project_)
-        return jsonify({"success": True, "summary": project_.computeDetails()})
+        summary_ = project_.computeDetails() 
+        return jsonify({"success": True, "summary": summary_ })
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 
@@ -469,9 +473,70 @@ def predictionReport(project_name):
         user = getUser()
         project_ = get_project_by_name(user.id, project_name)
         project_.intialize()
-        project_.computeAirfoilInfo()
-        print(project_)
-        return jsonify({"success": True, "summary": project_.computeDetails()})
+        project_.runxFoilAseq()
+        return jsonify({"success": True, 
+                        "summary_rmin": project_.printAirfoilInfo(), 
+                        "summary_rmax": project_.printAirfoilInfo(subexec='r_max')
+                        })
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
+@app.route('/myprojects/<string:project_name>/prediction/report/<string:subexec>', methods=['GET'])
+@jwt_required()
+def predictionReportSpecific(project_name, subexec):
+    """
+        Get data from react
+    """
+    try:
+        user = getUser()
+        project_ = get_project_by_name(user.id, project_name)
+        project_.intialize()
+        project_.runxFoilAseq()
+        return jsonify({"success": True, 
+                        "summary": project_.printAirfoilInfo(subexec=subexec)
+                        })
+    except Exception as e:
+        return jsonify({"success": False, "message": e.args[0]})
+
+@app.route('/myprojects/<string:project_name>/prediction/plots', methods=['GET'])
+@jwt_required()
+def predictionPlot(project_name):
+    """
+        Get data from react
+    """
+    try:
+        user = getUser()
+        project_ = get_project_by_name(user.id, project_name)
+        project_.intialize()
+        # return send_file(
+        #     io.BytesIO(plots[0]),  # Use BytesIO to wrap the bytes
+        #     mimetype='image/png',
+        #     as_attachment=True,
+        #     download_name=f'{plots[0]}.png'
+        # )
+        # Create an in-memory ZIP file
+        plots = project_.returnPredictionPlots()
+        zip_buffer = io.BytesIO()
+        plots_rmax = project_.returnPredictionPlots(subexec='r_max')
+        with zipfile.ZipFile(zip_buffer, "w") as zf:
+            for i, plot in enumerate(plots_rmax):
+                # Save each plot image as a PNG in the ZIP file
+                zf.writestr(f'plot_{i + 1}_rmax.png', plot)
+            for i, plot in enumerate(plots):
+                # Save each plot image as a PNG in the ZIP file
+                zf.writestr(f'plot_{i + 1}.png', plot)
+        
+        # Move to the beginning of the BytesIO buffer
+        zip_buffer.seek(0)
+        
+        # Send the ZIP file as the response
+        return send_file(
+            zip_buffer,
+            mimetype='application/zip',
+            as_attachment=True,
+            download_name='plots.zip'
+        )
+        # return jsonify({"success": True, "plots": })
     except Exception as e:
         return jsonify({"success": False, "message": e.args[0]})
 

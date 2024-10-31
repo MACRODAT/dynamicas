@@ -17,6 +17,8 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
   {
     return {
       'primary-color': '#903829',
+      'back-000': '#000',
+      'front-000': '#fff',
       'back-100': '#060836',
       'back-200': '#1a1d59e5',
       'back-300': '#0f157ebe',
@@ -33,6 +35,8 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
   {
     return {
       'primary-color': '#0f0809',
+      'back-000': '#000',
+      'front-000': '#fff',
       'back-100': '#060006',
       'back-200': '#151716',
       'back-300': '#212321',
@@ -51,6 +55,8 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
   {
     return {
       'primary-color': '#0f0809',
+      'back-000': '#fff',
+      'front-000': '#000',
       'back-100': '#D2DEE7',
       'back-200': '#CEDBE5',
       'back-300': '#C6D4DB',
@@ -69,6 +75,8 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
   {
     return {
       'primary-color': '#0f0809',
+      'back-000': '#fff',
+      'front-000': '#000',
       'back-100': '#FFFFFF',
       'back-200': '#C1E2E0',
       'back-300': '#A2D4D0',
@@ -87,6 +95,8 @@ const chooseTheme = (theme: string): { [key: string]: string} => {
   {
     return {
       'primary-color': '#0f0809',
+      'back-000': '#fff',
+      'front-000': '#000',
       'back-100': '#FFFFFF',
       'back-200': '#FAFDFD',
       'back-300': '#F7FCFC',
