@@ -7,6 +7,7 @@ import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { setMenu } from './store/logic/actionLogic';
 import { SET_TOKEN, SET_USER } from './store/user';
 import { User } from './types';
+import { remote_addr } from './firebase';
 
 
 const LoginForm: React.FC<States> = (state: States) => {
@@ -32,7 +33,7 @@ const LoginForm: React.FC<States> = (state: States) => {
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		try {
-			const response_ = await axios.post('http://127.0.0.1:5000/login', formData, {
+			const response_ = await axios.post('http://' + remote_addr + '/login', formData, {
 				headers: { 'Content-Type': 'application/json' }
 			}).then((response) => {
 				console.log(response);

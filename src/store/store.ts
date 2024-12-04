@@ -3,7 +3,7 @@ import rootReducer from './reducers/reducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { afterRequest, checkLogin, generateConfigToken, resendLogin } from '../firebase';
+import { afterRequest, checkLogin, generateConfigToken, remote_addr, resendLogin } from '../firebase';
 import { userDisconnect } from './logic/userLogic';
 import { INCREMENT_PRIORITY, isFlightAction } from './parameters';
 import { AirfoilType } from '../types';
@@ -50,11 +50,11 @@ const logger = (store: any) => (next: any) => (action: any) => {
         {
           return Response;
         }
-        axios.get(`http://127.0.0.1:5000/airfoil/${action.payload.name}/dat`).then((data_txt) => {
+        axios.get(`http://${remote_addr}/airfoil/${action.payload.name}/dat`).then((data_txt) => {
           if (data_txt.status == 200)
           {
             geometry_dat = data_txt.data
-            axios.post(`http://127.0.0.1:5000/myprojects/${st.user.project}/airfoilData`,
+            axios.post(`http://${remote_addr}/myprojects/${st.user.project}/airfoilData`,
             {
               name: st.user.project,
               airfoilName: action.payload.name,
@@ -78,7 +78,7 @@ const logger = (store: any) => (next: any) => (action: any) => {
       }
       return result;
     }
-    fetch(`http://127.0.0.1:5000/myprojects/${st.user.project}/comms`, {
+    fetch(`http://${remote_addr}/myprojects/${st.user.project}/comms`, {
         method: "POST",
         headers: {
           'Accept': 'application/json',

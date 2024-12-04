@@ -24,6 +24,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const fb_app = initializeApp(firebaseConfig);
 
+const remote_addr = "172.26.54.184:4242";
+
 const analytics = getAnalytics(fb_app);
 // console.log(analytics)
 
@@ -60,7 +62,7 @@ const signInWithGoogle = async () => {
 	
 				// console.log(obj)
 				resendLogin(obj).then((resolve_) => resolve({...obj, access_token: resolve_}), (reject_) => reject(reject_))
-				// fetch('http://127.0.0.1:5000/register', {
+				// fetch('http://' + remote_addr + '/register', {
 				// 	method: 'POST',
 				// 	headers: {
 				// 		'Accept': 'application/json',
@@ -97,7 +99,7 @@ const checkLogin = async (token_: string) => {
 		const config = {
 			headers: { Authorization: `Bearer ${token_}` }
 		};
-		axios.get("http://127.0.0.1:5000/dashboard", config).then((res) => {
+		axios.get("http://" + remote_addr + "/dashboard", config).then((res) => {
 
 			// console.log(res)
 			return res.status == 200;
@@ -110,7 +112,7 @@ const checkLogin = async (token_: string) => {
 const resendLogin = async (user: any) => {
 	return new Promise(
 		(resolve, reject) => {
-				fetch('http://127.0.0.1:5000/register', {
+				fetch('http://' + remote_addr + '/register', {
 					method: 'POST',
 					headers: {
 						'Accept': 'application/json',
@@ -176,5 +178,5 @@ const generateConfigToken = (token_: string) => {
 
 export {
 	fb_app, analytics, signInWithGoogle, signInWithoutGoogle, resendLogin,
-	afterRequest, checkLogin, generateConfigToken
+	afterRequest, checkLogin, generateConfigToken, remote_addr
 }

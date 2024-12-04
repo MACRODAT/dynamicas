@@ -5,6 +5,7 @@ import './airfoil.scss'
 import AirfoilPlot from "../airfoilPlot";
 import { geometrySetAirfoilName } from "../../store/logic/geometryLogic";
 import { GeometryState } from "../../store/reducers/geometry_reducer";
+import { remote_addr } from "../../firebase";
 
 
 export type airfoilData = {name: string, screenshot: string, description: string};
@@ -37,14 +38,14 @@ const Airfoil : React.FC = (params: any) => {
     useEffect(() => {
         const fetchAirfoils = async () => {
             try {
-                const response = await fetch("http://127.0.0.1:5000/airfoils"); // Adjust the URL if necessary
+                const response = await fetch("http://" + remote_addr + "/airfoils"); // Adjust the URL if necessary
                 if (!response.ok) {
                     throw new Error("Failed to fetch airfoils");
                 }
                 const data = await response.json();
                 const airfoilData = await Promise.all(data.map(async (airfoil: string) => {
-					const screenshotResponse= await fetch(`http://127.0.0.1:5000/airfoil/${airfoil}/screenshot`);
-					const screenshotDescRes: any = await (await fetch(`http://127.0.0.1:5000/airfoil/${airfoil}/description`)).json();
+					const screenshotResponse= await fetch(`http://${remote_addr}/airfoil/${airfoil}/screenshot`);
+					const screenshotDescRes: any = await (await fetch(`http://${remote_addr}/airfoil/${airfoil}/description`)).json();
                     
 					const screenshotBlob = await screenshotResponse.blob();
                     const screenshotUrl = URL.createObjectURL(screenshotBlob);

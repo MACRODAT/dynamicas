@@ -5,7 +5,7 @@ import "../../styles/project.scss"
 import { Button, Form } from 'react-bootstrap'
 import { SET_PROJECT, SET_USER_DISCONNECT } from '../../store/user'
 import { setMenu } from '../../store/logic/actionLogic'
-import { afterRequest } from '../../firebase'
+import { afterRequest, remote_addr } from '../../firebase'
 
 
 const Projects: React.FC<States> = (state: States) => {
@@ -17,7 +17,7 @@ const Projects: React.FC<States> = (state: States) => {
 	const dispatch = useDispatch();
 
 	let fetchProjects = () => {
-		fetch('http://127.0.0.1:5000/myprojects', {
+		fetch('http://' + remote_addr + '/myprojects', {
 			method: 'GET',
 			headers: {
 				'Accept': 'application/json',
@@ -38,7 +38,7 @@ const Projects: React.FC<States> = (state: States) => {
 	}
 
 	let createNewProject = () => {
-		fetch('http://127.0.0.1:5000/myprojects/new', {
+		fetch('http://' + remote_addr + '/myprojects/new', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',

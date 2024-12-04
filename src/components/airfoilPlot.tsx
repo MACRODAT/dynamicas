@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { parseDatFile } from '../helpers';
 import Plot from 'react-plotly.js';
+import { remote_addr } from '../firebase';
 
 const AirfoilPlot = ({ airfoilName }: { airfoilName: string }) => {
     const [airfoilData, setAirfoilData] = useState<{ x: number; y: number }[]>([]);
@@ -10,7 +11,7 @@ const AirfoilPlot = ({ airfoilName }: { airfoilName: string }) => {
         const fetchAndPlotAirfoil = async () => {
             try {
 				if (airfoilName.trim() == "") return;
-                const response = await fetch(`http://127.0.0.1:5000/airfoil/${airfoilName}/dat`);
+                const response = await fetch(`http://${remote_addr}/airfoil/${airfoilName}/dat`);
                 const content = await response.text();
                 const parsedData = parseDatFile(content);
                 setAirfoilData(parsedData);

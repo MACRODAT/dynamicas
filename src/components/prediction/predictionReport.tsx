@@ -3,7 +3,7 @@ import { connect, useDispatch } from 'react-redux'
 import { States, allInterfaces } from '../../helpers'
 import EngineeringConsole from '../parameters/console';
 import axios from 'axios';
-import { afterRequest, generateConfigToken } from '../../firebase';
+import { afterRequest, generateConfigToken, remote_addr } from '../../firebase';
 import { Form } from 'react-bootstrap';
 
 
@@ -14,7 +14,7 @@ const PredictionReport: React.FC<States> = (state: States) => {
 
 	useEffect(() => {
 		const config = generateConfigToken(state.user.jwt_token_);
-		axios.get(`http://127.0.0.1:5000/myprojects/${state.user.project}/prediction/report/${subexec}`, config)
+		axios.get(`http://${remote_addr}/myprojects/${state.user.project}/prediction/report/${subexec}`, config)
 			.then((res: any) => {
 				afterRequest(res);
 				if (res.data.success)

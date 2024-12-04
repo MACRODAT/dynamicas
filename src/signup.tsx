@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { setMenu } from './store/logic/actionLogic';
+import { remote_addr } from './firebase';
 
 
 const SignUP: React.FC<States> = (state: States) => {
@@ -33,7 +34,7 @@ const SignUP: React.FC<States> = (state: States) => {
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		try {
-			const response = await axios.post('http://127.0.0.1:5000/register', formData, {
+			const response = await axios.post('http://' + remote_addr + '/register', formData, {
 				headers: { 'Content-Type': 'application/json' }
 			}).then((response) => {
 				if (response.data.success)

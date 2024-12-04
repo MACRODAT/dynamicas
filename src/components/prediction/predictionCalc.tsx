@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { States, allInterfaces } from '../../helpers'
-import JSZip from 'jszip';
 import axios from 'axios';
-import { afterRequest, generateConfigToken } from '../../firebase';
+import { afterRequest, generateConfigToken, remote_addr } from '../../firebase';
 import { Button, Form } from 'react-bootstrap';
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
 import { MdError } from "react-icons/md";
@@ -21,7 +20,7 @@ const PredictionRecalc: React.FC<States> = (state: States) => {
 		setStarted(true);
 		setSuccess(false);
 		const config = generateConfigToken(state.user.jwt_token_);
-		axios.get(`http://127.0.0.1:5000/myprojects/${state.user.project}/prediction/calculate`, {
+		axios.get(`http://${remote_addr}/myprojects/${state.user.project}/prediction/calculate`, {
 				...config,
 				responseType: 'json'
 			})

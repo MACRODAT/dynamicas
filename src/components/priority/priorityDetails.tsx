@@ -3,7 +3,7 @@ import { connect, useDispatch } from 'react-redux'
 import { States, allInterfaces } from '../../helpers'
 import EngineeringConsole from '../parameters/console';
 import axios from 'axios';
-import { afterRequest, generateConfigToken } from '../../firebase';
+import { afterRequest, generateConfigToken, remote_addr } from '../../firebase';
 
 
 const PriorityDetails: React.FC<States> = (state: States) => {
@@ -11,7 +11,7 @@ const PriorityDetails: React.FC<States> = (state: States) => {
 
 	useEffect(() => {
 		const config = generateConfigToken(state.user.jwt_token_);
-		axios.get(`http://127.0.0.1:5000/myprojects/${state.user.project}/summary`, config)
+		axios.get(`http://${remote_addr}/myprojects/${state.user.project}/summary`, config)
 			.then((res: any) => {
 				afterRequest(res);
 				setDetails(res.data.summary.split('\n'))

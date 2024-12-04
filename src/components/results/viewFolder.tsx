@@ -12,7 +12,7 @@ const ViewFolder: React.FC<States> = (state: States) => {
 	const getMyFolder = async () => {
 		try {
 			const response = await 
-				fetch(`http://127.0.0.1:5000/user/
+				fetch(`http://' + remote_addr + '/user/
 					${state.user.user.avatar}/dir`);
 			if (response.ok)
 			{

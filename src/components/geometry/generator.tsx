@@ -8,7 +8,7 @@ import camberPicMax from '../../res/maxcamber.jpg';
 import { airfoilData } from './airfoil'
 import { geometrySetAirfoilName } from '../../store/logic/geometryLogic'
 import axios from 'axios'
-import { generateConfigToken } from '../../firebase'
+import { generateConfigToken, remote_addr } from '../../firebase'
 import { SET_GEO_DONE, SET_GEO_UNDONE } from '../../store/geometry'
 
 const autoUpdate = false;
@@ -29,7 +29,7 @@ const OwnGenerator: React.FC<States> = (state: States) => {
 
 	const fetchData = async () => {
 		try {
-			const response = await fetch("http://127.0.0.1:5000/naca/" + code + "/" + pts + "/png"); // Adjust the URL if necessary
+			const response = await fetch("http://" + remote_addr + "/naca/" + code + "/" + pts + "/png"); // Adjust the URL if necessary
 			if (!response.ok) {
 				throw new Error("Failed to fetch airfoils");
 			}
@@ -63,7 +63,7 @@ const OwnGenerator: React.FC<States> = (state: States) => {
 				screenshot: url_
 			};
 			const response = await axios.get(
-				"http://127.0.0.1:5000/naca/" + code + "/" + pts + "/txt"
+				"http://" + remote_addr + "/naca/" + code + "/" + pts + "/txt"
 				,
 				generateConfigToken(state.user.jwt_token_)
 				);
@@ -73,7 +73,7 @@ const OwnGenerator: React.FC<States> = (state: States) => {
 			const airfoil_txt_array = response.data.data;
 			const airfoil_txt = convertAirfoilToTxt(airfoil_txt_array, code)
 			dispatch(geometrySetAirfoilName(a, airfoil_txt_array) as any)
-			axios.post(`http://127.0.0.1:5000/myprojects/${state.user.project}/airfoilData`,
+			axios.post(`http://${remote_addr}/myprojects/${state.user.project}/airfoilData`,
             {
               name: state.user.project,
               airfoilName: "NACA " + code,
@@ -102,7 +102,7 @@ const OwnGenerator: React.FC<States> = (state: States) => {
 	const downloadDat = async () => {
 		
 		try {
-			const response = await fetch("http://127.0.0.1:5000/naca/" + code + "/" + pts + "/dat"); // Adjust the URL if necessary
+			const response = await fetch("http://" + remote_addr + "/naca/" + code + "/" + pts + "/dat"); // Adjust the URL if necessary
 			if (!response.ok) {
 				throw new Error("Failed to fetch airfoils");
 			}
